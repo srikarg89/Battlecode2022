@@ -35,10 +35,17 @@ public class Util {
 
     static boolean tryMove(Direction[] dirs) throws GameActionException {
         for(Direction dir : dirs){
-            if (rc.canMove(dir)) {
-                rc.move(dir);
+            if(Util.tryMove(dir)){
                 return true;
             }
+        }
+        return false;
+    }
+
+    static boolean tryMove(Direction dir) throws GameActionException {
+        if (rc.canMove(dir)) {
+            rc.move(dir);
+            return true;
         }
         return false;
     }

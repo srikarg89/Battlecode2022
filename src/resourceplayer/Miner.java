@@ -26,28 +26,52 @@ public class Miner extends Robot {
                 }
             }
         }
+        assert(archonLoc != null);
+
+        // TODO: If you're blocking the way of a fellow miner, move forward so that he can help you mine
+        // Movement strat: if you're right next to a miner and there's mineable blocks if you separate yourself, then separate yourself.
+        MapLocation mineLocation = checkMineable(myLoc);
+        if(mineLocation == null) {
+            nav.moveAwayFrom(myLoc.directionTo(archonLoc));
+        }
+        else if(rc.isMovementReady()){
+            int nearby = rc.senseNearbyRobots(2, myTeam).length;
+            Direction bestMoveDir = Direction.CENTER;
+            for(Direction dir : Navigation.directions){
+                MapLocation newCenter = myLoc.add(dir);
+                if(!rc.canMove(dir)){
+                    continue;
+                }
+                if(checkMineable(newCenter) == null){
+                    continue;
+                }
+                int robotsNearNewCenter = rc.senseNearbyRobots(newCenter, 2, myTeam).length;
+                if(robotsNearNewCenter < nearby){
+                    nearby = robotsNearNewCenter;
+                    bestMoveDir = dir;
+                }
+            }
+            if(bestMoveDir != Direction.CENTER){
+                Util.tryMove(bestMoveDir);
+            }
+        }
 
         // Try to mine on squares around us.
-        MapLocation mineLocation = checkMineable();
+        mineLocation = checkMineable(myLoc);
         if(mineLocation != null){
             System.out.println("Trying to mine at: " + mineLocation.toString());
             tryMine(mineLocation);
         }
-        else if(archonLoc != null) { // Otherwise try to move in the direction opposite the Archon.
-            nav.moveAwayFrom(myLoc.directionTo(archonLoc));
-        }
-        else{
-            System.out.println("ERROR DIDNT FIND ARCHON THAT SPAWNED ME");
-        }
+
     }
 
     // Find the location with the most reserves (gold and lead) to mine from. If there is no location to mine from, return null
-    public MapLocation checkMineable() throws GameActionException {
+    public MapLocation checkMineable(MapLocation center) throws GameActionException {
         MapLocation bestLoc = null;
         int bestLead = 0;
         int bestGold = 0;
         for (Direction dir : Navigation.allDirections) { // Maximum mine radius is 2
-            MapLocation newLoc = myLoc.add(dir);
+            MapLocation newLoc = center.add(dir);
             if(!rc.canSenseLocation(newLoc)){
                 continue;
             }
