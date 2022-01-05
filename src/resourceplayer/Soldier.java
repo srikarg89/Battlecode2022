@@ -13,18 +13,6 @@ public class Soldier extends Robot {
     public void run() throws GameActionException {
         super.run();
 
-        // Try to attack someone
-        MapLocation me = rc.getLocation();
-
-        int radius = rc.getType().actionRadiusSquared;
-        Team opponent = rc.getTeam().opponent();
-        RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
-
-        MapLocation toAttack = null;
-        RobotType oppType = null;
-        int distance = Integer.MAX_VALUE;
-
-
         //lifted from miner code
         if (archonLoc == null) {
             for (Direction dir : Navigation.directions) {
@@ -41,11 +29,20 @@ public class Soldier extends Robot {
         assert (archonLoc != null);
 
 
+        // Attacking
+        int radius = rc.getType().actionRadiusSquared;
+        Team opponent = rc.getTeam().opponent();
+        RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
+
+        MapLocation toAttack = null;
+        RobotType oppType = null;
+        int distance = Integer.MAX_VALUE;
+
         for (RobotInfo info : enemies) {
             if (oppType == null) {
                 toAttack = info.location;
                 oppType = info.type;
-                distance = me.distanceSquaredTo(info.location);
+                distance = myLoc.distanceSquaredTo(info.location);
             }
 
             // switch if we prioritize current robot type more
@@ -54,12 +51,12 @@ public class Soldier extends Robot {
                     || (info.type == RobotType.SOLDIER && oppType == RobotType.BUILDER)) {
                 toAttack = info.location;
                 oppType = info.type;
-                distance = me.distanceSquaredTo(info.location);
+                distance = myLoc.distanceSquaredTo(info.location);
             }
 
             // if same type as robot already found, only switch if we're closer
             else if (info.type == oppType) {
-                int currDistance = me.distanceSquaredTo(info.location);
+                int currDistance = myLoc.distanceSquaredTo(info.location);
                 if (currDistance < distance) {
                     toAttack = info.location;
                     oppType = info.type;
@@ -73,7 +70,9 @@ public class Soldier extends Robot {
         }
 
 
-        // movement
+
+
+        // Moving
         // TODO: make movement smarter
         else {
             nav.moveAwayFrom(myLoc.directionTo(archonLoc));
