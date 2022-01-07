@@ -1,7 +1,6 @@
-package resourceplayer;
+package rushbot;
 
 import battlecode.common.*;
-import battlecode.common.RobotController;
 
 public class Miner extends Robot {
 
@@ -9,7 +8,7 @@ public class Miner extends Robot {
     MapLocation mineLocation = null;
     Direction spawnDir = null;
 
-    public Miner(RobotController rc){
+    public Miner(RobotController rc) throws GameActionException {
         super(rc);
         System.out.println("Running constructor!");
     }

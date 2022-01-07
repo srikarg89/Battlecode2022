@@ -1,8 +1,7 @@
-package resourceplayer;
+package rushbot;
 
 import battlecode.common.*;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class Util {
@@ -65,12 +64,13 @@ public class Util {
         return copy;
     }
 
+    // Purpose of the +1 and -1 is to ensure that the integer version of a map location is never equal to 0 (useful for shared array)
     static int mapLocationToInt(MapLocation loc){
-        return loc.x * 1000 + loc.y;
+        return loc.x * 100 + loc.y + 1;
     }
 
     static MapLocation intToMapLocation(int num){
-        return new MapLocation(num / 1000, num % 1000);
+        return new MapLocation((num - 1) / 100, (num - 1) % 100);
     }
 
     static MapLocation multiplyDirection(MapLocation loc, Direction dir, int n){
@@ -128,6 +128,63 @@ public class Util {
         int dx = a.x - b.x;
         int dy = a.y - b.y;
         return Math.max(Math.abs(dx), Math.abs(dy));
+    }
+
+    public static int getArrayIndex(RobotType[] arr, RobotType value) {
+        for(int i = 0; i < arr.length; i++){
+            if(arr[i]==value){
+                return i;
+            }
+        }
+        return -1; // Should never reach this
+    }
+
+    public static int getArrayIndex(MapLocation[] arr, MapLocation value) {
+        for(int i = 0; i < arr.length; i++){
+            if(arr[i].equals(value)){
+                return i;
+            }
+        }
+        return -1; // Should never reach this
+    }
+
+    public static int getArrayIndex(int[] arr, int value) {
+        for(int i = 0; i < arr.length; i++){
+            if(arr[i] == value){
+                return i;
+            }
+        }
+        return -1; // Should never reach this
+    }
+
+    public static boolean checkRobotPresent(MapLocation loc, RobotType type, Team team) throws GameActionException {
+        if(!rc.canSenseLocation(loc)){
+            return false;
+        }
+        RobotInfo info = rc.senseRobotAtLocation(loc);
+        if(info != null){
+            if(info.getType() == type && info.getTeam() == team){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // reflection type: 1 = vertical reflection, 2 = horizontal reflection, 3 = 180 degree rotation
+    public static MapLocation[] reflect(MapLocation[] locs, int reflectionType){
+        MapLocation[] ret = new MapLocation[locs.length];
+        for(int i = 0; i < locs.length; i++){
+            if(reflectionType == 0){
+                ret[i] = new MapLocation(locs[i].x, robot.mapHeight - locs[i].y - 1);
+            }
+            else if(reflectionType == 1){
+                ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, locs[i].y);
+            }
+            else if(reflectionType == 2){
+                ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, robot.mapHeight - locs[i].y - 1);
+            }
+        }
+        return ret;
     }
 
 }
