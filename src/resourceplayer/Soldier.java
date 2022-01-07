@@ -2,17 +2,34 @@ package resourceplayer;
 
 import battlecode.common.*;
 
-
 public class Soldier extends Robot {
     MapLocation archonLoc = null;
+
+    // Proportion of soldiers that are defensive (offensive will go to enemy, defensive will stay close to spawning archon)
+
+
+    // might be smart to have a few created for each archon in the beginning of each game
+
+    // allow us to have different types of soldiers with different movement behaviour
+    String type = "offensive"; // defensive, scouting
+    Direction[] shuffled = Util.shuffleArr(Util.directions);
+
 
     //list defining what we should destroy first
     RobotType[] priorityOrder = {RobotType.ARCHON, RobotType.SOLDIER, RobotType.MINER,
             RobotType.BUILDER, RobotType.LABORATORY, RobotType.WATCHTOWER, RobotType.SAGE};
 
+
     public Soldier(RobotController rc) {
         super(rc);
     }
+
+
+    public Soldier(RobotController rc, String type) {
+        super(rc);
+        this.type = type;
+    }
+
 
 
     // helper method used that finds position of enemy robot type in predefined array
@@ -20,8 +37,7 @@ public class Soldier extends Robot {
     public int getArrayIndex(RobotType[] arr,RobotType value) {
         int k=0;
         for(int i=0;i<arr.length;i++){
-
-            if(arr[i]==value){
+            if(arr[i].equals(value)){
                 k=i;
                 break;
             }
@@ -48,7 +64,7 @@ public class Soldier extends Robot {
         assert (archonLoc != null);
 
 
-        // Attacking
+        // Attacking (same for both offensive and defensive soldiers)
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
@@ -92,13 +108,36 @@ public class Soldier extends Robot {
         }
 
 
-
-
-        // Moving
-        // TODO: make movement smarter
+        // Movement
         else {
-            nav.moveAwayFrom(myLoc.directionTo(archonLoc));
+
+            if(this.type == "defensive"){      // movement code for defensive soldier (
+                // explore area around spawned archon, but stay close
+                // defensive bubble increases as rounds progress so we don't crowd up area around archon
+                int currDistance = myLoc.distanceSquaredTo(archonLoc);
+
+                if (currDistance < 25){  // units surround spawning archon with radius of 5
+                        nav.moveAwayFrom(myLoc.directionTo(archonLoc));
+                    }
+
+                    else if (currDistance < 49){    // explore defensive bubblee
+                        Util.tryMove(shuffled);
+                    }
+
+                    else{   // move back towards spawning archon
+                        Util.tryMove(myLoc.directionTo(archonLoc));
+                }
+            }
+
+
+            else {      // movement code for offensive soldier
+                // TODO: move in direction of previously attacked enemy bot
+                // TODO: need to incorporate comms to share enemy archon locations instead of just moving away from own archon
+                nav.moveAwayFrom(myLoc.directionTo(archonLoc));
+            }
         }
+
+        Clock.yield();
     }
     }
 
