@@ -120,7 +120,7 @@ public class Soldier extends Robot {
                 } else if (currDistance < 49) {    // explore defensive bubblee
                     Util.tryMove(shuffled);
                 } else {   // move back towards spawning archon
-                    nav.moveAwayFrom(archonLoc);
+                    nav.moveTowards(archonLoc);
                 }
             }
 
