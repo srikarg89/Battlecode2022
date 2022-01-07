@@ -1,10 +1,13 @@
 package resourceplayer;
 
 import battlecode.common.*;
+import battlecode.common.RobotController;
 
 public class Miner extends Robot {
 
     MapLocation archonLoc = null;
+    MapLocation mineLocation = null;
+    Direction spawnDir = null;
 
     public Miner(RobotController rc){
         super(rc);
@@ -13,6 +16,7 @@ public class Miner extends Robot {
 
     public void run() throws GameActionException {
         super.run();
+//        System.out.println("Round number: " + rc.getRoundNum());
         // Find the location of the archon that spawned you
         if(archonLoc == null) {
             for (Direction dir : Navigation.directions) {
@@ -21,6 +25,7 @@ public class Miner extends Robot {
                     RobotInfo info = rc.senseRobotAtLocation(testLoc);
                     if (info.getType() == RobotType.ARCHON && info.getTeam() == myTeam) {
                         archonLoc = testLoc;
+                        spawnDir = info.getLocation().directionTo(myLoc);
                         System.out.println("Found my archon loc: " + archonLoc.toString());
                     }
                 }
@@ -30,11 +35,24 @@ public class Miner extends Robot {
 
         // TODO: If you're blocking the way of a fellow miner, move forward so that he can help you mine
         // Movement strat: if you're right next to a miner and there's mineable blocks if you separate yourself, then separate yourself.
-        MapLocation mineLocation = checkMineable(myLoc);
-        if(mineLocation == null) {
-            nav.moveAwayFrom(myLoc.directionTo(archonLoc));
+
+        // Calculate mineLocation
+        MapLocation mineLocation = findClosestMine();
+
+        // If there's nowhere that I can sense to mine, find a new mineLocation
+        if(mineLocation == null){
+//            nav.moveAwayFrom(archonLoc);
+//            Direction away = myLoc.directionTo(archonLoc).opposite();
+            MapLocation target = Util.multiplyDirection(myLoc, spawnDir, Math.max(rc.getMapWidth(), rc.getMapHeight()));
+            // Move away from spawning archon
+            nav.goTo(target);
+        }
+        else if(myLoc.distanceSquaredTo(mineLocation) > 2){
+//            nav.moveTowards(mineLocation);
+            nav.goTo(mineLocation);
         }
         else if(rc.isMovementReady()){
+            // Spreading out code
             int nearby = rc.senseNearbyRobots(2, myTeam).length;
             Direction bestMoveDir = Direction.CENTER;
             for(Direction dir : Navigation.directions){
@@ -57,7 +75,6 @@ public class Miner extends Robot {
         }
 
         // Try to mine on squares around us.
-        mineLocation = checkMineable(myLoc);
         if(mineLocation != null){
             System.out.println("Trying to mine at: " + mineLocation.toString());
             tryMine(mineLocation);
@@ -86,6 +103,37 @@ public class Miner extends Robot {
             bestLead = lead;
             bestGold = gold;
             bestLoc = newLoc;
+        }
+        return bestLoc;
+    }
+
+    // Find the closest location with the most reserves (gold and lead) to mine from. If there is no location to mine from, return null
+    public MapLocation findClosestMine() throws GameActionException {
+        MapLocation bestLoc = null;
+        int bestDist = 100000;
+        boolean foundGold = false;
+        // Go to nearest gold mine
+        MapLocation[] sensable = rc.getAllLocationsWithinRadiusSquared(myLoc, myType.visionRadiusSquared);
+        for(MapLocation newLoc : sensable){
+            if(!rc.canSenseLocation(newLoc)){
+                continue;
+            }
+            int gold = rc.senseGold(newLoc);
+            int lead = rc.senseLead(newLoc);
+            int dist = myLoc.distanceSquaredTo(newLoc);
+            if(gold == 0 && lead == 0){ // Ignore it if it doesn't have gold or lead
+                continue;
+            }
+            if(gold == 0 && foundGold){ // Ignore a non-gold repository if we alr found gold
+                continue;
+            }
+            if((gold > 0 && !foundGold) || (dist < bestDist)){
+                bestLoc = newLoc;
+                bestDist = dist;
+                if(gold > 0){
+                    foundGold = true;
+                }
+            }
         }
         return bestLoc;
     }

@@ -20,6 +20,7 @@ public class Robot {
         myTeam = rc.getTeam();
         myType = rc.getType();
         age = 0;
+        nav.minDistToSatisfy = myType.actionRadiusSquared;
     }
 
     public void run() throws GameActionException {
