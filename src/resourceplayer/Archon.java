@@ -19,8 +19,8 @@ public class Archon extends Robot {
         super.run();
 
         // Build in a different direction than last time
-        if (minerCount <= soldierCount) {
-//        if(true){
+//        if (minerCount <= soldierCount) {
+        if(minerCount < 6 || minerCount < soldierCount * 4){
             // Let's try to build a miner.
             rc.setIndicatorString("Trying to build a miner");
             spawnUniformly(RobotType.MINER, minerCount);

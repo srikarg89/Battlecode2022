@@ -97,7 +97,7 @@ public class Soldier extends Robot {
         // Moving
         // TODO: make movement smarter
         else {
-            nav.moveAwayFrom(myLoc.directionTo(archonLoc));
+            nav.moveAwayFrom(archonLoc);
         }
     }
     }

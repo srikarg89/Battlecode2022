@@ -65,4 +65,63 @@ public class Util {
         return copy;
     }
 
+    static int mapLocationToInt(MapLocation loc){
+        return loc.x * 1000 + loc.y;
+    }
+
+    static MapLocation intToMapLocation(int num){
+        return new MapLocation(num / 1000, num % 1000);
+    }
+
+    static MapLocation multiplyDirection(MapLocation loc, Direction dir, int n){
+        int x = 0;
+        int y = 0;
+        if(dir == Direction.NORTH){
+            x = 0; y = 1;
+        }
+        if(dir == Direction.SOUTH){
+            x = 0; y = -1;
+        }
+        if(dir == Direction.EAST){
+            x = 1; y = 0;
+        }
+        if(dir == Direction.WEST){
+            x = -1; y = 0;
+        }
+        if(dir == Direction.NORTHEAST){
+            x = 1; y = 1;
+        }
+        if(dir == Direction.NORTHWEST){
+            x = -1; y = 1;
+        }
+        if(dir == Direction.SOUTHEAST){
+            x = 1; y = -1;
+        }
+        if(dir == Direction.SOUTHWEST){
+            x = -1; y = -1;
+        }
+
+        return new MapLocation(loc.x + x * n, loc.y + y * n);
+    }
+
+    public static int directionToX(Direction dir){
+        if(dir == Direction.EAST || dir == Direction.NORTHEAST || dir == Direction.SOUTHEAST){
+            return 1;
+        }
+        if(dir == Direction.WEST || dir == Direction.NORTHWEST || dir == Direction.SOUTHWEST){
+            return -1;
+        }
+        return 0;
+    }
+
+    public static int directionToY(Direction dir){
+        if(dir == Direction.NORTH || dir == Direction.NORTHEAST || dir == Direction.NORTHWEST){
+            return 1;
+        }
+        if(dir == Direction.SOUTH || dir == Direction.SOUTHEAST || dir == Direction.SOUTHWEST){
+            return -1;
+        }
+        return 0;
+    }
+
 }
