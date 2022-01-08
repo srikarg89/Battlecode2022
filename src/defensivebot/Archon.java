@@ -60,7 +60,7 @@ public class Archon extends Robot {
 //        if(rc.getRoundNum()%10 < 7) spawnUniformly(RobotType.MINER, myMiners);
 //        else spawnUniformly(RobotType.BUILDER, myBuilders);
 
-        if(rc.getTeamLeadAmount(rc.getTeam()) > 1000 && rc.getRoundNum()%100==0) {
+        if(rc.getTeamLeadAmount(rc.getTeam()) > 1000 && rc.getRoundNum()%50==0) {
             spawnUniformly(RobotType.BUILDER, myBuilders);
         }
 
