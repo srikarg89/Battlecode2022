@@ -35,23 +35,24 @@ public class Soldier extends Robot {
 
         boolean attacked = attackEnemy();
         if(!attacked){
+            MapLocation nearbyEnemy = targetNearbyEnemy();
+            if(nearbyEnemy != null){
+                currentTarget = nearbyEnemy;
+                Logger.Log("Targetting nearby enemy");
+            }
             // Apparently there's nothing there to attack, so go find another location to scout
-            if(currentTarget != null && !enemyConfirmed){
+            else if(currentTarget != null && !enemyConfirmed){
                 MapLocation temp = enemyArchonOnComms();
                 if(temp != null){
                     currentTarget = temp;
-//                    Logger.Log("Got comms based target");
+                    Logger.Log("Got comms based target");
                 }
-            }
-            currentTarget = targetNearbyEnemy();
-            if(currentTarget != null){
-                return;
             }
             if(currentTarget == null){
                 resetTarget();
             }
             else if(myLoc.distanceSquaredTo(currentTarget) <= myType.actionRadiusSquared && rc.isActionReady()){
-//                Logger.Log("REEEEEEEEEEEEEEEEEEEE IM CLOSE ENOUGH AND ACTION IS READY BUT NOT ATTACKING REEEEEE");
+                Logger.Log("REEEEEEEEEEEEEEEEEEEE IM CLOSE ENOUGH AND ACTION IS READY BUT NOT ATTACKING REEEEEE");
                 resetTarget();
             }
             nav.minDistToSatisfy = myType.actionRadiusSquared;
