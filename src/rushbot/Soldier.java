@@ -73,7 +73,7 @@ public class Soldier extends Robot {
 
         for (int i = 0; i < enemies.length; i++) {
             RobotInfo info = enemies[i];
-            int currOppTypeIndex = defensivebot.Util.getArrayIndex(priorityOrder, info.type);
+            int currOppTypeIndex = Util.getArrayIndex(priorityOrder, info.type);
             int currHealth = info.getHealth();
 
             // Find the best enemy to attack based on priority order
