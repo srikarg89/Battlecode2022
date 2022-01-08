@@ -85,6 +85,12 @@ public class Navigation {
         visited = new HashSet<Integer>();
     }
 
+    public MapLocation getRandomMapLocation() throws GameActionException {
+        int x = (int)(Math.random() * robot.mapWidth);
+        int y = (int)(Math.random() * robot.mapHeight);
+        return new MapLocation(x, y);
+    }
+
     public void moveAwayFrom(MapLocation targetLoc) throws GameActionException {
         Direction dir = this.robot.myLoc.directionTo(targetLoc);
         Direction[] oppDirections = Navigation.closeDirections(dir.opposite());
@@ -129,7 +135,7 @@ public class Navigation {
         Direction bestDir = null;
         int bestCost = Integer.MAX_VALUE;
 
-        for(int i = 4; i-- > 0; ){
+        for(int i = moveOptions.length; i-- > 0; ){
             Direction dir = moveOptions[i];
             MapLocation newLoc = robot.myLoc.add(dir);
             if(!rc.canSenseLocation(newLoc) || !rc.canMove(dir)){
@@ -175,14 +181,14 @@ public class Navigation {
 
 //    public Direction bellmanFord(MapLocation target) throws GameActionException {
 //
-//        System.out.println("Starting bellman ford with " + Clock.getBytecodesLeft() + " bytecode");
+//        Logger.Log("Starting bellman ford with " + Clock.getBytecodesLeft() + " bytecode");
 //        int visionRadius = (int)Math.sqrt(robot.myType.visionRadiusSquared) + 1;
 //        int[][] distances = new int[visionRadius][visionRadius];
 //        MapLocation[][] locs = new MapLocation[visionRadius][visionRadius];
 //        Pair[][] previous = new Pair[visionRadius][visionRadius];
 //        Direction diag = robot.myLoc.directionTo(target);
 //        // Assuming start is 0, 0 and target is n, n
-//        System.out.println("Bytecode Checkpoint A: " + Clock.getBytecodesLeft());
+//        Logger.Log("Bytecode Checkpoint A: " + Clock.getBytecodesLeft());
 //        for(int i = 0; i < visionRadius; i++){ // This took 4000 bytecode T_T
 //            for(int j = 0; j < visionRadius; j++){
 //                MapLocation temp = Util.multiplyDirection(robot.myLoc, diag.rotateLeft(), i);
@@ -193,7 +199,7 @@ public class Navigation {
 //        }
 //
 //        distances[0][0] = 0;
-//        System.out.println("Bytecode Checkpoint B: " + Clock.getBytecodesLeft());
+//        Logger.Log("Bytecode Checkpoint B: " + Clock.getBytecodesLeft());
 //
 //        for(int i = 0; i < visionRadius * visionRadius; i++){
 //            for(int xy = 0; xy < visionRadius * 2 - 2; xy++){ // Go in a reasonable order
@@ -232,7 +238,7 @@ public class Navigation {
 //            }
 //        }
 //
-//        System.out.println("Bytecode Checkpoint C: " + Clock.getBytecodesLeft());
+//        Logger.Log("Bytecode Checkpoint C: " + Clock.getBytecodesLeft());
 //        MapLocation reachableTarget = target;
 //        if(!rc.canSenseLocation(reachableTarget)){
 //            reachableTarget = Util.multiplyDirection(robot.myLoc, diag, visionRadius);
@@ -244,23 +250,23 @@ public class Navigation {
 //                if(locs[i][j].equals(reachableTarget)){
 //                    prev = new Pair(i, j);
 //                }
-//                System.out.println("Found: (" + i + ", " + j + ") corresponding to " + locs[i][j].toString());
+//                Logger.Log("Found: (" + i + ", " + j + ") corresponding to " + locs[i][j].toString());
 //            }
 //        }
-//        System.out.println("Reachable target: " + reachableTarget.toString());
-//        System.out.println("Diagonal: " + diag.toString());
-//        System.out.println("Vision radius: " + visionRadius);
+//        Logger.Log("Reachable target: " + reachableTarget.toString());
+//        Logger.Log("Diagonal: " + diag.toString());
+//        Logger.Log("Vision radius: " + visionRadius);
 //        if(prev == null){
 //            return Direction.CENTER;
 //        }
 //        assert(prev != null);
 //        Pair next = null;
 //        while(prev.x != 0 || prev.y != 0){
-//            System.out.println("Backtracking!");
+//            Logger.Log("Backtracking!");
 //            next = prev;
 //            prev = previous[prev.x][prev.y];
 //        }
-//        System.out.println("Ended dijkstra with bytecode: " + Clock.getBytecodesLeft());
+//        Logger.Log("Ended dijkstra with bytecode: " + Clock.getBytecodesLeft());
 //        return robot.myLoc.directionTo(locs[next.x][next.y]);
 //
 //    }
@@ -283,7 +289,7 @@ public class Navigation {
 //    }
 
 //    public Direction dijkstra2(MapLocation target) throws GameActionException {
-//        System.out.println("Starting dijkstra with bytecode: " + Clock.getBytecodesLeft());
+//        Logger.Log("Starting dijkstra with bytecode: " + Clock.getBytecodesLeft());
 //
 //        Direction toTarget = robot.myLoc.directionTo(target);
 //        Direction[] options = {toTarget, toTarget.rotateLeft(), toTarget.rotateRight(), toTarget.rotateLeft().rotateLeft(), toTarget.rotateRight().rotateRight()};
@@ -331,7 +337,7 @@ public class Navigation {
 //            next = previous.get(next);
 //        }
 //        assert(next == start);
-//        System.out.println("Ended dijkstra with bytecode: " + Clock.getBytecodesLeft());
+//        Logger.Log("Ended dijkstra with bytecode: " + Clock.getBytecodesLeft());
 //        return robot.myLoc.directionTo(Util.intToMapLocation(prev));
 //
 //        // TODO: Test if this code even works XD

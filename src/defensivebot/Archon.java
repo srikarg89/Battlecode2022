@@ -8,10 +8,11 @@ public class Archon extends Robot {
     int minerCount = 0;
     int builderCount = 0;
     int sageCount = 0;
-
-    int mySoldierCount = 0;
-    int myMinerCount = 0;
-
+    int mySoldiers = 0;
+    int myMiners = 0;
+    int prevMinerCount = 0;
+    int prevSoldierCount = 0;
+    boolean givingChance = false;
     int id = 0;
 
     public Archon(RobotController rc) throws GameActionException {
@@ -34,27 +35,38 @@ public class Archon extends Robot {
         minerCount = comms.getRobotCount(RobotType.MINER);
         soldierCount = comms.getRobotCount(RobotType.SOLDIER);
 
-
-
         comms.findFriendlyArchons();
         this.comms.updateCenterOfAttackingMass(id);
 
 
-        System.out.println(myMinerCount);
-        System.out.println(mySoldierCount);
+        Logger.Log(myMiners + "");
+        Logger.Log(mySoldiers + "");
         if (Util.mapLocationToInt(rc.getLocation())== rc.readSharedArray(rc.getRoundNum()%this.numFriendlyArchons)) {
             // Build in a different direction than last time
-            if (myMinerCount <= mySoldierCount*0.75) {
-                // Let's try to build a miner.
+//            if (myMiners <= mySoldiers * 0.75) {
+//                // Let's try to build a miner.
+//                rc.setIndicatorString("Trying to build a miner");
+//                spawnUniformly(RobotType.MINER, minerCount);
+//            } else {
+//                // Let's try to build a soldier.
+//                rc.setIndicatorString("Trying to build a soldier");
+//                spawnUniformly(RobotType.SOLDIER, soldierCount);
+//            }
+            if(rc.getRoundNum() < 30){
                 rc.setIndicatorString("Trying to build a miner");
                 spawnUniformly(RobotType.MINER, minerCount);
-            } else {
-                // Let's try to build a soldier.
+            } else if (soldierCount < minerCount * 2){
                 rc.setIndicatorString("Trying to build a soldier");
                 spawnUniformly(RobotType.SOLDIER, soldierCount);
-
             }
-            Clock.yield();
+            else if(minerCount < soldierCount){
+                rc.setIndicatorString("Trying to build a miner");
+                spawnUniformly(RobotType.MINER, minerCount);
+            }
+            else{
+                rc.setIndicatorString("Trying to build a soldier");
+                spawnUniformly(RobotType.SOLDIER, soldierCount);
+            }
         }
     }
 
@@ -66,14 +78,14 @@ public class Archon extends Robot {
         }
         if(Util.tryBuild(spawnType, spawnDirs) != Direction.CENTER){
             if(spawnType == RobotType.MINER){
-                System.out.println("Successfully spawned a miner!");
+                Logger.Log("Successfully spawned a miner!");
                 comms.addRobotCount(RobotType.MINER, 1);
-                myMinerCount++;
+                myMiners++;
             }
             else if(spawnType == RobotType.SOLDIER){
-                System.out.println("Successfully spawned a soldier!");
+                Logger.Log("Successfully spawned a soldier!");
                 comms.addRobotCount(RobotType.SOLDIER, 1);
-                mySoldierCount++;
+                mySoldiers++;
             }
         }
         // TODO: Instead of going in order, check where the current miners are and try to spawn in the direction opposite of the most miners

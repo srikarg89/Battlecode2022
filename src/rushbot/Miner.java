@@ -153,11 +153,11 @@ public class Miner extends Robot {
     }
 
     public void tryMine(MapLocation mineLocation) throws GameActionException {
-//        Logger.Log("Bytecode at start of tryMine: " + Clock.getBytecodesLeft());
-        while (rc.canMineGold(mineLocation)) { // TODO: Fix farming issue
+        // TODO: If you reach the limit, then find a new spot to mine at
+        while (rc.canMineGold(mineLocation) && rc.senseGold(mineLocation) > 1) {
             rc.mineGold(mineLocation);
         }
-        while (rc.canMineLead(mineLocation)) {
+        while (rc.canMineLead(mineLocation) && rc.senseLead(mineLocation) > 1) {  // don't mine if therre's one lead so we can regenerate
             rc.mineLead(mineLocation);
         }
     }

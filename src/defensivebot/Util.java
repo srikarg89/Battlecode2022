@@ -42,17 +42,11 @@ public class Util {
     }
 
     static boolean tryMove(Direction dir) throws GameActionException {
-        try{
-            if (rc.canMove(dir)) {
-                rc.move(dir);
-                return true;
-            }
-            return false;
+        if (rc.canMove(dir)) {
+            rc.move(dir);
+            return true;
         }
-        catch(GameActionException e){
-            System.out.println(e);
-            return false;
-        }
+        return false;
     }
 
     static Direction[] shuffleArr(Direction[] arr){
@@ -75,11 +69,26 @@ public class Util {
         return x * 100 + y + 1;
     }
 
-    static int[] compressedToXAndY(int num){
+    static int[] compressedToXAndY(int num) {
         int x = (num - 1) / 100;
         int y = (num - 1) % 100;
         int[] data = {x, y};
         return data;
+    }
+
+    static MapLocation[] shuffleArr(MapLocation[] arr){
+        Random rand = new Random();
+        MapLocation[] copy = new MapLocation[arr.length];
+        for(int i = 0; i < arr.length; i++){
+            copy[i] = arr[i];
+        }
+        for (int i = 0; i < copy.length; i++) {
+            int randomIndexToSwap = rand.nextInt(copy.length);
+            MapLocation temp = copy[randomIndexToSwap];
+            copy[randomIndexToSwap] = copy[i];
+            copy[i] = temp;
+        }
+        return copy;
     }
 
     // Purpose of the +1 and -1 is to ensure that the integer version of a map location is never equal to 0 (useful for shared array)
@@ -150,7 +159,7 @@ public class Util {
 
     public static int getArrayIndex(RobotType[] arr, RobotType value) {
         for(int i = 0; i < arr.length; i++){
-            if(arr[i]==value){
+            if(arr[i] == value){
                 return i;
             }
         }
@@ -192,19 +201,30 @@ public class Util {
     public static MapLocation[] reflect(MapLocation[] locs, int reflectionType){
         MapLocation[] ret = new MapLocation[locs.length];
         for(int i = 0; i < locs.length; i++){
-            if(reflectionType == 0){
+            if(reflectionType == 1){
                 ret[i] = new MapLocation(locs[i].x, robot.mapHeight - locs[i].y - 1);
             }
-            else if(reflectionType == 1){
+            else if(reflectionType == 2){
                 ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, locs[i].y);
             }
-            else if(reflectionType == 2){
+            else if(reflectionType == 3){
                 ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, robot.mapHeight - locs[i].y - 1);
+            }
+            else{
+                assert(false);
             }
         }
         return ret;
     }
 
-
+    public static int countRobotTypes(RobotInfo[] infos, RobotType typ, Team team){
+        int count = 0;
+        for(int i = 0; i < infos.length; i++){
+            if(infos[i].type == typ && infos[i].team == team){
+                count++;
+            }
+        }
+        return count;
+    }
 
 }

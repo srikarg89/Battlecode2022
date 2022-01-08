@@ -11,8 +11,6 @@ public class Builder extends Robot {
 
     public void run() throws GameActionException {
         super.run();
-
-        // Do stuff
     }
 
 }

@@ -6,7 +6,7 @@ public class Soldier extends Robot {
     MapLocation archonLoc = null;
 
     //list defining what we should destroy first
-    RobotType[] priorityOrder = {RobotType.SAGE, RobotType.SOLDIER, RobotType.WATCHTOWER, RobotType.ARCHON, RobotType.MINER,
+    RobotType[] priorityOrder = {RobotType.SAGE, RobotType.SOLDIER, RobotType.ARCHON, RobotType.WATCHTOWER, RobotType.MINER,
             RobotType.BUILDER, RobotType.LABORATORY};
     boolean[][] visited = new boolean[4][3];
     MapLocation currentTarget;
@@ -33,56 +33,8 @@ public class Soldier extends Robot {
         }
         assert (archonLoc != null);
 
-
-        // Attacking
-        Team opponent = rc.getTeam().opponent();
-        RobotInfo[] enemies = rc.senseNearbyRobots(myType.actionRadiusSquared, opponent);
-
-        MapLocation toAttack = null;
-        int oppTypeIndex = 10;
-        RobotType oppType = null;
-        int distance = Integer.MAX_VALUE;
-
-
-//        Logger.Log("Bytecode left in the middle of soldier class: " + Clock.getBytecodesLeft());
-        for (int i = 0; i < enemies.length; i++) {
-            RobotInfo info = enemies[i];
-            // helper method used that finds position of enemy robot type in predefined array
-            // to help us figure out which bot to destroy first
-            int currOppTypeIndex = Util.getArrayIndex(priorityOrder, info.type);
-            int currDistance = myLoc.distanceSquaredTo(info.location);
-
-            if (oppType == null) {
-                toAttack = info.location;
-                oppTypeIndex = currOppTypeIndex;
-                oppType = info.type;
-                distance = currDistance;
-            }
-
-            // switch if we prioritize current opp. robot type more
-            else if (currOppTypeIndex < oppTypeIndex) {
-                toAttack = info.location;
-                oppType = info.type;
-                oppTypeIndex = currOppTypeIndex;
-                distance = currDistance;
-            }
-
-            // if same type as robot already found, only switch if we're closer
-            else if (currOppTypeIndex == oppTypeIndex) {
-                if (currDistance < distance) {
-                    toAttack = info.location;
-                    distance = currDistance;
-                }
-            }
-        }
-
-        // Attack the highest priority enemy
-        if (toAttack != null && rc.canAttack(toAttack)) {
-            rc.attack(toAttack);
-            rc.setIndicatorLine(myLoc, toAttack, 255, 0, 0);
-            rc.setIndicatorString("Attacking: " + toAttack.toString());
-        }
-        else{
+        boolean attacked = attackEnemy();
+        if(!attacked){
             // Apparently there's nothing there to attack, so go find another location to scout
             if(currentTarget != null && !enemyConfirmed){
                 MapLocation temp = enemyArchonOnComms();
@@ -90,6 +42,10 @@ public class Soldier extends Robot {
                     currentTarget = temp;
 //                    Logger.Log("Got comms based target");
                 }
+            }
+            currentTarget = targetNearbyEnemy();
+            if(currentTarget != null){
+                return;
             }
             if(currentTarget == null){
                 resetTarget();
@@ -106,6 +62,37 @@ public class Soldier extends Robot {
         }
     }
 
+    public boolean attackEnemy() throws GameActionException {
+        int radius = myType.actionRadiusSquared;
+        Team opponent = myTeam.opponent();
+        RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
+
+        MapLocation toAttack = null;
+        int oppTypeIndex = 20;
+        int health = Integer.MAX_VALUE;
+
+        for (int i = 0; i < enemies.length; i++) {
+            RobotInfo info = enemies[i];
+            int currOppTypeIndex = defensivebot.Util.getArrayIndex(priorityOrder, info.type);
+            int currHealth = info.getHealth();
+
+            // Find the best enemy to attack based on priority order
+            if (toAttack == null || currOppTypeIndex < oppTypeIndex || (currOppTypeIndex == oppTypeIndex && currHealth < health)) {
+                toAttack = info.location;
+                oppTypeIndex = currOppTypeIndex;
+                health = currHealth;
+            }
+        }
+
+        if (toAttack != null && rc.canAttack(toAttack)) {
+            rc.attack(toAttack);
+            rc.setIndicatorLine(myLoc, toAttack, 255, 0, 0);
+            rc.setIndicatorString("Attacking: " + toAttack.toString());
+            return true;
+        }
+        return false;
+    }
+
     public void resetTarget() throws GameActionException {
         // Find an archon to target
 //        Logger.Log("Resetting target");
@@ -117,6 +104,10 @@ public class Soldier extends Robot {
             return;
         }
         enemyConfirmed = false;
+        currentTarget = targetNearbyEnemy();
+        if(currentTarget != null){
+            return;
+        }
         // Scout for enemy based on symmetry
         currentTarget = scoutForEnemyArchons();
         if(currentTarget != null){
@@ -143,6 +134,22 @@ public class Soldier extends Robot {
             }
         }
         return closestEnemy;
+    }
+
+    public MapLocation targetNearbyEnemy() throws GameActionException {
+        // If you can sense an enemy (but I guess you can't attack it), go towards it
+        // Technically this line shld only be running if you have more friendlies than enemies in the area, so we shld be gucci
+        MapLocation bestLoc = null;
+        int bestTypeIndex = 100;
+        for (int i = 0; i < nearby.length; i++){
+            if(nearby[i].getTeam() != myTeam){
+                int currOppTypeIndex = Util.getArrayIndex(priorityOrder, nearby[i].type);
+                if(currOppTypeIndex < bestTypeIndex){
+                    bestLoc = nearby[i].getLocation();
+                }
+            }
+        }
+        return bestLoc;
     }
 
     public MapLocation scoutForEnemyArchons() throws GameActionException {

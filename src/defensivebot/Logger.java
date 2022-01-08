@@ -1,4 +1,4 @@
-package rushbot;
+package defensivebot;
 
 import battlecode.common.RobotType;
 
@@ -15,12 +15,12 @@ public class Logger {
     public static void Log(String str){
         if(limitToIDs){
             if(Util.getArrayIndex(allowedIDs, myID) != -1){
-                System.out.println(str);
+                Logger.Log(str);
             }
         }
         if(limitToTypes){
             if(Util.getArrayIndex(allowedTypes, myType) != -1){
-                System.out.println(str);
+                Logger.Log(str);
             }
         }
 

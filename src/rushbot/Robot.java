@@ -19,8 +19,10 @@ public class Robot {
     boolean symmetryDetermined = false;
     int mapWidth;
     int mapHeight;
+    RobotInfo[] nearby;
 
     public Robot(RobotController rc) throws GameActionException {
+        nearby = rc.senseNearbyRobots();
         myLoc = rc.getLocation();
         this.rc = rc;
         nav = new Navigation(rc, this);
@@ -41,6 +43,7 @@ public class Robot {
     }
 
     public void run() throws GameActionException {
+        nearby = rc.senseNearbyRobots();
         if(rc.getRoundNum() == 2 && myType == RobotType.ARCHON){
             // Find teammate archons
             comms.findFriendlyArchons();

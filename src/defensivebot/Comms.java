@@ -12,9 +12,9 @@ public class Comms {
     final int SAGE_COUNT_IDX = 15;
     final int BUILDER_COUNT_IDX = 16;
     final int CENTER_OF_ATTACKING_MASS_IDX = 25;
-
-
-
+    final int BIGGEST_THREAT_LEVEL_IDX = 40;
+    final int BIGGEST_THREAT_LOC_IDX = 41;
+    final int THREAT_THRESHOLD = 15;
 
     // Properties
     RobotController rc;
@@ -27,7 +27,7 @@ public class Comms {
 
     public void findFriendlyArchons() throws GameActionException {
         int numArchons = 0;
-        for(int i = 3; i >= 0; i--){
+        for(int i = 4; i-- > 0; ){
             int val = rc.readSharedArray(i);
             if(val != 0){
                 if(numArchons == 0){
@@ -53,7 +53,7 @@ public class Comms {
         if(symmetry == 1 || symmetry == 2 || symmetry == 4){ // Already determined symmetry
             return;
         }
-        if((symmetry & 1) == 1){
+        if((symmetry & 1) != 0){
             MapLocation[] enemyArchonLocs = Util.reflect(this.robot.friendlyArchons, 1);
             for(int i = 0; i < enemyArchonLocs.length; i++){
                 if(!rc.canSenseLocation(enemyArchonLocs[i])){
@@ -65,7 +65,7 @@ public class Comms {
                 }
             }
         }
-        if((symmetry & 2) == 1){
+        if((symmetry & 2) != 0){
             MapLocation[] enemyArchonLocs = Util.reflect(this.robot.friendlyArchons, 2);
             for(int i = 0; i < enemyArchonLocs.length; i++){
                 if(!rc.canSenseLocation(enemyArchonLocs[i])){
@@ -77,7 +77,7 @@ public class Comms {
                 }
             }
         }
-        if((symmetry & 4) == 1){
+        if((symmetry & 4) != 0){
             MapLocation[] enemyArchonLocs = Util.reflect(this.robot.friendlyArchons, 3);
             for(int i = 0; i < enemyArchonLocs.length; i++){
                 if(!rc.canSenseLocation(enemyArchonLocs[i])){
@@ -99,15 +99,29 @@ public class Comms {
     public void scanEnemyArchons() throws GameActionException {
         // Also update any enemy archon locs that you find to the comms array
         int[] enemyArchonIDs = new int[4];
+        enemyArchonIDs[0] = -1;
+        enemyArchonIDs[1] = -1;
+        enemyArchonIDs[2] = -1;
+        enemyArchonIDs[3] = -1;
         int[] enemyArchonLocs = new int[4];
         int known = 0;
         for(int i = 4; i < 8; i++){
-            int id = rc.readSharedArray(i);
-            if(id != 0){
+            int id = rc.readSharedArray(i) - 1; // NOTE: ARCHON IDs ARE SAVED AS ID + 1 since 0 is a possible ID
+            if(id != -1){
                 enemyArchonIDs[i - 4] = id;
                 known++;
             }
             int locInt = rc.readSharedArray(i + 4);
+            if(locInt != 0 && locInt != Integer.MAX_VALUE){
+                MapLocation loc = Util.intToMapLocation(locInt);
+                if(rc.canSenseLocation(loc)){
+                    RobotInfo info = rc.senseRobotAtLocation(loc);
+                    if(info == null || info.getType() != RobotType.ARCHON || info.getTeam() != robot.myTeam.opponent()){
+                        // Archon was destroyed
+                        locInt = 0;
+                    }
+                }
+            }
             if(rc.canSenseRobot(id)){
                 locInt = Util.mapLocationToInt(rc.senseRobot(id).getLocation());
             }
@@ -129,8 +143,8 @@ public class Comms {
         }
         // Update shared array
         for(int i = 0; i < 4; i++){
-            if(enemyArchonIDs[i] != rc.readSharedArray(i + 4)){
-                rc.writeSharedArray(i + 4, enemyArchonIDs[i]);
+            if(enemyArchonIDs[i] != rc.readSharedArray(i + 4) - 1){ // NOTE: ARCHON IDs ARE SAVED AS ID + 1 since 0 is a possible ID
+                rc.writeSharedArray(i + 4, enemyArchonIDs[i] + 1); // NOTE: ARCHON IDs ARE SAVED AS ID + 1 since 0 is a possible ID
             }
             if(enemyArchonLocs[i] != rc.readSharedArray(i + 8)){
                 rc.writeSharedArray(i + 8, enemyArchonLocs[i]);
@@ -235,18 +249,18 @@ public class Comms {
            n+= 1;
         }
         x_avg /= n; y_avg /= n;
-        if(x_avg == 0 && y_avg == 0)
-            rc.writeSharedArray(CENTER_OF_ATTACKING_MASS_IDX+index, MAX_COMMS_VAL);
-
-
-        else
-            rc.writeSharedArray(CENTER_OF_ATTACKING_MASS_IDX+index, Util.xAndYToCompressed(x_avg, y_avg));
+        if(x_avg == 0 && y_avg == 0) {
+            rc.writeSharedArray(CENTER_OF_ATTACKING_MASS_IDX + index, MAX_COMMS_VAL);
+        }
+        else {
+            rc.writeSharedArray(CENTER_OF_ATTACKING_MASS_IDX + index, Util.xAndYToCompressed(x_avg, y_avg));
+        }
     }
 
-        public int getClosestFriendlyArchonIndex() throws GameActionException{
+    public int getClosestFriendlyArchonIndex() throws GameActionException {
         int minDistanceSquared = Integer.MAX_VALUE;
         int index = 0;
-        for(int i=0; i<4; i++) {
+        for(int i=4; i-- > 0; ) {
             int compressed_coordinate = rc.readSharedArray(i);
             if (compressed_coordinate != 0) {
                 MapLocation currMapLocation = Util.intToMapLocation(rc.readSharedArray(i));
@@ -258,7 +272,60 @@ public class Comms {
             }
         }
         return index;
-        }
+    }
 
+    public MapLocation getCurrAttackLoc() throws GameActionException {
+        int threatLevel = 0;
+        MapLocation threatLoc = null;
+        for(int i = 0; i < robot.nearby.length; i++){
+            RobotInfo info = robot.nearby[i];
+            if(info.getTeam() == robot.opponent){
+                if(info.getType() == RobotType.ARCHON){
+                    threatLevel += 50;
+                    threatLoc = info.getLocation();
+                }
+                else if(info.getType() == RobotType.SOLDIER){
+                    threatLevel += 5;
+                    if(threatLoc == null){
+                        threatLoc = info.getLocation();
+                    }
+                }
+            }
+        }
+        int currThreatLevel = rc.readSharedArray(BIGGEST_THREAT_LEVEL_IDX);
+        int currThreatLocInt = rc.readSharedArray(BIGGEST_THREAT_LOC_IDX);
+        MapLocation currThreatLoc = null;
+        if(currThreatLocInt != 0 && currThreatLocInt != MAX_COMMS_VAL){
+            currThreatLoc = Util.intToMapLocation(currThreatLocInt);
+        }
+        if(threatLoc == null){
+            return currThreatLoc;
+        }
+        if(currThreatLoc != null && robot.myLoc.distanceSquaredTo(currThreatLoc) < 4){ // Reached the global currThreatLoc
+            if(currThreatLevel != threatLevel){
+                if(threatLevel < THREAT_THRESHOLD){ // No significant threat here
+                    rc.writeSharedArray(BIGGEST_THREAT_LEVEL_IDX, 0);// Update sharedArray value
+                    rc.writeSharedArray(BIGGEST_THREAT_LOC_IDX, 0);// Update sharedArray value
+                }
+                else{
+                    rc.writeSharedArray(BIGGEST_THREAT_LEVEL_IDX, threatLevel);// Update sharedArray value
+                    rc.writeSharedArray(BIGGEST_THREAT_LOC_IDX, currThreatLevel);// Update sharedArray value
+                }
+            }
+        }
+        else{
+            if(threatLevel > currThreatLevel && threatLevel > THREAT_THRESHOLD){ // This threat is clearly more massive than the previous one T_T
+                rc.writeSharedArray(BIGGEST_THREAT_LEVEL_IDX, threatLevel);// Update sharedArray value
+                rc.writeSharedArray(BIGGEST_THREAT_LOC_IDX, currThreatLevel);// Update sharedArray value
+            }
+        }
+        // Stick with the most updated loc
+        int locInt = rc.readSharedArray(BIGGEST_THREAT_LOC_IDX);;
+        if(locInt == 0 || locInt == MAX_COMMS_VAL){
+            return null;
+        }
+        return Util.intToMapLocation(locInt);
+
+    }
 
 }

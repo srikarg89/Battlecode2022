@@ -11,8 +11,6 @@ public class WatchTower extends Robot {
 
     public void run() throws GameActionException {
         super.run();
-
-        // Do stuff
     }
 
 }
