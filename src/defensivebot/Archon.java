@@ -40,10 +40,13 @@ public class Archon extends Robot {
 
         Logger.Log(myMiners + "");
         Logger.Log(mySoldiers + "");
+        // Try building
         if (Util.mapLocationToInt(rc.getLocation()) == rc.readSharedArray(rc.getRoundNum() % this.numFriendlyArchons)) {
             // Build in a different direction than last time
             runBuildOrder();
         }
+        // Try repairing
+        runRepair();
         prevLead = rc.getTeamLeadAmount(myTeam);
     }
 
@@ -89,6 +92,34 @@ public class Archon extends Robot {
             }
         }
         // TODO: Instead of going in order, check where the current miners are and try to spawn in the direction opposite of the most miners
+    }
+
+    public void runRepair() throws GameActionException {
+        MapLocation toRepair = null;
+        int bestRepairPriority = -100000;
+        rc.setIndicatorString("Gonna try repairing XD");
+        for(int i = 0; i < nearby.length; i++){
+            if(!rc.canRepair(nearby[i].getLocation())){
+                continue;
+            }
+            int repairPriority = 0;
+            if(nearby[i].getType() == RobotType.SOLDIER){ // Prioritize healing soldiers
+                repairPriority += 100;
+            }
+            repairPriority -= nearby[i].getHealth(); // Prioritize healing lower health ppl
+            if(repairPriority > bestRepairPriority){
+                bestRepairPriority = repairPriority;
+                toRepair = nearby[i].getLocation();
+            }
+        }
+        if(toRepair == null){
+            return;
+        }
+        if(rc.canRepair(toRepair)){
+            rc.repair(toRepair);
+            Logger.Log("Repairing a soldier: " + toRepair.toString());
+            rc.setIndicatorString("Repairing a soldier: " + toRepair.toString());
+        }
     }
 
 
