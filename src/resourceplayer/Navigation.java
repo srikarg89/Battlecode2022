@@ -98,7 +98,7 @@ public class Navigation {
         if (robot.myLoc.distanceSquaredTo(target) <= minDistToSatisfy) {
             return true;
         }
-        rc.setIndicatorLine(robot.myLoc, target, 0, 255, 0);
+//        rc.setIndicatorLine(robot.myLoc, target, 0, 255, 0);
         if (!rc.isMovementReady()) {
             return false;
         }
@@ -126,7 +126,7 @@ public class Navigation {
         Direction bestDir = null;
         int bestCost = Integer.MAX_VALUE;
 
-        for(int i = 4; i-- > 0; ){
+        for(int i = moveOptions.length; i-- > 0; ){
             Direction dir = moveOptions[i];
             MapLocation newLoc = robot.myLoc.add(dir);
             if(!rc.canSenseLocation(newLoc) || !rc.canMove(dir)){

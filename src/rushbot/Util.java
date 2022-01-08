@@ -64,6 +64,21 @@ public class Util {
         return copy;
     }
 
+    static MapLocation[] shuffleArr(MapLocation[] arr){
+        Random rand = new Random();
+        MapLocation[] copy = new MapLocation[arr.length];
+        for(int i = 0; i < arr.length; i++){
+            copy[i] = arr[i];
+        }
+        for (int i = 0; i < copy.length; i++) {
+            int randomIndexToSwap = rand.nextInt(copy.length);
+            MapLocation temp = copy[randomIndexToSwap];
+            copy[randomIndexToSwap] = copy[i];
+            copy[i] = temp;
+        }
+        return copy;
+    }
+
     // Purpose of the +1 and -1 is to ensure that the integer version of a map location is never equal to 0 (useful for shared array)
     static int mapLocationToInt(MapLocation loc){
         return loc.x * 100 + loc.y + 1;
@@ -174,14 +189,17 @@ public class Util {
     public static MapLocation[] reflect(MapLocation[] locs, int reflectionType){
         MapLocation[] ret = new MapLocation[locs.length];
         for(int i = 0; i < locs.length; i++){
-            if(reflectionType == 0){
+            if(reflectionType == 1){
                 ret[i] = new MapLocation(locs[i].x, robot.mapHeight - locs[i].y - 1);
             }
-            else if(reflectionType == 1){
+            else if(reflectionType == 2){
                 ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, locs[i].y);
             }
-            else if(reflectionType == 2){
+            else if(reflectionType == 3){
                 ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, robot.mapHeight - locs[i].y - 1);
+            }
+            else{
+                assert(false);
             }
         }
         return ret;

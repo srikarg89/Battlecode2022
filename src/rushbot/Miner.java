@@ -10,23 +10,17 @@ public class Miner extends Robot {
 
     public Miner(RobotController rc) throws GameActionException {
         super(rc);
-        System.out.println("Running constructor!");
+//        Logger.Log("Running constructor!");
     }
 
     public void run() throws GameActionException {
         super.run();
-//        System.out.println("Round number: " + rc.getRoundNum());
         // Find the location of the archon that spawned you
         if(archonLoc == null) {
-            for (Direction dir : Navigation.directions) {
-                MapLocation testLoc = myLoc.add(dir);
-                if (rc.canSenseRobotAtLocation(testLoc)) {
-                    RobotInfo info = rc.senseRobotAtLocation(testLoc);
-                    if (info.getType() == RobotType.ARCHON && info.getTeam() == myTeam) {
-                        archonLoc = testLoc;
-                        spawnDir = info.getLocation().directionTo(myLoc);
-                        System.out.println("Found my archon loc: " + archonLoc.toString());
-                    }
+            for(int i = 0; i < numFriendlyArchons; i++){
+                if(myLoc.distanceSquaredTo(friendlyArchons[i]) <= 2){
+                    archonLoc = friendlyArchons[i];
+                    spawnDir = archonLoc.directionTo(myLoc);
                 }
             }
         }
@@ -40,106 +34,127 @@ public class Miner extends Robot {
 
         // If there's nowhere that I can sense to mine, find a new mineLocation
         if(mineLocation == null){
-//            nav.moveAwayFrom(archonLoc);
-//            Direction away = myLoc.directionTo(archonLoc).opposite();
-            // Do some sort of intelligent scouting stuff
+            // TODO: Do some sort of intelligent scouting stuff
             MapLocation target = Util.multiplyDirection(myLoc, spawnDir, Math.max(rc.getMapWidth(), rc.getMapHeight()));
             // Move away from spawning archon
             nav.goTo(target);
         }
         else if(myLoc.distanceSquaredTo(mineLocation) > 2){
-//            nav.moveTowards(mineLocation);
             nav.goTo(mineLocation);
         }
         else if(rc.isMovementReady()){
             // Spreading out code
-            int nearby = rc.senseNearbyRobots(2, myTeam).length;
+//            Logger.Log("Spreading out");
+            int nearby = getAdjacentTeammatesCount(myLoc, true);
+//            Logger.Log("Nearby: " + nearby);
             Direction bestMoveDir = Direction.CENTER;
             for(Direction dir : Navigation.directions){
                 MapLocation newCenter = myLoc.add(dir);
                 if(!rc.canMove(dir)){
                     continue;
                 }
-                if(checkMineable(newCenter) == null){
+                if(!checkMineable(newCenter)){
                     continue;
                 }
-                int robotsNearNewCenter = rc.senseNearbyRobots(newCenter, 2, myTeam).length;
+                int robotsNearNewCenter = getAdjacentTeammatesCount(newCenter, true);
                 if(robotsNearNewCenter < nearby){
                     nearby = robotsNearNewCenter;
                     bestMoveDir = dir;
                 }
+//                Logger.Log("Testing loc: " + newCenter.toString() + ", nbrs found: " + robotsNearNewCenter);
             }
             if(bestMoveDir != Direction.CENTER){
-                Util.tryMove(bestMoveDir);
+                if(Util.tryMove(bestMoveDir)){
+                    mineLocation = findClosestMine();
+                }
             }
         }
 
         // Try to mine on squares around us.
         if(mineLocation != null){
-            System.out.println("Trying to mine at: " + mineLocation.toString());
             tryMine(mineLocation);
         }
 
     }
 
-    // Find the location with the most reserves (gold and lead) to mine from. If there is no location to mine from, return null
-    public MapLocation checkMineable(MapLocation center) throws GameActionException {
-        MapLocation bestLoc = null;
-        int bestLead = 0;
-        int bestGold = 0;
-        for (Direction dir : Navigation.allDirections) { // Maximum mine radius is 2
-            MapLocation newLoc = center.add(dir);
+    public int getAdjacentTeammatesCount(MapLocation center, boolean cardinal) throws GameActionException {
+        Direction[] dirs = Navigation.directions;
+        if(cardinal){
+            dirs = Navigation.cardinalDirections;
+        }
+        int count = 0;
+//        Logger.Log("Dirs: " + dirs.length);
+        for(int i = dirs.length; i-- > 0; ){
+            MapLocation adjLoc = center.add(dirs[i]); // Can use rc.isLocationOccupied to save bytecode
+//            Logger.Log("\tChecking adjacent location: " + adjLoc.toString());
+            if(rc.canSenseLocation(adjLoc)){
+                RobotInfo info = rc.senseRobotAtLocation(adjLoc);
+                if(info == null){
+                    continue;
+                }
+                if(info.team == myTeam){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    // True if you can mine from a given area, false if you can't
+    public boolean checkMineable(MapLocation center) throws GameActionException {
+        for (int i = 0; i < Navigation.allDirections.length; i++) { // Maximum mine radius is 2
+            MapLocation newLoc = center.add(Navigation.allDirections[i]);
             if(!rc.canSenseLocation(newLoc)){
                 continue;
             }
             int lead = rc.senseLead(newLoc);
             int gold = rc.senseGold(newLoc);
-            if(bestGold > gold){ // We value gold more than lead
-                continue;
+            if(lead > 0 || gold > 0){
+                return true;
             }
-            if(bestGold == gold && bestLead >= lead){ // If the gold reserves are equal, check which one has more lead
-                continue;
-            }
-            bestLead = lead;
-            bestGold = gold;
-            bestLoc = newLoc;
         }
-        return bestLoc;
+        return false;
     }
 
     // Find the closest location with the most reserves (gold and lead) to mine from. If there is no location to mine from, return null
     public MapLocation findClosestMine() throws GameActionException {
         MapLocation bestLoc = null;
         int bestDist = 100000;
-        boolean foundGold = false;
         // Go to nearest gold mine
-        MapLocation[] sensable = rc.getAllLocationsWithinRadiusSquared(myLoc, myType.visionRadiusSquared);
-        for(MapLocation newLoc : sensable){
-            if(!rc.canSenseLocation(newLoc)){
+        MapLocation[] goldLocs = rc.senseNearbyLocationsWithGold(myType.visionRadiusSquared);
+        for(int i = 0; i < goldLocs.length; i++){
+            if(rc.senseGold(goldLocs[i]) == 1){ // Save for farming
                 continue;
             }
-            int gold = rc.senseGold(newLoc);
-            int lead = rc.senseLead(newLoc);
-            int dist = myLoc.distanceSquaredTo(newLoc);
-            if(gold == 0 && lead == 0){ // Ignore it if it doesn't have gold or lead
-                continue;
-            }
-            if(gold == 0 && foundGold){ // Ignore a non-gold repository if we alr found gold
-                continue;
-            }
-            if((gold > 0 && !foundGold) || (dist < bestDist)){
-                bestLoc = newLoc;
+            int dist = myLoc.distanceSquaredTo(goldLocs[i]);
+            if(dist < bestDist){
                 bestDist = dist;
-                if(gold > 0){
-                    foundGold = true;
-                }
+                bestLoc = goldLocs[i];
             }
         }
+        if(bestLoc != null){
+            return bestLoc;
+        }
+
+        MapLocation[] leadLocs = rc.senseNearbyLocationsWithLead(myType.visionRadiusSquared);
+//        Logger.Log("Num leadlocs found: " + leadLocs.length);
+        for(int i = 0; i < leadLocs.length; i++){
+            if(rc.senseLead(leadLocs[i]) == 1){ // Save for farming
+                continue;
+            }
+            int dist = myLoc.distanceSquaredTo(leadLocs[i]);
+            if(dist < bestDist){
+                bestDist = dist;
+                bestLoc = leadLocs[i];
+            }
+        }
+
         return bestLoc;
     }
 
     public void tryMine(MapLocation mineLocation) throws GameActionException {
-        while (rc.canMineGold(mineLocation)) {
+//        Logger.Log("Bytecode at start of tryMine: " + Clock.getBytecodesLeft());
+        while (rc.canMineGold(mineLocation)) { // TODO: Fix farming issue
             rc.mineGold(mineLocation);
         }
         while (rc.canMineLead(mineLocation)) {

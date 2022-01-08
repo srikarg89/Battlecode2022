@@ -26,6 +26,8 @@ public class Robot {
         nav = new Navigation(rc, this);
         Util.rc = rc;
         Util.robot = this;
+        Logger.myID = rc.getID();
+        Logger.myType = rc.getType();
         comms = new Comms(rc, this);
         myTeam = rc.getTeam();
         myType = rc.getType();
@@ -45,7 +47,7 @@ public class Robot {
         }
         // TODO: Only do this for scouts, cuz most likely by the time anyone else gets there the archon will have moved
         if(rc.getRoundNum() >= 2){
-            System.out.println("Determining symmetry");
+//            Logger.Log("Determining symmetry");
             comms.determineSymmetry();
         }
         comms.scanEnemyArchons();

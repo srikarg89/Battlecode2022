@@ -55,7 +55,7 @@ public class Soldier extends Robot {
                     RobotInfo info = rc.senseRobotAtLocation(testLoc);
                     if (info.getType() == RobotType.ARCHON && info.getTeam() == myTeam) {
                         archonLoc = testLoc;
-                        System.out.println("Found my archon loc: " + archonLoc.toString());
+//                        System.out.println("Found my archon loc: " + archonLoc.toString());
                     }
                 }
             }
