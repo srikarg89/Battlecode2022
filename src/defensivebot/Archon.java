@@ -14,6 +14,7 @@ public class Archon extends Robot {
     int prevSoldierCount = 0;
     boolean givingChance = false;
     int id = 0;
+    int prevLead = 10000;
 
     public Archon(RobotController rc) throws GameActionException {
         super(rc);
@@ -27,7 +28,6 @@ public class Archon extends Robot {
                 break;
             }
         }
-
     }
 
     public void run() throws GameActionException {
@@ -38,35 +38,33 @@ public class Archon extends Robot {
         comms.findFriendlyArchons();
         this.comms.updateCenterOfAttackingMass(id);
 
-
         Logger.Log(myMiners + "");
         Logger.Log(mySoldiers + "");
-        if (Util.mapLocationToInt(rc.getLocation())== rc.readSharedArray(rc.getRoundNum()%this.numFriendlyArchons)) {
+        if (Util.mapLocationToInt(rc.getLocation()) == rc.readSharedArray(rc.getRoundNum() % this.numFriendlyArchons)) {
             // Build in a different direction than last time
-//            if (myMiners <= mySoldiers * 0.75) {
-//                // Let's try to build a miner.
-//                rc.setIndicatorString("Trying to build a miner");
-//                spawnUniformly(RobotType.MINER, minerCount);
-//            } else {
-//                // Let's try to build a soldier.
-//                rc.setIndicatorString("Trying to build a soldier");
-//                spawnUniformly(RobotType.SOLDIER, soldierCount);
-//            }
-            if(rc.getRoundNum() < 30){
-                rc.setIndicatorString("Trying to build a miner");
-                spawnUniformly(RobotType.MINER, minerCount);
-            } else if (soldierCount < minerCount * 2){
-                rc.setIndicatorString("Trying to build a soldier");
-                spawnUniformly(RobotType.SOLDIER, soldierCount);
-            }
-            else if(minerCount < soldierCount){
-                rc.setIndicatorString("Trying to build a miner");
-                spawnUniformly(RobotType.MINER, minerCount);
-            }
-            else{
-                rc.setIndicatorString("Trying to build a soldier");
-                spawnUniformly(RobotType.SOLDIER, soldierCount);
-            }
+            runBuildOrder();
+        }
+        prevLead = rc.getTeamLeadAmount(myTeam);
+    }
+
+    public void runBuildOrder() throws GameActionException {
+        int lead = rc.getTeamLeadAmount(myTeam);
+        int soldierCost = RobotType.SOLDIER.buildCostLead;
+        // If the current miners can build a soldier every round, then just build a soldier every round
+        if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
+            spawnUniformly(RobotType.SOLDIER, mySoldiers);
+        }
+        else if(rc.getRoundNum() < 30){
+            spawnUniformly(RobotType.MINER, myMiners);
+        }
+        else if (soldierCount < minerCount * 2){
+            spawnUniformly(RobotType.SOLDIER, mySoldiers);
+        }
+        else if(minerCount < soldierCount){
+            spawnUniformly(RobotType.MINER, myMiners);
+        }
+        else{
+            spawnUniformly(RobotType.SOLDIER, mySoldiers);
         }
     }
 
@@ -79,11 +77,13 @@ public class Archon extends Robot {
         if(Util.tryBuild(spawnType, spawnDirs) != Direction.CENTER){
             if(spawnType == RobotType.MINER){
                 Logger.Log("Successfully spawned a miner!");
+                rc.setIndicatorString("Built a miner");
                 comms.addRobotCount(RobotType.MINER, 1);
                 myMiners++;
             }
             else if(spawnType == RobotType.SOLDIER){
                 Logger.Log("Successfully spawned a soldier!");
+                rc.setIndicatorString("Built a soldier");
                 comms.addRobotCount(RobotType.SOLDIER, 1);
                 mySoldiers++;
             }

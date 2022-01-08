@@ -13,6 +13,7 @@ public class Archon extends Robot {
     int prevMinerCount = 0;
     int prevSoldierCount = 0;
     boolean givingChance = false;
+    int prevLead = 100000;
 
     public Archon(RobotController rc) throws GameActionException {
         super(rc);
@@ -39,26 +40,35 @@ public class Archon extends Robot {
         }
         else{
             // TODO: Figure out a better build order
-            if(rc.getRoundNum() < 30){
-                rc.setIndicatorString("Trying to build a miner");
-                spawnUniformly(RobotType.MINER, minerCount);
-            } else if (soldierCount < minerCount * 2){
-                rc.setIndicatorString("Trying to build a soldier");
-                spawnUniformly(RobotType.SOLDIER, soldierCount);
-            }
-            else if(minerCount < soldierCount){
-                rc.setIndicatorString("Trying to build a miner");
-                spawnUniformly(RobotType.MINER, minerCount);
-            }
-            else{
-                rc.setIndicatorString("Trying to build a soldier");
-                spawnUniformly(RobotType.SOLDIER, soldierCount);
-            }
+            runBuildOrder();
             givingChance = false;
         }
         prevMinerCount = comms.getRobotCount(RobotType.MINER);
         prevSoldierCount = comms.getRobotCount(RobotType.SOLDIER);
+        prevLead = rc.getTeamLeadAmount(myTeam);
     }
+
+    public void runBuildOrder() throws GameActionException {
+        int lead = rc.getTeamLeadAmount(myTeam);
+        int soldierCost = RobotType.SOLDIER.buildCostLead;
+        // If the current miners can build a soldier every round, then just build a soldier every round
+        if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
+            spawnUniformly(RobotType.SOLDIER, mySoldiers);
+        }
+        else if(rc.getRoundNum() < 30){
+            spawnUniformly(RobotType.MINER, myMiners);
+        }
+        else if (soldierCount < minerCount * 2){
+            spawnUniformly(RobotType.SOLDIER, mySoldiers);
+        }
+        else if(minerCount < soldierCount * 0.75){
+            spawnUniformly(RobotType.MINER, myMiners);
+        }
+        else{
+            spawnUniformly(RobotType.SOLDIER, mySoldiers);
+        }
+    }
+
 
     public void spawnUniformly(RobotType spawnType, int offset) throws GameActionException {
         Direction[] defaultSpawnDirs = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NORTHEAST, Direction.SOUTHWEST, Direction.NORTHWEST, Direction.SOUTHEAST};

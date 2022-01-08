@@ -105,7 +105,7 @@ public class Comms {
         int[] enemyArchonLocs = new int[4];
         int known = 0;
         for(int i = 4; i < 8; i++){
-            int id = rc.readSharedArray(i) - 1; // NOTE: ARCHON IDs ARE SAVED AS ID + 1 since 0 is a possible ID
+            int id = rc.readSharedArray(i) - 1; // NOTE: ARCHON IDs ARE SAVED AS ID + 1 since 0 is a possiblfe ID
             if(id != -1){
                 enemyArchonIDs[i - 4] = id;
                 known++;
