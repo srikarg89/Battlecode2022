@@ -39,11 +39,11 @@ public class Archon extends Robot {
         }
         if(Util.tryBuild(spawnType, spawnDirs) != Direction.CENTER){
             if(spawnType == RobotType.MINER){
-                System.out.println("Successfully spawned a miner!");
+//                System.out.println("Successfully spawned a miner!");
                 minerCount++;
             }
             else if(spawnType == RobotType.SOLDIER){
-                System.out.println("Successfully spawned a soldier!");
+//                System.out.println("Successfully spawned a soldier!");
                 soldierCount++;
             }
         }

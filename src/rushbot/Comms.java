@@ -26,7 +26,7 @@ public class Comms {
 
     public void findFriendlyArchons() throws GameActionException {
         int numArchons = 0;
-        for(int i = 3; i >= 0; i--){
+        for(int i = 4; i-- > 0; ){
             int val = rc.readSharedArray(i);
             if(val != 0){
                 if(numArchons == 0){
@@ -52,7 +52,7 @@ public class Comms {
         if(symmetry == 1 || symmetry == 2 || symmetry == 4){ // Already determined symmetry
             return;
         }
-        if((symmetry & 1) == 1){
+        if((symmetry & 1) != 0){
             MapLocation[] enemyArchonLocs = Util.reflect(this.robot.friendlyArchons, 1);
             for(int i = 0; i < enemyArchonLocs.length; i++){
                 if(!rc.canSenseLocation(enemyArchonLocs[i])){
@@ -64,7 +64,7 @@ public class Comms {
                 }
             }
         }
-        if((symmetry & 2) == 1){
+        if((symmetry & 2) != 0){
             MapLocation[] enemyArchonLocs = Util.reflect(this.robot.friendlyArchons, 2);
             for(int i = 0; i < enemyArchonLocs.length; i++){
                 if(!rc.canSenseLocation(enemyArchonLocs[i])){
@@ -76,7 +76,7 @@ public class Comms {
                 }
             }
         }
-        if((symmetry & 4) == 1){
+        if((symmetry & 4) != 0){
             MapLocation[] enemyArchonLocs = Util.reflect(this.robot.friendlyArchons, 3);
             for(int i = 0; i < enemyArchonLocs.length; i++){
                 if(!rc.canSenseLocation(enemyArchonLocs[i])){
@@ -98,15 +98,29 @@ public class Comms {
     public void scanEnemyArchons() throws GameActionException {
         // Also update any enemy archon locs that you find to the comms array
         int[] enemyArchonIDs = new int[4];
+        enemyArchonIDs[0] = -1;
+        enemyArchonIDs[1] = -1;
+        enemyArchonIDs[2] = -1;
+        enemyArchonIDs[3] = -1;
         int[] enemyArchonLocs = new int[4];
         int known = 0;
         for(int i = 4; i < 8; i++){
-            int id = rc.readSharedArray(i);
-            if(id != 0){
+            int id = rc.readSharedArray(i) - 1; // NOTE: ARCHON IDs ARE SAVED AS ID + 1 since 0 is a possible ID
+            if(id != -1){
                 enemyArchonIDs[i - 4] = id;
                 known++;
             }
             int locInt = rc.readSharedArray(i + 4);
+            if(locInt != 0 && locInt != Integer.MAX_VALUE){
+                MapLocation loc = Util.intToMapLocation(locInt);
+                if(rc.canSenseLocation(loc)){
+                    RobotInfo info = rc.senseRobotAtLocation(loc);
+                    if(info == null || info.getType() != RobotType.ARCHON || info.getTeam() != robot.myTeam.opponent()){
+                        // Archon was destroyed
+                        locInt = 0;
+                    }
+                }
+            }
             if(rc.canSenseRobot(id)){
                 locInt = Util.mapLocationToInt(rc.senseRobot(id).getLocation());
             }
@@ -128,68 +142,13 @@ public class Comms {
         }
         // Update shared array
         for(int i = 0; i < 4; i++){
-            if(enemyArchonIDs[i] != rc.readSharedArray(i + 4)){
-                rc.writeSharedArray(i + 4, enemyArchonIDs[i]);
+            if(enemyArchonIDs[i] != rc.readSharedArray(i + 4) - 1){ // NOTE: ARCHON IDs ARE SAVED AS ID + 1 since 0 is a possible ID
+                rc.writeSharedArray(i + 4, enemyArchonIDs[i] + 1); // NOTE: ARCHON IDs ARE SAVED AS ID + 1 since 0 is a possible ID
             }
             if(enemyArchonLocs[i] != rc.readSharedArray(i + 8)){
                 rc.writeSharedArray(i + 8, enemyArchonLocs[i]);
             }
         }
-    }
-
-    public MapLocation searchForEnemyArchons() throws GameActionException {
-        // Find the closest enemy we've detected
-        MapLocation closestEnemy = null;
-        int closestDist = Integer.MAX_VALUE;
-        for(int i = 8; i < 12; i++){
-            int val = rc.readSharedArray(i);
-            if(val != 0 && val != MAX_COMMS_VAL){
-                MapLocation enemyLoc = Util.intToMapLocation(val);
-                int enemyDist = robot.myLoc.distanceSquaredTo(enemyLoc);
-                if(enemyDist < closestDist){
-                    closestDist = enemyDist;
-                    closestEnemy = enemyLoc;
-                }
-            }
-        }
-        if(closestEnemy != null){
-            return closestEnemy;
-        }
-
-        // Otherwise search for one based on symmetry
-        int symmetry = rc.readSharedArray(SYMMETRY_IDX); // Index for symmetry in shared array
-        if((symmetry & 1) == 1 || symmetry == 0){
-            MapLocation[] enemyArchonLocs = Util.reflect(this.robot.friendlyArchons, 1);
-            for(int i = 0; i < enemyArchonLocs.length; i++){
-                int dist = robot.myLoc.distanceSquaredTo(enemyArchonLocs[i]);
-                if(dist < closestDist){
-                    closestEnemy = enemyArchonLocs[i];
-                    closestDist = dist;
-                }
-            }
-        }
-        if((symmetry & 2) == 1 || symmetry == 0){
-            MapLocation[] enemyArchonLocs = Util.reflect(this.robot.friendlyArchons, 2);
-            for(int i = 0; i < enemyArchonLocs.length; i++){
-                int dist = robot.myLoc.distanceSquaredTo(enemyArchonLocs[i]);
-                if(dist < closestDist){
-                    closestEnemy = enemyArchonLocs[i];
-                    closestDist = dist;
-                }
-            }
-        }
-        if((symmetry & 4) == 1 || symmetry == 0){
-            MapLocation[] enemyArchonLocs = Util.reflect(this.robot.friendlyArchons, 3);
-            for(int i = 0; i < enemyArchonLocs.length; i++){
-                int dist = robot.myLoc.distanceSquaredTo(enemyArchonLocs[i]);
-                if(dist < closestDist){
-                    closestEnemy = enemyArchonLocs[i];
-                    closestDist = dist;
-                }
-            }
-        }
-
-        return closestEnemy;
     }
 
     public void addRobotCount(RobotType type, int diff) throws GameActionException {
