@@ -32,6 +32,8 @@ public class Util {
         return Direction.CENTER;
     }
 
+
+
     static boolean tryMove(Direction[] dirs) throws GameActionException {
         for(Direction dir : dirs){
             if(Util.tryMove(dir)){

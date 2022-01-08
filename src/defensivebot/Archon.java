@@ -10,6 +10,7 @@ public class Archon extends Robot {
     int sageCount = 0;
     int mySoldiers = 0;
     int myMiners = 0;
+    int myBuilders = 0;
     int prevMinerCount = 0;
     int prevSoldierCount = 0;
     boolean givingChance = false;
@@ -51,9 +52,20 @@ public class Archon extends Robot {
         int lead = rc.getTeamLeadAmount(myTeam);
         int soldierCost = RobotType.SOLDIER.buildCostLead;
         // If the current miners can build a soldier every round, then just build a soldier every round
-        if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
+
+//
+//        if(rc.getRoundNum()%10 < 7) spawnUniformly(RobotType.MINER, myMiners);
+//        else spawnUniformly(RobotType.BUILDER, myBuilders);
+
+        if(rc.getTeamLeadAmount(rc.getTeam()) > 1000 && rc.getRoundNum()%100==0) {
+            spawnUniformly(RobotType.BUILDER, myBuilders);
+        }
+
+        else if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
             spawnUniformly(RobotType.SOLDIER, mySoldiers);
         }
+
+
         else if(rc.getRoundNum() < 30){
             spawnUniformly(RobotType.MINER, myMiners);
         }

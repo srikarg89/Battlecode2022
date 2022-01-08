@@ -29,6 +29,7 @@ public class Miner extends Robot {
         // TODO: If you're blocking the way of a fellow miner, move forward so that he can help you mine
         // Movement strat: if you're right next to a miner and there's mineable blocks if you separate yourself, then separate yourself.
 
+
         // Calculate mineLocation
         MapLocation mineLocation = findClosestMine();
 
@@ -39,9 +40,11 @@ public class Miner extends Robot {
             // Move away from spawning archon
             nav.goTo(target);
         }
+
         else if(myLoc.distanceSquaredTo(mineLocation) > 2){
             nav.goTo(mineLocation);
         }
+
         else if(rc.isMovementReady()){
             // Spreading out code
 //            Logger.Log("Spreading out");
