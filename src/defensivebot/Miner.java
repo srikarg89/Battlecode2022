@@ -34,6 +34,12 @@ public class Miner extends Robot {
 
         // Calculate mineLocation
         comms.scanEnemyArchons();
+
+        // If you're under attack (or you sense an enemy soldier), retreat!
+        if(Util.countRobotTypes(nearby, RobotType.SOLDIER, myTeam.opponent()) > Util.countRobotTypes(nearby, RobotType.SOLDIER, myTeam)){
+            nav.goTo(archonLoc);
+        }
+
         MapLocation mineLocation = findClosestMine();
 
         // If there's nowhere that I can sense to mine, find a new mineLocation

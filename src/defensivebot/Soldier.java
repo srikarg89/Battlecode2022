@@ -49,9 +49,11 @@ public class Soldier extends Robot {
 
         // Attacking (same for both offensive and defensive soldiers)
         // 0 = no enemy to attack, 1 = successfully attacked enemy, 2 = NEED TO RETREAT
-        int friendlySoldiers = Util.countRobotTypes(nearby, RobotType.SOLDIER, myTeam);
-        int enemySoldiers = Util.countRobotTypes(nearby, RobotType.SOLDIER, myTeam.opponent());
-        if(enemySoldiers > friendlySoldiers + 1){ // + 1 because you count as a soldier :))
+        double friendlySoldiersDamage = calculateNearbySoldiersDPS(nearby, myTeam);
+        double enemySoldiersDamage = calculateNearbySoldiersDPS(nearby, myTeam.opponent());
+        double friendlySoldiersHealth = calculateNearbySoldiersHealth(nearby, myTeam);
+        double enemySoldiersHealth = calculateNearbySoldiersHealth(nearby, myTeam.opponent());
+        if(enemySoldiersDamage / friendlySoldiersHealth > friendlySoldiersDamage / enemySoldiersHealth || rc.getHealth() <= enemySoldiersDamage){ // + 1 because you count as a soldier :))
             // RETREAT BACK TO BASE
             Logger.Log("RETREATING");
             nav.goTo(archonLoc);
@@ -69,6 +71,40 @@ public class Soldier extends Robot {
             }
         }
 
+    }
+
+    public double calculateNearbySoldiersDPS(RobotInfo[] nearby, Team team) throws GameActionException {
+        double damage = 0.0;
+        for(int i = 0; i < nearby.length; i++){
+            if(nearby[i].getType() != RobotType.SOLDIER || nearby[i].getTeam() != team){
+                continue;
+            }
+            assert(rc.canSenseLocation(nearby[i].getLocation()));
+            double cooldown = 10.0 + rc.senseRubble(nearby[i].getLocation());
+            cooldown /= 10;
+            damage += (double)RobotType.SOLDIER.damage / cooldown;
+        }
+        if(team == myTeam){
+            double cooldown = 10.0 + rc.senseRubble(myLoc);
+            cooldown /= 10;
+            damage += (double)RobotType.SOLDIER.damage / cooldown;
+        }
+        return damage;
+    }
+
+    public double calculateNearbySoldiersHealth(RobotInfo[] nearby, Team team) throws GameActionException {
+        double health = 0.0;
+        for(int i = 0; i < nearby.length; i++){
+            if(nearby[i].getType() != RobotType.SOLDIER || nearby[i].getTeam() != team){
+                continue;
+            }
+            assert(rc.canSenseLocation(nearby[i].getLocation()));
+            health += nearby[i].getHealth();
+        }
+        if(team == myTeam){
+            health += rc.getHealth();
+        }
+        return health;
     }
 
     public boolean attackEnemy(RobotInfo[] nearby) throws GameActionException {
