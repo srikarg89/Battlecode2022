@@ -91,6 +91,7 @@ public class Navigation {
         return new MapLocation(x, y);
     }
 
+
     public void moveAwayFrom(MapLocation targetLoc) throws GameActionException {
         Direction dir = this.robot.myLoc.directionTo(targetLoc);
         Direction[] oppDirections = Navigation.closeDirections(dir.opposite());
