@@ -35,6 +35,7 @@ public class Archon extends Robot {
         super.run();
         minerCount = comms.getRobotCount(RobotType.MINER);
         soldierCount = comms.getRobotCount(RobotType.SOLDIER);
+        builderCount = comms.getRobotCount(RobotType.BUILDER);
 
         comms.findFriendlyArchons();
         this.comms.updateCenterOfAttackingMass(id);
@@ -63,15 +64,12 @@ public class Archon extends Robot {
 //        if(rc.getRoundNum()%10 < 7) spawnUniformly(RobotType.MINER, myMiners);
 //        else spawnUniformly(RobotType.BUILDER, myBuilders);
 
-        if(rc.getTeamLeadAmount(rc.getTeam()) > 1000 && rc.getRoundNum()%50==0) {
+        if(lead > 1000 && builderCount*30 < rc.getRoundNum()) {
             spawnUniformly(RobotType.BUILDER, myBuilders);
         }
-
         else if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
             spawnUniformly(RobotType.SOLDIER, mySoldiers);
         }
-
-
         else if(rc.getRoundNum() < 30){
             spawnUniformly(RobotType.MINER, myMiners);
         }
@@ -118,17 +116,21 @@ public class Archon extends Robot {
             spawnDirs[i] = defaultSpawnDirs[(i + offset) % 8];
         }
         if(Util.tryBuild(spawnType, spawnDirs) != Direction.CENTER){
+            comms.addRobotCount(spawnType, 1);
             if(spawnType == RobotType.MINER){
                 Logger.Log("Successfully spawned a miner!");
                 rc.setIndicatorString("Built a miner");
-                comms.addRobotCount(RobotType.MINER, 1);
                 myMiners++;
             }
             else if(spawnType == RobotType.SOLDIER){
                 Logger.Log("Successfully spawned a soldier!");
                 rc.setIndicatorString("Built a soldier");
-                comms.addRobotCount(RobotType.SOLDIER, 1);
                 mySoldiers++;
+            }
+            else if(spawnType == RobotType.BUILDER){
+                Logger.Log("Successfully spawned a builder!");
+                rc.setIndicatorString("Built a builder");
+                myBuilders++;
             }
         }
         // TODO: Instead of going in order, check where the current miners are and try to spawn in the direction opposite of the most miners
