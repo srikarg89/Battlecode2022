@@ -252,4 +252,18 @@ public class Util {
         return close;
     }
 
+
+    public static MapLocation getClosestCorner(MapLocation baseArchon){
+        // used for building laboratories
+        int cornerX = 0;
+        int cornerY = 0;
+        if(baseArchon.x - 0 > rc.getMapWidth() - baseArchon.x){
+            cornerX = rc.getMapWidth()-1;
+        }
+        if(baseArchon.y - 0 > rc.getMapHeight() - baseArchon.y){
+            cornerY = rc.getMapHeight()-1;
+        }
+        return new MapLocation(cornerX, cornerY);
+    }
+
 }

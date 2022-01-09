@@ -10,7 +10,7 @@ public class WatchTower extends Robot {
     MapLocation archonLoc = null;
     int archonIndex = -1;
     boolean enemyConfirmed = false;
-//    boolean[][] visited = new boolean[4][3];
+    boolean[][] visited = new boolean[4][3];
 
 //    int stationaryPeriod = 0;       // variable to keep track of how long we've been in turret mode
 //    final int MOVEMENT_BUFFER = 20; // after how many rounds of turret mode should we move
@@ -26,7 +26,7 @@ public class WatchTower extends Robot {
 
     public void run() throws GameActionException {
         super.run();
-
+        comms.scanEnemyArchons();
         if(archonIndex == -1){
             archonIndex = comms.getClosestFriendlyArchonIndex();
             archonLoc = Util.intToMapLocation(rc.readSharedArray(archonIndex));
@@ -149,6 +149,27 @@ public class WatchTower extends Robot {
             return;
         }
         enemyConfirmed = false;
+        MapLocation bestLoc = targetNearbyEnemy();
+        if(bestLoc != null){
+            currentTarget = bestLoc;
+        }
+        // Check if the squad is currently attacking anyone
+        currentTarget = comms.getCurrAttackLoc();
+        if(currentTarget != null){
+            return;
+        }
+        // Scout for enemy based on symmetry
+        currentTarget = scoutForEnemyArchons();
+        if(currentTarget != null){
+//            Logger.Log("Got scouting target");
+            return;
+        }
+        // Run around randomly?
+        currentTarget = middle;
+//        Logger.Log("Got random target");
+    }
+
+    public MapLocation targetNearbyEnemy() throws GameActionException {
         // If you can sense an enemy (but I guess you can't attack it), go towards it
         // Technically this line shld only be running if you have more friendlies than enemies in the area, so we shld be gucci
         MapLocation bestLoc = null;
@@ -161,18 +182,7 @@ public class WatchTower extends Robot {
                 }
             }
         }
-        if(bestLoc != null){
-            currentTarget = bestLoc;
-        }
-        // Check if the squad is currently attacking anyone
-        currentTarget = comms.getCurrAttackLoc();
-        if(currentTarget != null){
-            return;
-        }
-
-        // Run around randomly?
-        currentTarget = middle;     // go towards the middle of the map
-//        Logger.Log("Got random target");
+        return bestLoc;
     }
 
     public MapLocation enemyArchonOnComms() throws GameActionException {
@@ -189,6 +199,68 @@ public class WatchTower extends Robot {
                 }
             }
         }
+        return closestEnemy;
+    }
+
+    public MapLocation scoutForEnemyArchons() throws GameActionException {
+        Logger.Log("--------------------------------------");
+        // Find the closest enemy we've detected
+        MapLocation closestEnemy = null;
+        int closestDist = Integer.MAX_VALUE;
+
+        // Otherwise search for one based on symmetry
+        int symmetry = rc.readSharedArray(comms.SYMMETRY_IDX); // Index for symmetry in shared array
+        // TODO: FIGURE THIS OUT
+        Logger.Log("Symmetry: " + symmetry);
+        if(symmetry == 0){
+            symmetry = 7; // Smth messed up XD
+        }
+
+        MapLocation[] potentialScoutingLocs = new MapLocation[12];
+        int potentialScoutingCount = 0;
+
+//        Logger.Log("Friendly archon: " + friendlyArchons[0].toString());
+        int[] binVals = {1, 2, 4};
+        for(int j = 0; j < 3; j++) {
+            int reflectionType = j + 1;
+            int binVal = binVals[j];
+            if((symmetry & binVal) != 0){
+                MapLocation[] enemyArchonLocs = Util.reflect(friendlyArchons, reflectionType);
+                for(int i = 0; i < enemyArchonLocs.length; i++){
+                    if(rc.canSenseLocation(enemyArchonLocs[i])){
+                        if(!Util.checkRobotPresent(enemyArchonLocs[i], RobotType.ARCHON, myTeam.opponent())){
+                            visited[i][j] = true;
+                        }
+                    }
+                    if(visited[i][j]){
+                        continue;
+                    }
+                    potentialScoutingLocs[potentialScoutingCount] = enemyArchonLocs[i];
+                    potentialScoutingCount++;
+                    int dist = myLoc.distanceSquaredTo(enemyArchonLocs[i]);
+                    if(dist < closestDist){
+                        closestEnemy = enemyArchonLocs[i];
+                        closestDist = dist;
+                    }
+                }
+            }
+        }
+
+        // Pick a random location to scout
+        potentialScoutingLocs = Util.shuffleArr(potentialScoutingLocs);
+//        Logger.Log("Number of scouting locs: " + potentialScoutingCount);
+//        for(MapLocation loc : potentialScoutingLocs){
+//            if(loc != null){
+//                Logger.Log("Potential Scouting Loc: " + loc.toString());
+//            }
+//        }
+        for(int i = 0; i < potentialScoutingLocs.length; i++){
+            if(potentialScoutingLocs[i] != null){
+//                Logger.Log("Heading towards: " + potentialScoutingLocs[i].toString());
+                return potentialScoutingLocs[i];
+            }
+        }
+
         return closestEnemy;
     }
 }

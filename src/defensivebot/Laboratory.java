@@ -11,6 +11,10 @@ public class Laboratory extends Robot {
 
     public void run() throws GameActionException {
         super.run();
+        if(rc.canTransmute() && rc.getTeamLeadAmount(rc.getTeam()) > 10*rc.getTransmutationRate()){
+            rc.transmute();
+            rc.setIndicatorString("Transmuting");
+        }
     }
 
 }
