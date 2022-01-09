@@ -42,6 +42,30 @@ public class Builder extends Robot {
         }
         assert (archonLoc != null);
 
+        // CODE TO BUILD LABORATORIES,
+        // TODO: need to use comms to only have a few builders try to build a laboratory
+//        // if we are near lab build location
+//        if(laboratoryBuildLocation != null && myLoc.distanceSquaredTo(laboratoryBuildLocation)<4){
+//            Direction dir = myLoc.directionTo(archonLoc);           // build in direction opposite of the home archon (closer to opposing soldiers)
+//            Direction[] buildDirections = nav.closeDirections(dir.opposite());
+//            Direction build_dir = Util.tryBuild(RobotType.LABORATORY, buildDirections);
+//            if(build_dir != Direction.CENTER) {      // yay we built a laboratory :D
+//                laboratoryBuildLocation = null;
+//
+//            }
+//        }
+//
+//        // all existing builders try building a laboratory every 100 rounds if we have enough leead
+//        //TODO: don't move all existing builders, only get one or two of alive builders
+//        else if((laboratoryBuildLocation != null || rc.getRoundNum()%100 == 0 && rc.getTeamLeadAmount(rc.getTeam()) > RobotType.LABORATORY.buildCostLead*3)){
+//            if(laboratoryBuildLocation == null) {
+//                laboratoryBuildLocation = Util.getClosestCorner(archonLoc);
+//            }
+//            nav.minDistToSatisfy = 9;
+//            nav.goTo(laboratoryBuildLocation);
+//
+//        }
+
         if(myLoc.distanceSquaredTo(archonLoc) <= 2){
             Logger.Log("Too close to archon, so moving away (towards center)");
             MapLocation map_center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
