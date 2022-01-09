@@ -32,6 +32,8 @@ public class Util {
         return Direction.CENTER;
     }
 
+
+
     static boolean tryMove(Direction[] dirs) throws GameActionException {
         for(Direction dir : dirs){
             if(Util.tryMove(dir)){
@@ -227,14 +229,28 @@ public class Util {
         return count;
     }
 
-    public static int countRobotTypesWithinLocation(RobotInfo[] infos, RobotType typ, Team team, MapLocation center, int radiusSquared){
+    public static int countRobotTypesWithinLocation(RobotInfo[] infos, RobotType typ, Team team, MapLocation center, int radiusSquared) {
         int count = 0;
-        for(int i = 0; i < infos.length; i++){
-            if(infos[i].type == typ && infos[i].team == team && infos[i].getLocation().distanceSquaredTo(center) <= radiusSquared){
+        for (int i = 0; i < infos.length; i++) {
+            if (infos[i].type == typ && infos[i].team == team && infos[i].getLocation().distanceSquaredTo(center) <= radiusSquared) {
                 count++;
             }
         }
         return count;
+    }
+
+    public static Direction[] closeDirections(Direction dir){
+        Direction[] close = {
+                dir,
+                dir.rotateLeft(),
+                dir.rotateRight(),
+                dir.rotateLeft().rotateLeft(),
+                dir.rotateRight().rotateRight(),
+                dir.rotateLeft().rotateLeft().rotateLeft(),
+                dir.rotateRight().rotateRight().rotateRight(),
+                dir.opposite()
+        };
+        return close;
     }
 
 }
