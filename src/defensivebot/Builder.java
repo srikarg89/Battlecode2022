@@ -29,10 +29,6 @@ public class Builder extends Robot {
 
     public void run() throws GameActionException {
         super.run();
-//        System.out.println(numSpots +", " + spotIndex);
-//        rc.setIndicatorString(""+needToRepair);
-//        desiredDistanceFromArchonSquared = rc.getRobotCount() / 5;  //arbitrary, need to fix
-
 
         if(archonIndex == -1){
             archonIndex = comms.getClosestFriendlyArchonIndex();
@@ -47,7 +43,7 @@ public class Builder extends Robot {
         }
         else if(numSpots == spotIndex){         // generate new build spots to build at
             generateBuildSpots(direction_multiplier);
-            direction_multiplier += 2;
+            direction_multiplier += 3;
             canBuild = false;
             spotIndex = 0;      //start from the beginning of the generated spots
         }
@@ -84,7 +80,7 @@ public class Builder extends Robot {
 
         }
         this.numSpots = 0;
-        for(int i=2; i< 7; i++){        // go in the first 4 best directions
+        for(int i=3; i< 7; i++){        // go in the first 4 best directions
             Direction direction = directions[i];
             MapLocation potentialBuildSpot = Util.multiplyDirection(this.archonLoc, direction, directionMultiplier);
 
@@ -110,6 +106,7 @@ public class Builder extends Robot {
             if(potentialTowers[i].getHealth() >= max_health){
                 continue; // No need to repair this boi
             }
+
             while (potentialTowers[i].getHealth() < max_health && rc.isActionReady()) {
                 repaired = true;
                 rc.repair(potentialTowers[i].location);
