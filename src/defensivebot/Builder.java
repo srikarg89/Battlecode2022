@@ -46,7 +46,7 @@ public class Builder extends Robot {
 
         else if(numSpots == spotIndex){         // generate new build spots to build at
             generateBuildSpots(direction_multiplier);
-            direction_multiplier += 3;
+            direction_multiplier += 2;
             canBuild = false;
             spotIndex = 0;      //start from the beginning of the generated spots
         }
@@ -79,11 +79,15 @@ public class Builder extends Robot {
         //generates potential build locations in all cardinal directions going outwards from home archon
         // builder can go to every one and try to build a watchtower there
 //        System.out.println("hello");
-        final Direction[] directions = Util.closeDirections(myLoc.directionTo(middle)); // build towers towards the middle of the map
+        Direction[] directions = Util.closeDirections(myLoc.directionTo(middle)); // build towers towards the middle of the map
         // TODO: need to change to the direction of enemy archons
+        MapLocation closestArchon = enemyArchonOnComms();
+        if(closestArchon != null){
+            directions = Util.closeDirections(myLoc.directionTo(closestArchon)); // build towers towards the middle of the map
 
+        }
         this.numSpots = 0;
-        for(int i=3; i< 7; i++){        // go in the first 4 best directions
+        for(int i=2; i< 7; i++){        // go in the first 4 best directions
             Direction direction = directions[i];
             MapLocation potentialBuildSpot = Util.multiplyDirection(this.archonLoc, direction, directionMultiplier);
 
@@ -115,6 +119,23 @@ public class Builder extends Robot {
         else if(rc.isActionReady()){           // the watchtower is no more if we are action ready and can't build:(
             needToRepair = false;
         }
+    }
+
+    public MapLocation enemyArchonOnComms() throws GameActionException {
+        MapLocation closestEnemy = null;
+        int closestDist = Integer.MAX_VALUE;
+        for(int i = 8; i < 12; i++){
+            int val = rc.readSharedArray(i);
+            if(val != 0 && val != comms.MAX_COMMS_VAL){
+                MapLocation enemyLoc = Util.intToMapLocation(val);
+                int enemyDist = myLoc.distanceSquaredTo(enemyLoc);
+                if(enemyDist < closestDist){
+                    closestDist = enemyDist;
+                    closestEnemy = enemyLoc;
+                }
+            }
+        }
+        return closestEnemy;
     }
 
 
