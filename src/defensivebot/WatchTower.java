@@ -19,31 +19,7 @@ public class WatchTower extends Robot {
 
     public void run() throws GameActionException {
         super.run();
-
-        if(archonIndex == -1){
-            archonIndex = comms.getClosestFriendlyArchonIndex();
-            archonLoc = Util.intToMapLocation(rc.readSharedArray(archonIndex));
-//            Logger.Log("found my archonIndex and archonLoc");
-        }
-        assert (archonLoc != null);
-
-
-        int friendlySoldiers = Util.countRobotTypes(nearby, RobotType.SOLDIER, myTeam);
-        int enemySoldiers = Util.countRobotTypes(nearby, RobotType.SOLDIER, myTeam.opponent());
-        if(enemySoldiers > friendlySoldiers + 1){ // + 1 because you count as a soldier :))
-            // RETREAT BACK TO BASE
-            Logger.Log("RETREATING");
-            nav.goTo(archonLoc);
-        }
-        else{
-            // Try to attack
-            boolean attacked = attackEnemy(nearby);
-            if(!attacked) {
-                runAttackMovement();
-            }
-        }
-
-
+        attackEnemy(nearby);
     }
 
     public boolean attackEnemy(RobotInfo[] nearby) throws GameActionException {
@@ -61,7 +37,7 @@ public class WatchTower extends Robot {
             if(myLoc.distanceSquaredTo(info.getLocation()) > myType.actionRadiusSquared){
                 continue; // Too far to attack
             }
-            int currOppTypeIndex = defensivebot.Util.getArrayIndex(priorityOrder, info.type);
+            int currOppTypeIndex = Util.getArrayIndex(priorityOrder, info.type);
             int currHealth = info.getHealth();
 
             // Find the best enemy to attack based on priority order
@@ -93,7 +69,7 @@ public class WatchTower extends Robot {
 
         if(compressedCenterOfMass != comms.MAX_COMMS_VAL){
             Logger.Log("DEFEND THE KINGDOM!!!!"); // LMFAO I LOVE THIS
-            int[] coordinates = defensivebot.Util.compressedToXAndY(compressedCenterOfMass);
+            int[] coordinates = Util.compressedToXAndY(compressedCenterOfMass);
             nav.moveTowards(new MapLocation(coordinates[0], coordinates[1]));
         }
 
@@ -127,7 +103,7 @@ public class WatchTower extends Robot {
         int bestTypeIndex = 100;
         for (int i = 0; i < nearby.length; i++){
             if(nearby[i].getTeam() != myTeam){
-                int currOppTypeIndex = defensivebot.Util.getArrayIndex(priorityOrder, nearby[i].type);
+                int currOppTypeIndex = Util.getArrayIndex(priorityOrder, nearby[i].type);
                 if(currOppTypeIndex < bestTypeIndex){
                     bestLoc = nearby[i].getLocation();
                 }
@@ -166,7 +142,7 @@ public class WatchTower extends Robot {
         int bestTypeIndex = 100;
         for (int i = 0; i < nearby.length; i++){
             if(nearby[i].getTeam() != myTeam){
-                int currOppTypeIndex = defensivebot.Util.getArrayIndex(priorityOrder, nearby[i].type);
+                int currOppTypeIndex = Util.getArrayIndex(priorityOrder, nearby[i].type);
                 if(currOppTypeIndex < bestTypeIndex){
                     bestLoc = nearby[i].getLocation();
                 }
@@ -197,7 +173,7 @@ public class WatchTower extends Robot {
         for(int i = 8; i < 12; i++){
             int val = rc.readSharedArray(i);
             if(val != 0 && val != comms.MAX_COMMS_VAL){
-                MapLocation enemyLoc = defensivebot.Util.intToMapLocation(val);
+                MapLocation enemyLoc = Util.intToMapLocation(val);
                 int enemyDist = myLoc.distanceSquaredTo(enemyLoc);
                 if(enemyDist < closestDist){
                     closestDist = enemyDist;
@@ -225,10 +201,10 @@ public class WatchTower extends Robot {
         Logger.Log("Friendly archon: " + friendlyArchons[0].toString());
         if((symmetry & 1) != 0 || symmetry == 0){
 //            Logger.Log("Symmetry 1!");
-            MapLocation[] enemyArchonLocs = defensivebot.Util.reflect(friendlyArchons, 1);
+            MapLocation[] enemyArchonLocs = Util.reflect(friendlyArchons, 1);
             for(int i = 0; i < enemyArchonLocs.length; i++){
                 if(rc.canSenseLocation(enemyArchonLocs[i])){
-                    if(!defensivebot.Util.checkRobotPresent(enemyArchonLocs[i], RobotType.ARCHON, myTeam.opponent())){
+                    if(!Util.checkRobotPresent(enemyArchonLocs[i], RobotType.ARCHON, myTeam.opponent())){
                         visited[i][0] = true;
                     }
                 }
@@ -246,10 +222,10 @@ public class WatchTower extends Robot {
         }
         if((symmetry & 2) != 0 || symmetry == 0){
 //            Logger.Log("Symmetry 2!");
-            MapLocation[] enemyArchonLocs = defensivebot.Util.reflect(friendlyArchons, 2);
+            MapLocation[] enemyArchonLocs = Util.reflect(friendlyArchons, 2);
             for(int i = 0; i < enemyArchonLocs.length; i++){
                 if(rc.canSenseLocation(enemyArchonLocs[i])){
-                    if(!defensivebot.Util.checkRobotPresent(enemyArchonLocs[i], RobotType.ARCHON, myTeam.opponent())){
+                    if(!Util.checkRobotPresent(enemyArchonLocs[i], RobotType.ARCHON, myTeam.opponent())){
                         visited[i][1] = true;
                     }
                 }
@@ -267,10 +243,10 @@ public class WatchTower extends Robot {
         }
         if((symmetry & 4) != 0 || symmetry == 0){
 //            Logger.Log("Symmetry 3!");
-            MapLocation[] enemyArchonLocs = defensivebot.Util.reflect(friendlyArchons, 3);
+            MapLocation[] enemyArchonLocs = Util.reflect(friendlyArchons, 3);
             for(int i = 0; i < enemyArchonLocs.length; i++){
                 if(rc.canSenseLocation(enemyArchonLocs[i])){
-                    if(!defensivebot.Util.checkRobotPresent(enemyArchonLocs[i], RobotType.ARCHON, myTeam.opponent())){
+                    if(!Util.checkRobotPresent(enemyArchonLocs[i], RobotType.ARCHON, myTeam.opponent())){
                         visited[i][2] = true;
                     }
                 }

@@ -40,24 +40,24 @@ public class Builder extends Robot {
         }
         assert (archonLoc != null);
 
-        if(needToRepair){        // try to repair last built archon if it's not active yet
-            repair();
-        }
+        boolean repaired = repair();
+        // TODO: Move out of the archon's way when spawned
+        if(repaired){
 
+        }
         else if(numSpots == spotIndex){         // generate new build spots to build at
             generateBuildSpots(direction_multiplier);
             direction_multiplier += 3;
             canBuild = false;
             spotIndex = 0;      //start from the beginning of the generated spots
         }
-
         else if(!canBuild){             // still travelling to a build spot
             nav.minDistToSatisfy = 3;
             nav.goTo(watchTowerBuildSpots[spotIndex]);
             canBuild = myLoc.distanceSquaredTo(watchTowerBuildSpots[spotIndex]) < 9;
         }
 
-        else if(canBuild && rc.getTeamLeadAmount(rc.getTeam()) > 500){      // time to build a tower :D
+        else if(canBuild && rc.getTeamLeadAmount(rc.getTeam()) > RobotType.WATCHTOWER.buildCostLead * 3){      // time to build a tower :D
             Direction dir = myLoc.directionTo(archonLoc);           // build in direction opposite of the home archon (closer to opposing soldiers)
             Direction[] buildDirections = nav.closeDirections(dir.opposite());
             Direction build_dir = Util.tryBuild(RobotType.WATCHTOWER, buildDirections);
@@ -69,12 +69,9 @@ public class Builder extends Robot {
             }
         }
 
-
-
     }
 
-
-
+    // Build a 3x3 spaced out watchtower fortress
     public void generateBuildSpots(int directionMultiplier) throws GameActionException{
         //generates potential build locations in all cardinal directions going outwards from home archon
         // builder can go to every one and try to build a watchtower there
@@ -97,24 +94,25 @@ public class Builder extends Robot {
     }
 
 
-    public void repair() throws GameActionException{
-//            System.out.println("yo");
-        if(rc.canRepair(lastBuiltTower)) {
-//                System.out.println("hello");
-            RobotInfo myTower = rc.senseRobotAtLocation(lastBuiltTower);
-            int max_health = myTower.getType().getMaxHealth(myTower.getLevel());
-            while(myTower.getHealth() < max_health && rc.isActionReady()) {
-//                    System.out.println(myTower.getHealth() +", " + max_health);
-                rc.repair(lastBuiltTower);
+    public boolean repair() throws GameActionException {
+        // Try repairing nearby watchtowers
+        boolean repaired = false;
+        RobotInfo[] potentialTowers = rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam);
+        for (int i = 0; i < potentialTowers.length; i++) {
+            if(potentialTowers[i].type != RobotType.WATCHTOWER){
+                continue;
             }
-            if(myTower.getHealth() >= max_health) { // watchtower is ready for battle :)
-                needToRepair = false;
+            int max_health = RobotType.WATCHTOWER.getMaxHealth(potentialTowers[i].getLevel());
+            if(potentialTowers[i].getHealth() >= max_health){
+                continue; // No need to repair this boi
+            }
+            while (potentialTowers[i].getHealth() < max_health && rc.isActionReady()) {
+                repaired = true;
+                rc.repair(potentialTowers[i].location);
+                rc.setIndicatorString("Repairing da boi");;
             }
         }
-
-        else if(rc.isActionReady()){           // the watchtower is no more if we are action ready and can't build:(
-            needToRepair = false;
-        }
+        return repaired;
     }
 
 
