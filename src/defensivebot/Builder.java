@@ -83,7 +83,7 @@ public class Builder extends Robot {
         // TODO: need to change to the direction of enemy archons
 
         this.numSpots = 0;
-        for(int i=0; i< 4; i++){        // go in the first 4 best directions
+        for(int i=3; i< 7; i++){        // go in the first 4 best directions
             Direction direction = directions[i];
             MapLocation potentialBuildSpot = Util.multiplyDirection(this.archonLoc, direction, directionMultiplier);
 
@@ -116,5 +116,7 @@ public class Builder extends Robot {
             needToRepair = false;
         }
     }
+
+
 
 }

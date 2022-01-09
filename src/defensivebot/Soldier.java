@@ -49,6 +49,10 @@ public class Soldier extends Robot {
 
         // Attacking (same for both offensive and defensive soldiers)
         // 0 = no enemy to attack, 1 = successfully attacked enemy, 2 = NEED TO RETREAT
+//        double friendlySoldiersDamage = calculateNearbySoldiersDPS(nearby, myTeam);
+//        double enemySoldiersDamage = calculateNearbySoldiersDPS(nearby, myTeam.opponent());
+//        double friendlySoldiersHealth = calculateNearbySoldiersHealth(nearby, myTeam);
+//        double enemySoldiersHealth = calculateNearbySoldiersHealth(nearby, myTeam.opponent());
         // If your bois are attacking an enemy more than the enemy is attacking ur bois, then go for the attack
         if(!goForAttack(nearby)){ // Check if you should go for the attack
             // RETREAT BACKWARDS
@@ -115,6 +119,40 @@ public class Soldier extends Robot {
 //        Logger.Log("END: " + Clock.getBytecodesLeft());
         return ourBestAttack >= enemyAttackOnMe;
     }
+
+//    public double calculateNearbySoldiersDPS(RobotInfo[] nearby, Team team) throws GameActionException {
+//        double damage = 0.0;
+//        for(int i = 0; i < nearby.length; i++){
+//            if(nearby[i].getType() != RobotType.SOLDIER || nearby[i].getTeam() != team){
+//                continue;
+//            }
+//            assert(rc.canSenseLocation(nearby[i].getLocation()));
+//            double cooldown = 10.0 + rc.senseRubble(nearby[i].getLocation());
+//            cooldown /= 10;
+//            damage += (double)RobotType.SOLDIER.damage / cooldown;
+//        }
+//        if(team == myTeam){
+//            double cooldown = 10.0 + rc.senseRubble(myLoc);
+//            cooldown /= 10;
+//            damage += (double)RobotType.SOLDIER.damage / cooldown;
+//        }
+//        return damage;
+//    }
+//
+//    public double calculateNearbySoldiersHealth(RobotInfo[] nearby, Team team) throws GameActionException {
+//        double health = 0.0;
+//        for(int i = 0; i < nearby.length; i++){
+//            if(nearby[i].getType() != RobotType.SOLDIER || nearby[i].getTeam() != team){
+//                continue;
+//            }
+//            assert(rc.canSenseLocation(nearby[i].getLocation()));
+//            health += nearby[i].getHealth();
+//        }
+//        if(team == myTeam){
+//            health += rc.getHealth();
+//        }
+//        return health;
+//    }
 
     public MapLocation calculateEnemySoldierCOM(RobotInfo[] nearby) throws GameActionException {
         int count = 0;
@@ -302,7 +340,9 @@ public class Soldier extends Robot {
         int symmetry = rc.readSharedArray(comms.SYMMETRY_IDX); // Index for symmetry in shared array
         // TODO: FIGURE THIS OUT
         Logger.Log("Symmetry: " + symmetry);
-//        symmetry = 7;
+        if(symmetry == 0){
+            symmetry = 7; // Smth messed up XD
+        }
 
         MapLocation[] potentialScoutingLocs = new MapLocation[12];
         int potentialScoutingCount = 0;
@@ -313,10 +353,10 @@ public class Soldier extends Robot {
             int reflectionType = j + 1;
             int binVal = binVals[j];
             if((symmetry & binVal) != 0){
-                MapLocation[] enemyArchonLocs = defensivebotbase.Util.reflect(friendlyArchons, reflectionType);
+                MapLocation[] enemyArchonLocs = Util.reflect(friendlyArchons, reflectionType);
                 for(int i = 0; i < enemyArchonLocs.length; i++){
                     if(rc.canSenseLocation(enemyArchonLocs[i])){
-                        if(!defensivebotbase.Util.checkRobotPresent(enemyArchonLocs[i], RobotType.ARCHON, myTeam.opponent())){
+                        if(!Util.checkRobotPresent(enemyArchonLocs[i], RobotType.ARCHON, myTeam.opponent())){
                             visited[i][j] = true;
                         }
                     }
@@ -353,4 +393,3 @@ public class Soldier extends Robot {
     }
 
 }
-
