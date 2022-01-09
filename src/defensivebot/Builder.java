@@ -15,6 +15,7 @@ public class Builder extends Robot {
     int spotIndex = 0;  // index value used to mark which build spot we're navigating to
     boolean canBuild = false;
     int direction_multiplier = rc.getRoundNum()/100*4;
+    MapLocation laboratoryBuildLocation = null;
 
     int mid_x = rc.getMapWidth()/2;
     int mid_y = rc.getMapHeight()/2;
@@ -35,6 +36,32 @@ public class Builder extends Robot {
             archonLoc = Util.intToMapLocation(rc.readSharedArray(archonIndex));
         }
         assert (archonLoc != null);
+
+
+
+        // CODE TO BUILD LABORATORIES,
+        // TODO: need to use comms to only have a few builders try to build a laboratory
+//        // if we are near lab build location
+//        if(laboratoryBuildLocation != null && myLoc.distanceSquaredTo(laboratoryBuildLocation)<4){
+//            Direction dir = myLoc.directionTo(archonLoc);           // build in direction opposite of the home archon (closer to opposing soldiers)
+//            Direction[] buildDirections = nav.closeDirections(dir.opposite());
+//            Direction build_dir = Util.tryBuild(RobotType.LABORATORY, buildDirections);
+//            if(build_dir != Direction.CENTER) {      // yay we built a laboratory :D
+//                laboratoryBuildLocation = null;
+//
+//            }
+//        }
+//
+//        // all existing builders try building a laboratory every 100 rounds if we have enough leead
+//        //TODO: don't move all existing builders, only get one or two of alive builders
+//        else if((laboratoryBuildLocation != null || rc.getRoundNum()%100 == 0 && rc.getTeamLeadAmount(rc.getTeam()) > RobotType.LABORATORY.buildCostLead*3)){
+//            if(laboratoryBuildLocation == null) {
+//                laboratoryBuildLocation = Util.getClosestCorner(archonLoc);
+//            }
+//            nav.minDistToSatisfy = 9;
+//            nav.goTo(laboratoryBuildLocation);
+//
+//        }
 
         boolean repaired = repair();
         // TODO: Move out of the archon's way when spawned
@@ -99,10 +126,10 @@ public class Builder extends Robot {
         boolean repaired = false;
         RobotInfo[] potentialTowers = rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam);
         for (int i = 0; i < potentialTowers.length; i++) {
-            if(potentialTowers[i].type != RobotType.WATCHTOWER){
+            if((potentialTowers[i].type != RobotType.WATCHTOWER) &&  (potentialTowers[i].type != RobotType.LABORATORY)){
                 continue;
             }
-            int max_health = RobotType.WATCHTOWER.getMaxHealth(potentialTowers[i].getLevel());
+            int max_health = potentialTowers[i].getType().getMaxHealth(potentialTowers[i].getLevel());
             if(potentialTowers[i].getHealth() >= max_health){
                 continue; // No need to repair this boi
             }
