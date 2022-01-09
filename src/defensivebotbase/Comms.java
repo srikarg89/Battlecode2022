@@ -1,4 +1,4 @@
-package defensivebot;
+package defensivebotbase;
 
 import battlecode.common.*;
 
@@ -226,9 +226,9 @@ public class Comms {
         int n = 1;
         for(RobotInfo info: nearbyRobots){
             MapLocation loc = info.getLocation();
-           x_avg += loc.x; y_avg += loc.y;
-           if(n >= 15) break;   // so we don't use too much bytecode
-           n+= 1;
+            x_avg += loc.x; y_avg += loc.y;
+            if(n >= 15) break;   // so we don't use too much bytecode
+            n+= 1;
         }
         x_avg /= n; y_avg /= n;
         if(x_avg == 0 && y_avg == 0) {
