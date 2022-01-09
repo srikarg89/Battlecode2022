@@ -64,10 +64,10 @@ public class Archon extends Robot {
 //        if(rc.getRoundNum()%10 < 7) spawnUniformly(RobotType.MINER, myMiners);
 //        else spawnUniformly(RobotType.BUILDER, myBuilders);
 
-        if(lead > 1000 && builderCount*30 < rc.getRoundNum()) {
+        if(lead > 1500 && builderCount*30 < rc.getRoundNum() && builderCount < 4) {
             spawnUniformly(RobotType.BUILDER, myBuilders);
         }
-        else if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
+        else if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost * numFriendlyArchons || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
             spawnUniformly(RobotType.SOLDIER, mySoldiers);
         }
         else if(rc.getRoundNum() < 30){

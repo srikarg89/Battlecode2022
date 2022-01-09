@@ -6,8 +6,8 @@ public class Logger {
 
     static boolean limitToIDs = false;
     static int[] allowedIDs = {-1};
-    static boolean limitToTypes = false;
-    static RobotType[] allowedTypes = {RobotType.SOLDIER};
+    static boolean limitToTypes = true;
+    static RobotType[] allowedTypes = {RobotType.BUILDER};
 
     static RobotType myType;
     static int myID;
