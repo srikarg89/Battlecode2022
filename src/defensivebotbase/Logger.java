@@ -5,10 +5,9 @@ import battlecode.common.RobotType;
 public class Logger {
 
     static boolean limitToIDs = false;
-    //    static int[] allowedIDs = {10025, 11726};
-    static int[] allowedIDs = {11229};
-    static boolean limitToTypes = true;
-    static RobotType[] allowedTypes = {RobotType.SOLDIER};
+    static int[] allowedIDs = {-1};
+    static boolean limitToTypes = false;
+    static RobotType[] allowedTypes = {RobotType.MINER};
 
     static RobotType myType;
     static int myID;
@@ -20,7 +19,11 @@ public class Logger {
             }
         }
         if(limitToTypes){
-            if(Util.getArrayIndex(allowedTypes, myType) != -1){
+//            if(Util.getArrayIndex(allowedTypes, myType) != -1){
+//            if(myType == RobotType.MINER){
+//                System.out.println(str);
+//            }
+            if(myType == RobotType.SOLDIER && myID == 12887){
                 System.out.println(str);
             }
         }

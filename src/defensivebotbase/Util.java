@@ -35,7 +35,7 @@ public class Util {
     }
 
     static boolean tryMove(Direction[] dirs) throws GameActionException {
-        for(int i = 0; i < 8; i++){
+        for(int i = 0; i < dirs.length; i++){
             if(Util.tryMove(dirs[i])){
                 return true;
             }
@@ -229,6 +229,16 @@ public class Util {
         return count;
     }
 
+    public static int countRobotTypes(RobotInfo[] infos, RobotType type){
+        int count = 0;
+        for(int i = 0; i < infos.length; i++){
+            if(infos[i].type == type){
+                count++;
+            }
+        }
+        return count;
+    }
+
     public static int countRobotTypesWithinLocation(RobotInfo[] infos, RobotType typ, Team team, MapLocation center, int radiusSquared){
         int count = 0;
         for(int i = 0; i < infos.length; i++){
@@ -272,6 +282,32 @@ public class Util {
         return lowestLoc;
     }
 
+    public int directionToIndex(Direction dir){
+        switch(dir){
+            case NORTH:
+                return 0;
+            case NORTHEAST:
+                return 1;
+            case EAST:
+                return 2;
+            case SOUTHEAST:
+                return 3;
+            case SOUTH:
+                return 4;
+            case SOUTHWEST:
+                return 5;
+            case WEST:
+                return 6;
+            case NORTHWEST:
+                return 7;
+            default:
+                return -1;
+        }
+    }
+
+    public static Direction[] getDirectionsGoingTowards(Direction dir){
+        return new Direction[]{dir, dir.rotateLeft(), dir.rotateRight()};
+    }
 
 
 }

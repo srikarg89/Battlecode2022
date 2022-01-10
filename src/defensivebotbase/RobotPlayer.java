@@ -29,7 +29,6 @@ public strictfp class RobotPlayer {
     public static void run(RobotController rc) throws GameActionException {
 
         // You can also use indicators to save debug notes in replays.
-        rc.setIndicatorString("Hello world!");
         Robot robot;
 
         switch (rc.getType()) {
@@ -52,15 +51,30 @@ public strictfp class RobotPlayer {
             // Try/catch blocks stop unhandled exceptions, which cause your robot to explode.
             try {
                 robot.run();
+                if(!checkBytecode(robot, rc)){
+//                    rc.resign();
+                }
             } catch (GameActionException e) {
+                Logger.Log("CAUGHT GAMEACTIONEXCEPTION");
                 e.printStackTrace();
-                rc.resign();
+//                rc.resign();
             } catch (Exception e) {
+                Logger.Log("CAUGHT EXCEPTION");
                 e.printStackTrace();
-                rc.resign();
+//                rc.resign();
             } finally {
                 Clock.yield();
             }
         }
+    }
+
+    public static boolean checkBytecode(Robot robot, RobotController rc) throws GameActionException {
+        if(robot.roundNum != rc.getRoundNum()){
+            System.out.println("Robot round num: " + robot.roundNum);
+            System.out.println("Actual round num: " + rc.getRoundNum());
+            System.out.println("BYTECODE ERROR REEEEEEEEEEEEEEEEEEEEEEEE");
+            return false;
+        }
+        return true;
     }
 }

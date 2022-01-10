@@ -120,7 +120,7 @@ public class Comms {
         }
 
         // Search for new archons
-        RobotInfo[] info = rc.senseNearbyRobots();
+        RobotInfo[] info = rc.senseNearbyRobots(rc.getLocation(), robot.myType.visionRadiusSquared, robot.myTeam.opponent());
         for(int i = 0; i < info.length; i++){
             if(info[i].getType() == RobotType.ARCHON && info[i].getTeam() == robot.myTeam.opponent()){
                 int id = info[i].getID();
@@ -268,6 +268,7 @@ public class Comms {
     public MapLocation getCurrAttackLoc() throws GameActionException {
         int currThreatLevel = rc.readSharedArray(BIGGEST_THREAT_LEVEL_IDX);
         int currThreatLocInt = rc.readSharedArray(BIGGEST_THREAT_LOC_IDX);
+        Logger.Log("Curr Threat level: " + currThreatLevel);
         Logger.Log("Curr Threat Loc: " + currThreatLocInt);
         if(currThreatLocInt != 0 && currThreatLocInt != MAX_COMMS_VAL){
             return Util.intToMapLocation(currThreatLocInt);
@@ -277,9 +278,10 @@ public class Comms {
         }
     }
 
-    public void updateCurrAttackLoc() throws GameActionException {
+    public void updateCurrAttackLoc(MapLocation enemyCOM) throws GameActionException {
         int threatLevel = 0;
-        MapLocation threatLoc = Util.calculateEnemySoldierCOM(robot.nearby);
+        MapLocation threatLoc = enemyCOM;
+        Logger.Log("After calculating COM: " + Clock.getBytecodesLeft());
         for(int i = 0; i < robot.nearby.length; i++){
             RobotInfo info = robot.nearby[i];
             if(info.getTeam() == robot.opponent){
@@ -292,6 +294,7 @@ public class Comms {
                 }
             }
         }
+        Logger.Log("After calculating threat level: " + Clock.getBytecodesLeft());
         int currThreatLevel = rc.readSharedArray(BIGGEST_THREAT_LEVEL_IDX);
         int currThreatLocInt = rc.readSharedArray(BIGGEST_THREAT_LOC_IDX);
         MapLocation currThreatLoc = null;
@@ -306,7 +309,7 @@ public class Comms {
             }
             writeSharedArray(BIGGEST_THREAT_LEVEL_IDX, threatLevel); // Call for reinforcements
             writeSharedArray(BIGGEST_THREAT_LOC_IDX, Util.mapLocationToInt(threatLoc)); // Call for reinforcements
-            System.out.println("Writing: " + threatLevel + ", " + Util.mapLocationToInt(threatLoc));
+            Logger.Log("Writing: " + threatLevel + ", " + Util.mapLocationToInt(threatLoc));
         }
         else if(currThreatLoc != null){
             if(currThreatLoc.distanceSquaredTo(threatLoc) < 4){ // If you're near the current threat loc, update its value
@@ -317,13 +320,13 @@ public class Comms {
                 }
                 writeSharedArray(BIGGEST_THREAT_LEVEL_IDX, threatLevel); // Call for reinforcements
                 writeSharedArray(BIGGEST_THREAT_LOC_IDX, threatLocInt); // Call for reinforcements
-                System.out.println("Writing: " + threatLevel + ", " + threatLocInt);
+                Logger.Log("Writing: " + threatLevel + ", " + threatLocInt);
             }
             else{ // New location, check if its more threatened than the old loc
                 if(threatLevel > THREAT_THRESHOLD && threatLevel > currThreatLevel){ // Update threshold value
                     writeSharedArray(BIGGEST_THREAT_LEVEL_IDX, threatLevel); // Call for reinforcements
                     writeSharedArray(BIGGEST_THREAT_LOC_IDX, Util.mapLocationToInt(threatLoc)); // Call for reinforcements
-                    System.out.println("Writing: " + threatLevel + ", " + Util.mapLocationToInt(threatLoc));
+                    Logger.Log("Writing: " + threatLevel + ", " + Util.mapLocationToInt(threatLoc));
                 }
             }
         }

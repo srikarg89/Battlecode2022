@@ -65,6 +65,7 @@ public class Archon extends Robot {
 //        else spawnUniformly(RobotType.BUILDER, myBuilders);
 
         if(lead > 1500 && builderCount*30 < rc.getRoundNum() && builderCount < 4) {
+//        if(false){
             spawnUniformly(RobotType.BUILDER, myBuilders);
         }
         else if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost * numFriendlyArchons || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD

@@ -31,20 +31,22 @@ public class Soldier extends Robot {
 
     public void run() throws GameActionException {
         super.run();
+        Logger.Log("Start of soldier run method: " + Clock.getBytecodesLeft());
+        Logger.Log("Current Location: " + rc.getLocation());
 //        Logger.Log("lead amount: " + rc.getTeamLeadAmount(this.myTeam));
-        //lifted from miner code
-
         if(archonIndex == -1){
             archonIndex = comms.getClosestFriendlyArchonIndex();
             archonLoc = Util.intToMapLocation(rc.readSharedArray(archonIndex));
-//            Logger.Log("found my archonIndex and archonLoc");
         }
         assert (archonLoc != null);
-        comms.updateCurrAttackLoc();
+        MapLocation enemyCOM = Util.calculateEnemySoldierCOM(rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent()));
+        comms.updateCurrAttackLoc(enemyCOM);
 
         // If your bois are attacking an enemy more than the enemy is attacking ur bois, then go for the attack
-        MapLocation enemyCOM = Util.calculateEnemySoldierCOM(nearby);
-        if(!goForAttack(nearby, enemyCOM)){ // Check if you should go for the attack
+        Logger.Log("Before checking attack: " + Clock.getBytecodesLeft());
+        boolean shouldAttack = goForAttack(nearby, enemyCOM); // 2300 bytecode for 31 nearby
+        Logger.Log("After checking attack: " + Clock.getBytecodesLeft());
+        if(!shouldAttack){ // Check if you should go for the attack
             // RETREAT BACKWARDS
 //            Logger.Log("RETREATING");
             // Run away from soldiers (move in opposite direction of soldier COM)
@@ -52,9 +54,15 @@ public class Soldier extends Robot {
             if(enemyCOM.equals(myLoc)){
                 targetDir = Direction.NORTH;
             }
-            nav.goTo(myLoc.add(targetDir).add(targetDir).add(targetDir)); // Move in that direction
-            rc.setIndicatorString("Retreating! COM: " + enemyCOM.toString() + ", Moving: " + targetDir.toString());
-//            nav.goTo(archonLoc);
+            boolean retreated = nav.goTo(myLoc.add(targetDir).add(targetDir).add(targetDir)); // Move in that direction
+            if(retreated){
+                rc.setIndicatorString("Retreating! COM: " + enemyCOM.toString() + ", Moving: " + targetDir.toString());
+                return;
+            }
+            else{
+                rc.setIndicatorString("Can't retreat, mighgt as well try attacking in");
+                attackEnemy(nearby);
+            }
         }
         else{
             // Try to attack
@@ -111,7 +119,7 @@ public class Soldier extends Robot {
         return shouldRetreat;
     }
 
-    public boolean goForAttack(RobotInfo[] nearby, MapLocation enemyCOM){
+    public boolean goForAttack(RobotInfo[] nearby, MapLocation enemyCOM){ // TODO: Maybe only check # of attackers on the robot closest to you?
         // If friendly that is closer to enemy is retreating, maybe u shld too!
 //        if(checkFriendlyRetreating(nearby, enemyCOM)){
 //            return false;
@@ -119,41 +127,46 @@ public class Soldier extends Robot {
 
         int ourBestAttack = 0;
         int enemyBestAttack = 0;
-//        Logger.Log("Start: " + Clock.getBytecodesLeft());
-//        Logger.Log("Num nearby: " + nearby.length);
+        int enemyAttackOnMe = Util.countRobotTypes(rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam.opponent()), RobotType.SOLDIER);
+//        int enemyAttackOnMe = Util.countRobotTypesWithinLocation(nearby, RobotType.SOLDIER, myTeam.opponent(), myLoc, RobotType.SOLDIER.actionRadiusSquared);
+        Logger.Log("Before start: " + Clock.getBytecodesLeft());
+        RobotInfo[] totalFriendlies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam);
+        if(totalFriendlies.length < enemyAttackOnMe){ // Shortcut to save bytecode in certain scenarios
+            return false;
+        }
+        Logger.Log("Start: " + Clock.getBytecodesLeft());
+        Logger.Log("Num nearby: " + nearby.length);
         for(int i = 0; i < nearby.length; i++){
             if(nearby[i].getType() != RobotType.SOLDIER){
                 continue;
             }
             if(nearby[i].getTeam() == myTeam.opponent()){
 //                int temp = Util.countRobotTypesWithinLocation(nearby, RobotType.SOLDIER, myTeam, nearby[i].getLocation(), RobotType.SOLDIER.actionRadiusSquared);
-                int temp = 0;
+//                int temp = 0;
                 RobotInfo[] nearbyFriendlies = rc.senseNearbyRobots(nearby[i].getLocation(), RobotType.SOLDIER.actionRadiusSquared, myTeam);
-                for(int j = nearbyFriendlies.length; j-- > 0; ){
-                    if(nearbyFriendlies[j].type == RobotType.SOLDIER){
-                        temp++;
-                    }
-                }
+                int temp = nearbyFriendlies.length; // Assume all friendlies are soldiers?
+//                for(int j = nearby.length; j-- > 0; ){
+//                    if(nearby[j].type == RobotType.SOLDIER && nearby[j].team == myTeam && nearby[j].location.distanceSquaredTo(nearby[i].location) <= nearby[j].type.actionRadiusSquared){
+//                        temp++;
+//                    }
+//                }
                 if(myLoc.distanceSquaredTo(nearby[i].getLocation()) <= RobotType.SOLDIER.actionRadiusSquared){
                     temp++; // Factor in the fact that you can also attack that enemy robot
                 }
                 ourBestAttack = Math.max(ourBestAttack, temp); // Find your best attack on the enemy
 //                Logger.Log("Temp: " + Clock.getBytecodesLeft());
+                if(ourBestAttack >= enemyAttackOnMe){
+                    return true;
+                }
             }
 //            else{
 //                int temp = Util.countRobotTypesWithinLocation(nearby, RobotType.SOLDIER, myTeam.opponent(), nearby[i].getLocation(), RobotType.SOLDIER.actionRadiusSquared);
 //                enemyBestAttack = Math.max(enemyBestAttack, temp); // Find the enemy's best attack on you
 //            }
         }
+        Logger.Log("END: " + Clock.getBytecodesLeft());
         // Factor in yourself
-        int enemyAttackOnMe = Util.countRobotTypesWithinLocation(nearby, RobotType.SOLDIER, myTeam.opponent(), myLoc, RobotType.SOLDIER.actionRadiusSquared);
 //        enemyBestAttack = Math.max(enemyBestAttack, enemyAttackOnMe);
-
-//        return ourBestAttack >= enemyBestAttack;
-//        Logger.Log("END: " + Clock.getBytecodesLeft());
-        if(enemyAttackOnMe > ourBestAttack){
-            return false;
-        }
         return ourBestAttack >= enemyAttackOnMe;
     }
 
@@ -200,18 +213,24 @@ public class Soldier extends Robot {
             targetLevel = 0; // Reset target
         }
 //        Logger.Log("Target level: " + targetLevel);
-        resetTarget(); // Find best target at current round
+        Logger.Log("Before resetting target: " + Clock.getBytecodesLeft());
+        resetTarget(); // Find best target at current round. 500 bytecode
+        Logger.Log("After resetting target: " + Clock.getBytecodesLeft());
         assert(currentTarget != null);
-//        nav.minDistToSatisfy = myType.actionRadiusSquared;
 //        Logger.Log("Current target: " + currentTarget.toString());
 //        if(rc.canSenseLocation(currentTarget) && rc.isLocationOccupied(currentTarget) && rc.senseRobotAtLocation(currentTarget).team != myTeam){
         if(targetLevel == 5){ // Bugnav if going for visible enemy
 //            nav.bug0nav(currentTarget);
 //            nav.goTo(currentTarget);
 //            nav.moveTowardsSafe(currentTarget); // TODO: If you have overwhelming forces, then just move in that direction anyways
-            moveForwardSafely(currentTarget);
+            Logger.Log("Bytecode before: " + Clock.getBytecodesLeft());
+            moveForwardSafely(currentTarget); // 1k bytecode for 24 nearby
             rc.setIndicatorLine(myLoc, currentTarget, 255, 0, 0);
-            rc.setIndicatorString("Bugnav to enemy at: " + currentTarget.toString());
+            rc.setIndicatorString("Safenav to enemy at: " + currentTarget.toString());
+            if(Util.getArrayIndex(Logger.allowedIDs, rc.getID()) != -1){
+                rc.setIndicatorLine(myLoc, archonLoc, 0, 0, 255);
+            }
+            Logger.Log("Bytecode after: " + Clock.getBytecodesLeft());
         }
         else{ // Fuzzy nav if going to general area
             nav.goTo(currentTarget);
@@ -224,6 +243,7 @@ public class Soldier extends Robot {
     public void moveForwardSafely(MapLocation attackTarget) throws GameActionException {
         double friendlyDPS = 0.0;
         double enemyDPS = 0.0;
+        Logger.Log("Nearby length: " + nearby.length);
         for(int i = 0; i < nearby.length; i++){
             RobotInfo info = nearby[i];
             if(info.type != RobotType.SOLDIER || info.type != RobotType.WATCHTOWER){
@@ -237,6 +257,7 @@ public class Soldier extends Robot {
             else{
                 enemyDPS += dps;
             }
+            Logger.Log("Temp: " + Clock.getBytecodesLeft());
         }
 
         int lowestRubble = Integer.MAX_VALUE;
@@ -271,36 +292,46 @@ public class Soldier extends Robot {
 
     public void resetTarget() throws GameActionException {
         // Search for enemy on comms
+        Logger.Log("Current target level: " + targetLevel);
         MapLocation tempLoc = targetNearbyEnemy();
         if(tempLoc != null){
             currentTarget = tempLoc;
             targetLevel = 5;
             Logger.Log("New current target: " + currentTarget.toString() + ", found cuz i can sense the mans");
         }
+        else{
+            targetLevel = 0; // Enemy is no longer present
+        }
         if(targetLevel >= 5){
+            return;
+        }
+        // Check if the squad is currently attacking anyone
+        tempLoc = comms.getCurrAttackLoc(); // TODO: Let archon updateCurrAttackLoc so that soldiers will go back to help defend archon
+        if(tempLoc != null){
+            currentTarget = tempLoc;
+            targetLevel = 4;
+            Logger.Log("New current target: " + currentTarget.toString() + ", using comms attack loc");
+        }
+        else{
+            targetLevel = 0; // Squad is no longer there
+        }
+        if(targetLevel >= 4){
             return;
         }
         tempLoc = enemyArchonOnComms();
         if(tempLoc != null){
             currentTarget = tempLoc;
             enemyConfirmed = true;
-            targetLevel = 4;
+            targetLevel = 3;
             Logger.Log("New current target: " + currentTarget.toString() + ", found archon via comms");
         }
-        if(targetLevel >= 4){
-            return;
-        }
-        enemyConfirmed = false;
-        // Check if the squad is currently attacking anyone
-        tempLoc = comms.getCurrAttackLoc();
-        if(tempLoc != null){
-            currentTarget = tempLoc;
-            targetLevel = 3;
-            Logger.Log("New current target: " + currentTarget.toString() + ", using comms attack loc");
+        else{
+            targetLevel = 0; // Archon is no longer there
         }
         if(targetLevel >= 2){
             return;
         }
+        enemyConfirmed = false;
         // Scout for enemy based on symmetry
         tempLoc = scoutForEnemyArchons();
         if(tempLoc != null){
@@ -358,7 +389,6 @@ public class Soldier extends Robot {
 
         // Otherwise search for one based on symmetry
         int symmetry = rc.readSharedArray(comms.SYMMETRY_IDX); // Index for symmetry in shared array
-        // TODO: FIGURE THIS OUT
         Logger.Log("Symmetry: " + symmetry);
         if(symmetry == 0){
             symmetry = 7; // Smth messed up XD
