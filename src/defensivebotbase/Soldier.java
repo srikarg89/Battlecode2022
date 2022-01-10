@@ -9,10 +9,7 @@ public class Soldier extends Robot {
     // Proportion of soldiers that are defensive (offensive will go to enemy, defensive will stay close to spawning archon)
     // might be smart to have a few created for each archon in the beginning of each game
 
-    // allow us to have different types of soldiers with different movement behaviour
-    String type = "offensive"; // defensive, scouting
     Direction[] shuffled = Util.shuffleArr(Util.directions);
-
 
     //list defining what we should destroy first
     RobotType[] priorityOrder = {RobotType.SAGE, RobotType.SOLDIER, RobotType.ARCHON, RobotType.WATCHTOWER, RobotType.MINER,
@@ -23,16 +20,13 @@ public class Soldier extends Robot {
 
     // Defending soldier variables
     boolean circleCW = true;
+    int previousFriendlies = 0;
+    int[] previousFriendlyIDs = new int[50];
+    int[] previousFriendlyLocs = new int[50];
+    int targetLevel = 0;
 
     public Soldier(RobotController rc) throws GameActionException {
         super(rc);
-//        if(rc.getID() % 2 == 0){
-        if(false){
-            this.type = "defensive";
-        }
-        else{
-            this.type = "offensive";
-        }
     }
 
     public void run() throws GameActionException {
@@ -46,19 +40,14 @@ public class Soldier extends Robot {
 //            Logger.Log("found my archonIndex and archonLoc");
         }
         assert (archonLoc != null);
+        comms.updateCurrAttackLoc();
 
-        // Attacking (same for both offensive and defensive soldiers)
-        // 0 = no enemy to attack, 1 = successfully attacked enemy, 2 = NEED TO RETREAT
-//        double friendlySoldiersDamage = calculateNearbySoldiersDPS(nearby, myTeam);
-//        double enemySoldiersDamage = calculateNearbySoldiersDPS(nearby, myTeam.opponent());
-//        double friendlySoldiersHealth = calculateNearbySoldiersHealth(nearby, myTeam);
-//        double enemySoldiersHealth = calculateNearbySoldiersHealth(nearby, myTeam.opponent());
         // If your bois are attacking an enemy more than the enemy is attacking ur bois, then go for the attack
-        if(!goForAttack(nearby)){ // Check if you should go for the attack
+        MapLocation enemyCOM = Util.calculateEnemySoldierCOM(nearby);
+        if(!goForAttack(nearby, enemyCOM)){ // Check if you should go for the attack
             // RETREAT BACKWARDS
 //            Logger.Log("RETREATING");
             // Run away from soldiers (move in opposite direction of soldier COM)
-            MapLocation enemyCOM = calculateEnemySoldierCOM(nearby);
             Direction targetDir = myLoc.directionTo(enemyCOM).opposite(); // Find direction opposite of enemy COM
             if(enemyCOM.equals(myLoc)){
                 targetDir = Direction.NORTH;
@@ -72,17 +61,62 @@ public class Soldier extends Robot {
             boolean attacked = attackEnemy(nearby);
             // Movement
             if(!attacked) {
-                if (this.type == "defensive") {
-                    runDefensiveMovement();
-                } else {
-                    runAttackMovement();
-                }
+                runAttackMovement();
             }
         }
 
     }
 
-    public boolean goForAttack(RobotInfo[] nearby){
+    public boolean checkFriendlyRetreating(RobotInfo[] nearby, MapLocation enemyCOM){
+        Logger.Log("-----------------------------------------------------");
+        Logger.Log("Cringe: " + Clock.getBytecodesLeft());
+        boolean shouldRetreat = false;
+        RobotInfo[] friendlies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam);
+        Logger.Log("Count: " + nearby.length + ", vs: " + friendlies.length);
+        int currFriendlies = 0;
+        int[] currFriendlyIDs = new int[50];
+        int[] currFriendlyLocs = new int[50];
+        for(int i = 0; i < friendlies.length; i++){
+            if(friendlies[i].team == myTeam && friendlies[i].type == RobotType.SOLDIER){
+                int id = friendlies[i].getID();
+                int index = -1;
+                for(int j = 0; j < previousFriendlies; j++){
+                    if(previousFriendlyIDs[j] == id){
+                        index = j;
+                        break;
+                    }
+                }
+                int locInt = Util.mapLocationToInt(friendlies[i].getLocation());
+                if(index != -1){
+                    int prevLocInt = previousFriendlyLocs[index];
+                    MapLocation prevLoc = Util.intToMapLocation(prevLocInt);
+                    MapLocation currLoc = friendlies[i].getLocation();
+                    // If he's closer to the enemy and he's retreating, you should retreat too
+                    if(currLoc.distanceSquaredTo(enemyCOM) < myLoc.distanceSquaredTo(enemyCOM) && currLoc.distanceSquaredTo(enemyCOM) > prevLoc.distanceSquaredTo(enemyCOM)){
+                        shouldRetreat = true;
+                    }
+                }
+                Logger.Log("Test: " + Clock.getBytecodesLeft());
+                currFriendlyIDs[currFriendlies] = id;
+                currFriendlyLocs[currFriendlies] = locInt;
+                Logger.Log("Calculated: " + Clock.getBytecodesLeft());
+                currFriendlies++;
+            }
+            else{
+                Logger.Log("Not calculated: " + Clock.getBytecodesLeft());
+            }
+        }
+        previousFriendlyIDs = currFriendlyIDs;
+        previousFriendlyLocs = currFriendlyLocs;
+        return shouldRetreat;
+    }
+
+    public boolean goForAttack(RobotInfo[] nearby, MapLocation enemyCOM){
+        // If friendly that is closer to enemy is retreating, maybe u shld too!
+//        if(checkFriendlyRetreating(nearby, enemyCOM)){
+//            return false;
+//        }
+
         int ourBestAttack = 0;
         int enemyBestAttack = 0;
 //        Logger.Log("Start: " + Clock.getBytecodesLeft());
@@ -117,59 +151,10 @@ public class Soldier extends Robot {
 
 //        return ourBestAttack >= enemyBestAttack;
 //        Logger.Log("END: " + Clock.getBytecodesLeft());
+        if(enemyAttackOnMe > ourBestAttack){
+            return false;
+        }
         return ourBestAttack >= enemyAttackOnMe;
-    }
-
-//    public double calculateNearbySoldiersDPS(RobotInfo[] nearby, Team team) throws GameActionException {
-//        double damage = 0.0;
-//        for(int i = 0; i < nearby.length; i++){
-//            if(nearby[i].getType() != RobotType.SOLDIER || nearby[i].getTeam() != team){
-//                continue;
-//            }
-//            assert(rc.canSenseLocation(nearby[i].getLocation()));
-//            double cooldown = 10.0 + rc.senseRubble(nearby[i].getLocation());
-//            cooldown /= 10;
-//            damage += (double)RobotType.SOLDIER.damage / cooldown;
-//        }
-//        if(team == myTeam){
-//            double cooldown = 10.0 + rc.senseRubble(myLoc);
-//            cooldown /= 10;
-//            damage += (double)RobotType.SOLDIER.damage / cooldown;
-//        }
-//        return damage;
-//    }
-//
-//    public double calculateNearbySoldiersHealth(RobotInfo[] nearby, Team team) throws GameActionException {
-//        double health = 0.0;
-//        for(int i = 0; i < nearby.length; i++){
-//            if(nearby[i].getType() != RobotType.SOLDIER || nearby[i].getTeam() != team){
-//                continue;
-//            }
-//            assert(rc.canSenseLocation(nearby[i].getLocation()));
-//            health += nearby[i].getHealth();
-//        }
-//        if(team == myTeam){
-//            health += rc.getHealth();
-//        }
-//        return health;
-//    }
-
-    public MapLocation calculateEnemySoldierCOM(RobotInfo[] nearby) throws GameActionException {
-        int count = 0;
-        int avgX = 0;
-        int avgY = 0;
-        for(int i = 0; i < nearby.length; i++){
-            if(nearby[i].getType() != RobotType.SOLDIER || nearby[i].getTeam() != myTeam.opponent()){
-                continue;
-            }
-            avgX += nearby[i].getLocation().x;
-            avgY += nearby[i].getLocation().y;
-            count++;
-        }
-        if(count == 0){
-            return myLoc;
-        }
-        return new MapLocation(avgX / count, avgY / count);
     }
 
     public boolean attackEnemy(RobotInfo[] nearby) throws GameActionException {
@@ -201,7 +186,6 @@ public class Soldier extends Robot {
         if (toAttack != null && rc.canAttack(toAttack)) {
             // Check if you have more friendly soldiers than enemy soldiers
             rc.attack(toAttack);
-            rc.setIndicatorLine(myLoc, toAttack, 255, 0, 0);
             rc.setIndicatorString("Attacking: " + toAttack.toString());
             return true;
         }
@@ -209,92 +193,78 @@ public class Soldier extends Robot {
         return false;
     }
 
-    public void runDefensiveMovement() throws GameActionException {
-        // movement code for defensive soldier (
-        // explore area around spawned archon, but stay close
-        // defensive bubble increases as rounds progress so we don't crowd up area around archon
-
-        // check if there is a center of mass which we should navigate to
-        int compressedCenterOfMass = rc.readSharedArray(comms.CENTER_OF_ATTACKING_MASS_IDX + archonIndex);
-
-        if(compressedCenterOfMass != comms.MAX_COMMS_VAL){
-            Logger.Log("DEFEND THE KINGDOM!!!!"); // LMFAO I LOVE THIS
-            int[] coordinates = Util.compressedToXAndY(compressedCenterOfMass);
-            nav.moveTowards(new MapLocation(coordinates[0], coordinates[1]));
-        }
-
-        else{
-            int currDistance = myLoc.distanceSquaredTo(archonLoc);
-            int scaledRadius = comms.getRobotCount(RobotType.SOLDIER) / numFriendlyArchons;
-
-            int DEFENSIVE_BUBBLE_CONSTANT = 3;
-            if (currDistance < (scaledRadius / DEFENSIVE_BUBBLE_CONSTANT)) {  // units surround spawning archon with specified radius
-                nav.moveAwayFrom(archonLoc);
-            } else if (currDistance < scaledRadius) {    // explore defensive bubblee
-//                nav.circle(archonLoc);
-//                Util.tryMove(shuffled);
-            } else {   // move back towards spawning archon
-                nav.moveTowards(archonLoc);
-            }
-        }
-    }
-
     public void runAttackMovement() throws GameActionException {
         // If you can sense an enemy (but I guess you can't attack it), go towards it
         // Technically this line shld only be running if you have more friendlies than enemies in the area, so we shld be gucci
-        MapLocation bestLoc = targetNearbyEnemy();
-        if(bestLoc != null){
-            currentTarget = bestLoc;
+        if(currentTarget != null && myLoc.distanceSquaredTo(currentTarget) <= myType.actionRadiusSquared && rc.isActionReady()){
+            targetLevel = 0; // Reset target
         }
-        // Check comms for archon loc
-        if(currentTarget != null && !enemyConfirmed){
-            MapLocation temp = enemyArchonOnComms();
-            if(temp != null){
-                currentTarget = temp;
-            }
+//        Logger.Log("Target level: " + targetLevel);
+        resetTarget(); // Find best target at current round
+        assert(currentTarget != null);
+//        nav.minDistToSatisfy = myType.actionRadiusSquared;
+//        Logger.Log("Current target: " + currentTarget.toString());
+//        if(rc.canSenseLocation(currentTarget) && rc.isLocationOccupied(currentTarget) && rc.senseRobotAtLocation(currentTarget).team != myTeam){
+        if(targetLevel == 5){ // Bugnav if going for visible enemy
+//            nav.bug0nav(currentTarget);
+            nav.goTo(currentTarget);
+            rc.setIndicatorLine(myLoc, currentTarget, 255, 0, 0);
+            rc.setIndicatorString("Bugnav to enemy at: " + currentTarget.toString());
         }
-        // Reset target if you alr reached your currentTarget
-        if(currentTarget == null){
-            resetTarget();
+        else{ // Fuzzy nav if going to general area
+            nav.goTo(currentTarget);
+            rc.setIndicatorLine(myLoc, currentTarget, 0, 255, 0);
+            rc.setIndicatorString("Fuzzynav to location: " + currentTarget.toString());
         }
-        else if(myLoc.distanceSquaredTo(currentTarget) <= myType.actionRadiusSquared && rc.isActionReady()){
-            resetTarget();
-        }
-        nav.minDistToSatisfy = myType.actionRadiusSquared;
-        nav.goTo(currentTarget);
-        rc.setIndicatorLine(myLoc, currentTarget, 0, 255, 0);
-        rc.setIndicatorString("Going to: " + currentTarget.toString());
 //        Logger.Log("Bytecode left at end of soldier class: " + Clock.getBytecodesLeft());
     }
 
     public void resetTarget() throws GameActionException {
-//        Logger.Log("Resetting target");
         // Search for enemy on comms
-        currentTarget = enemyArchonOnComms();
-        if(currentTarget != null){
+        MapLocation tempLoc = targetNearbyEnemy();
+        if(tempLoc != null){
+            currentTarget = tempLoc;
+            targetLevel = 5;
+            Logger.Log("New current target: " + currentTarget.toString() + ", found cuz i can sense the mans");
+        }
+        if(targetLevel >= 5){
+            return;
+        }
+        tempLoc = enemyArchonOnComms();
+        if(tempLoc != null){
+            currentTarget = tempLoc;
             enemyConfirmed = true;
-//            Logger.Log("Got comms based target");
+            targetLevel = 4;
+            Logger.Log("New current target: " + currentTarget.toString() + ", found archon via comms");
+        }
+        if(targetLevel >= 4){
             return;
         }
         enemyConfirmed = false;
-        MapLocation bestLoc = targetNearbyEnemy();
-        if(bestLoc != null){
-            currentTarget = bestLoc;
-        }
         // Check if the squad is currently attacking anyone
-        currentTarget = comms.getCurrAttackLoc();
-        if(currentTarget != null){
+        tempLoc = comms.getCurrAttackLoc();
+        if(tempLoc != null){
+            currentTarget = tempLoc;
+            targetLevel = 3;
+            Logger.Log("New current target: " + currentTarget.toString() + ", using comms attack loc");
+        }
+        if(targetLevel >= 2){
             return;
         }
         // Scout for enemy based on symmetry
-        currentTarget = scoutForEnemyArchons();
-        if(currentTarget != null){
-//            Logger.Log("Got scouting target");
+        tempLoc = scoutForEnemyArchons();
+        if(tempLoc != null){
+            currentTarget = tempLoc;
+            targetLevel = 2;
+            Logger.Log("New current target: " + currentTarget.toString() + ", scouting for enemy archon");
+        }
+        if(targetLevel >= 1){
             return;
         }
         // Run around randomly?
+        targetLevel = 1;
         currentTarget = nav.getRandomMapLocation();
-//        Logger.Log("Got random target");
+        Logger.Log("New current target: " + currentTarget.toString() + ", randomly chosen location");
     }
 
     public MapLocation targetNearbyEnemy() throws GameActionException {
@@ -376,15 +346,8 @@ public class Soldier extends Robot {
 
         // Pick a random location to scout
         potentialScoutingLocs = Util.shuffleArr(potentialScoutingLocs);
-//        Logger.Log("Number of scouting locs: " + potentialScoutingCount);
-//        for(MapLocation loc : potentialScoutingLocs){
-//            if(loc != null){
-//                Logger.Log("Potential Scouting Loc: " + loc.toString());
-//            }
-//        }
         for(int i = 0; i < potentialScoutingLocs.length; i++){
             if(potentialScoutingLocs[i] != null){
-//                Logger.Log("Heading towards: " + potentialScoutingLocs[i].toString());
                 return potentialScoutingLocs[i];
             }
         }

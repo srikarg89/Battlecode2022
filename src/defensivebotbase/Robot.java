@@ -38,7 +38,7 @@ public class Robot {
         mapHeight = rc.getMapHeight();
         nav = new Navigation(rc, this);
         comms = new Comms(rc, this);
-        nav.minDistToSatisfy = myType.actionRadiusSquared;
+//        nav.minDistToSatisfy = myType.actionRadiusSquared;
         if(myType != RobotType.ARCHON){
             comms.findFriendlyArchons();
         }

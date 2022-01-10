@@ -5,8 +5,8 @@ import battlecode.common.RobotType;
 public class Logger {
 
     static boolean limitToIDs = false;
-    static int[] allowedIDs = {-1};
-    static boolean limitToTypes = true;
+    static int[] allowedIDs = {13048};
+    static boolean limitToTypes = false;
     static RobotType[] allowedTypes = {RobotType.BUILDER};
 
     static RobotType myType;

@@ -33,8 +33,8 @@ public class Util {
     }
 
     static boolean tryMove(Direction[] dirs) throws GameActionException {
-        for(Direction dir : dirs){
-            if(Util.tryMove(dir)){
+        for(int i = 0; i < dirs.length; i++){
+            if(Util.tryMove(dirs[i])){
                 return true;
             }
         }

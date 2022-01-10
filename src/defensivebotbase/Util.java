@@ -23,7 +23,9 @@ public class Util {
     static MapLocation copyLoc(MapLocation loc){ return loc.add(Direction.CENTER); }
 
     static Direction tryBuild(RobotType type, Direction[] dirs) throws GameActionException {
-        for(Direction dir : dirs){
+        for(int i = 0; i < dirs.length; i++){
+            Direction dir = dirs[i];
+//            Logger.Log("Tryna build robot of type: " + type.toString() + " in direction: " + dir.toString());
             if (rc.canBuildRobot(type, dir)) {
                 rc.buildRobot(type, dir);
                 return dir;
@@ -33,8 +35,8 @@ public class Util {
     }
 
     static boolean tryMove(Direction[] dirs) throws GameActionException {
-        for(Direction dir : dirs){
-            if(Util.tryMove(dir)){
+        for(int i = 0; i < 8; i++){
+            if(Util.tryMove(dirs[i])){
                 return true;
             }
         }
@@ -236,5 +238,24 @@ public class Util {
         }
         return count;
     }
+
+    public static MapLocation calculateEnemySoldierCOM(RobotInfo[] nearby) throws GameActionException {
+        int count = 0;
+        int avgX = 0;
+        int avgY = 0;
+        for(int i = 0; i < nearby.length; i++){
+            if(nearby[i].getType() != RobotType.SOLDIER || nearby[i].getTeam() != robot.myTeam.opponent()){
+                continue;
+            }
+            avgX += nearby[i].getLocation().x;
+            avgY += nearby[i].getLocation().y;
+            count++;
+        }
+        if(count == 0){
+            return robot.myLoc;
+        }
+        return new MapLocation(avgX / count, avgY / count);
+    }
+
 
 }
