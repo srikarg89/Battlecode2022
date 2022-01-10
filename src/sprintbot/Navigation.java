@@ -248,4 +248,19 @@ public class Navigation {
         return false;
     }
 
+    public void circle(MapLocation center, int minDist, boolean ccw) throws GameActionException {
+        MapLocation myLoc = robot.myLoc;
+        int dx = myLoc.x - center.x;
+        int dy = myLoc.y - center.y;
+        double cs = Math.cos(ccw ? 0.5 : -0.5);
+        double sn = Math.sin(ccw ? 0.5 : -0.5);
+        int x = (int) (dx * cs - dy * sn);
+        int y = (int) (dx * sn + dy * cs);
+        MapLocation target = center.translate(x, y);
+//		goTo(target);
+        Direction targetDir = myLoc.directionTo(target);
+        Direction[] options = {targetDir, targetDir.rotateRight(), targetDir.rotateLeft(), targetDir.rotateRight().rotateRight(), targetDir.rotateLeft().rotateLeft()};
+        Util.tryMove(options);
+    }
+
 }
