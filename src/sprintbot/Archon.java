@@ -41,8 +41,10 @@ public class Archon extends Robot {
 //        }
 
         comms.findFriendlyArchons();
-//        this.comms.updateCenterOfAttackingMass(id);
-
+//        RobotInfo[] enemiesInVision = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
+//        MapLocation enemyCOM = Util.calculateEnemySoldierCOM(enemiesInVision);
+//        comms.updateCurrAttackLoc(enemiesInVision, enemyCOM);
+//
         Logger.Log(myMiners + "");
         Logger.Log(mySoldiers + "");
         // Try building
@@ -65,9 +67,13 @@ public class Archon extends Robot {
     public void runBuildOrder() throws GameActionException {
         int lead = rc.getTeamLeadAmount(myTeam);
         int soldierCost = RobotType.SOLDIER.buildCostLead;
+        int leadDiff = lead - prevLead;
+        Logger.Log("Soldier count: " + soldierCount);
+        Logger.Log("Miner count: " + minerCount);
+        Logger.Log("Lead diff: " + minerCount);
         // If the current miners can build a soldier every round, then just build a soldier every round
         Logger.Log("Running build order!");
-        if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
+        if(numFriendlyArchons > 0 && (leadDiff > soldierCost || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
             Logger.Log("Build order A");
             spawnUniformly(RobotType.SOLDIER, mySoldiers);
         }
@@ -75,12 +81,24 @@ public class Archon extends Robot {
             Logger.Log("Build order B");
             spawnUniformly(RobotType.MINER, myMiners);
         }
+//        else if (soldierCount < minerCount){ // Should be based on current lead production instead
+//            Logger.Log("Build order C");
+//            spawnUniformly(RobotType.SOLDIER, mySoldiers);
+//        }
+//        else if(leadDiff < soldierCost * numFriendlyArchons / 4){ // 4 rounds for every archon to spawn a soldier
+//            Logger.Log("Build order E");
+//            spawnUniformly(RobotType.MINER, myMiners);
+//        }
+//        else{
+//            Logger.Log("Build order D");
+//            spawnUniformly(RobotType.MINER, myMiners);
+//        }
         else if (soldierCount < minerCount * 2){ // Should be based on current lead production instead
-            Logger.Log("Build order C");
+            defensivebotbase.Logger.Log("Build order C");
             spawnUniformly(RobotType.SOLDIER, mySoldiers);
         }
         else{
-            Logger.Log("Build order D");
+            defensivebotbase.Logger.Log("Build order D");
             spawnUniformly(RobotType.MINER, myMiners);
         }
     }

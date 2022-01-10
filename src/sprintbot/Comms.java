@@ -229,25 +229,6 @@ public class Comms {
         return -1;
     }
 
-    public void updateCenterOfAttackingMass(int index) throws GameActionException{
-        RobotInfo[] nearbyRobots = rc.senseNearbyRobots(rc.getType().visionRadiusSquared, rc.getTeam().opponent());
-        int x_avg = 0; int y_avg = 0;
-        int n = 1;
-        for(RobotInfo info: nearbyRobots){
-            MapLocation loc = info.getLocation();
-            x_avg += loc.x; y_avg += loc.y;
-            if(n >= 15) break;   // so we don't use too much bytecode
-            n+= 1;
-        }
-        x_avg /= n; y_avg /= n;
-        if(x_avg == 0 && y_avg == 0) {
-            writeSharedArray(CENTER_OF_ATTACKING_MASS_IDX + index, MAX_COMMS_VAL);
-        }
-        else {
-            writeSharedArray(CENTER_OF_ATTACKING_MASS_IDX + index, Util.xAndYToCompressed(x_avg, y_avg));
-        }
-    }
-
     public int getClosestFriendlyArchonIndex() throws GameActionException {
         int minDistanceSquared = Integer.MAX_VALUE;
         int index = 0;
@@ -278,21 +259,22 @@ public class Comms {
         }
     }
 
-    public void updateCurrAttackLoc(MapLocation enemyCOM) throws GameActionException {
+    public void updateCurrAttackLoc(RobotInfo[] enemiesInVision, MapLocation enemyCOM) throws GameActionException {
         int threatLevel = 0;
         MapLocation threatLoc = enemyCOM;
         Logger.Log("After calculating COM: " + Clock.getBytecodesLeft());
-        for(int i = 0; i < robot.nearby.length; i++){
-            RobotInfo info = robot.nearby[i];
-            if(info.getTeam() == robot.opponent){
-                if(info.getType() == RobotType.ARCHON){
-                    threatLevel += 50;
-                    threatLoc = info.getLocation();
-                }
-                else if(info.getType() == RobotType.SOLDIER){
-                    threatLevel += 5;
-                }
+        for(int i = 0; i < enemiesInVision.length; i++){
+            RobotInfo info = enemiesInVision[i];
+            if(info.getType() == RobotType.ARCHON){
+                threatLevel += 50;
+                threatLoc = info.getLocation();
             }
+            else if(info.getType() == RobotType.SOLDIER){
+                threatLevel += 5;
+            }
+        }
+        if(rc.getType() == RobotType.ARCHON){
+            threatLevel *= 2;
         }
         Logger.Log("After calculating threat level: " + Clock.getBytecodesLeft());
         int currThreatLevel = rc.readSharedArray(BIGGEST_THREAT_LEVEL_IDX);

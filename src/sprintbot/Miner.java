@@ -44,6 +44,7 @@ public class Miner extends Robot {
         // If you're under attack (or you sense an enemy soldier), retreat!
         if(Util.countRobotTypes(nearby, RobotType.SOLDIER, myTeam.opponent()) > Util.countRobotTypes(nearby, RobotType.SOLDIER, myTeam)){ // 100 bytecode
             nav.goTo(archonLoc);
+            tryMineAllDirections();
             return;
         }
 
@@ -63,11 +64,13 @@ public class Miner extends Robot {
             }
             nav.goTo(target); // Go towards target!
             Logger.Log("D1: " + Clock.getBytecodesLeft());
+            tryMineAllDirections();
             return;
         }
         else if(myLoc.distanceSquaredTo(mineLocation) > 2){
             nav.goTo(mineLocation);
             Logger.Log("D2: " + Clock.getBytecodesLeft());
+            tryMineAllDirections();
             return;
         }
         else if(rc.isMovementReady()){ // 300 byetecode (doesn't check if the location has led)
@@ -77,6 +80,7 @@ public class Miner extends Robot {
             if(bestMoveDir != null){
 //                    if(Util.tryMove(Util.getDirectionsGoingTowards(bestMoveDir))){
                 if(nav.goTo(myLoc.add(bestMoveDir).add(bestMoveDir).add(bestMoveDir))){
+                    tryMineAllDirections();
                     return; // Moved away from adjacent teammates
                 }
             }
@@ -111,6 +115,7 @@ public class Miner extends Robot {
             Logger.Log("Trying to mine at: " + mineLocation.toString());
             tryMine(mineLocation);
         }
+        tryMineAllDirections();
         Logger.Log("E: " + Clock.getBytecodesLeft());
 
     }
@@ -331,12 +336,32 @@ public class Miner extends Robot {
 
     public void tryMine(MapLocation mineLocation) throws GameActionException {
         // TODO: If you reach the limit, then find a new spot to mine at
-        while (rc.canMineGold(mineLocation) && rc.senseGold(mineLocation) > 1) {
+        while (rc.canMineGold(mineLocation) && rc.senseGold(mineLocation) > 0) {
             rc.mineGold(mineLocation);
         }
         while (rc.canMineLead(mineLocation) && rc.senseLead(mineLocation) > 1) {  // don't mine if therre's one lead so we can regenerate
             rc.mineLead(mineLocation);
         }
+    }
+
+    public void tryMineAllDirections() throws GameActionException {
+//        return;
+        for(int i = 0; i < Navigation.directions.length; i++){
+            Direction dir = Navigation.directions[i];
+            MapLocation loc = myLoc.add(dir);
+            while (rc.canMineGold(loc) && rc.senseGold(loc) > 0) {
+                rc.mineGold(loc);
+            }
+        }
+
+        for(int i = 0; i < Navigation.directions.length; i++){
+            Direction dir = Navigation.directions[i];
+            MapLocation loc = myLoc.add(dir);
+            while (rc.canMineLead(loc) && rc.senseLead(loc) > 1) {
+                rc.mineLead(loc);
+            }
+        }
+
     }
 
 }
