@@ -309,5 +309,19 @@ public class Util {
         return new Direction[]{dir, dir.rotateLeft(), dir.rotateRight()};
     }
 
+    public static Direction[] closeDirections(Direction dir){
+        Direction[] close = {
+                dir.rotateLeft().rotateLeft().rotateLeft(),
+                dir.rotateLeft().rotateLeft(),
+                dir.rotateLeft(),
+                dir,
+                dir.rotateRight(),
+                dir.rotateRight().rotateRight(),
+                dir.rotateRight().rotateRight().rotateRight(),
+                dir.opposite()
+        };
+        return close;
+    }
+
 
 }

@@ -10,6 +10,7 @@ public class Archon extends Robot {
     int sageCount = 0;
     int mySoldiers = 0;
     int myMiners = 0;
+    int myBuilders = 0;
     int prevMinerCount = 0;
     int prevSoldierCount = 0;
     boolean givingChance = false;
@@ -34,72 +35,53 @@ public class Archon extends Robot {
         super.run();
         minerCount = comms.getRobotCount(RobotType.MINER);
         soldierCount = comms.getRobotCount(RobotType.SOLDIER);
-
-//        System.out.println("---------------COMMS------------------");
-//        for(int i = 0; i < 64; i++){
-//            System.out.println(i + ": " + rc.readSharedArray(i));
-//        }
+        builderCount = comms.getRobotCount(RobotType.BUILDER);
 
         comms.findFriendlyArchons();
-//        RobotInfo[] enemiesInVision = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
-//        MapLocation enemyCOM = Util.calculateEnemySoldierCOM(enemiesInVision);
-//        comms.updateCurrAttackLoc(enemiesInVision, enemyCOM);
-//
+        this.comms.updateCenterOfAttackingMass(id);
+
         Logger.Log(myMiners + "");
         Logger.Log(mySoldiers + "");
         // Try building
-        if (Util.mapLocationToInt(rc.getLocation()) == rc.readSharedArray(rc.getRoundNum() % numFriendlyArchons)) {
-            Logger.Log("Tryna build stuff xd");
+        if (Util.mapLocationToInt(rc.getLocation()) == rc.readSharedArray(rc.getRoundNum() % this.numFriendlyArchons)) {
             // Build in a different direction than last time
             boolean defended = defendYourself();
             if(!defended){
                 runBuildOrder();
             }
-            else{
-                Logger.Log("Defending myself!");
-            }
         }
         // Try repairing
-//        runRepair();
+        runRepair();
         prevLead = rc.getTeamLeadAmount(myTeam);
     }
 
     public void runBuildOrder() throws GameActionException {
         int lead = rc.getTeamLeadAmount(myTeam);
         int soldierCost = RobotType.SOLDIER.buildCostLead;
-        int leadDiff = lead - prevLead;
-        Logger.Log("Soldier count: " + soldierCount);
-        Logger.Log("Miner count: " + minerCount);
-        Logger.Log("Lead diff: " + minerCount);
         // If the current miners can build a soldier every round, then just build a soldier every round
-        Logger.Log("Running build order!");
-        if(numFriendlyArchons > 0 && (leadDiff > soldierCost || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
-            Logger.Log("Build order A");
+
+//
+//        if(rc.getRoundNum()%10 < 7) spawnUniformly(RobotType.MINER, myMiners);
+//        else spawnUniformly(RobotType.BUILDER, myBuilders);
+
+        if(lead > 1500 && builderCount*30 < rc.getRoundNum() && builderCount < 4) {
+//        if(false){
+            spawnUniformly(RobotType.BUILDER, myBuilders);
+        }
+        else if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost * numFriendlyArchons || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
             spawnUniformly(RobotType.SOLDIER, mySoldiers);
         }
-        else if (rc.getRoundNum() < 30){
-            Logger.Log("Build order B");
+        else if(rc.getRoundNum() < 30){
             spawnUniformly(RobotType.MINER, myMiners);
         }
-//        else if (soldierCount < minerCount){ // Should be based on current lead production instead
-//            Logger.Log("Build order C");
-//            spawnUniformly(RobotType.SOLDIER, mySoldiers);
-//        }
-//        else if(leadDiff < soldierCost * numFriendlyArchons / 4){ // 4 rounds for every archon to spawn a soldier
-//            Logger.Log("Build order E");
-//            spawnUniformly(RobotType.MINER, myMiners);
-//        }
-//        else{
-//            Logger.Log("Build order D");
-//            spawnUniformly(RobotType.MINER, myMiners);
-//        }
-        else if (soldierCount < minerCount * 2){ // Should be based on current lead production instead
-            defensivebotbase.Logger.Log("Build order C");
+        else if (soldierCount < minerCount * 2){
             spawnUniformly(RobotType.SOLDIER, mySoldiers);
+        }
+        else if(minerCount < soldierCount){
+            spawnUniformly(RobotType.MINER, myMiners);
         }
         else{
-            defensivebotbase.Logger.Log("Build order D");
-            spawnUniformly(RobotType.MINER, myMiners);
+            spawnUniformly(RobotType.SOLDIER, mySoldiers);
         }
     }
 
@@ -134,19 +116,22 @@ public class Archon extends Robot {
         for(int i = 0; i < 8; i++){
             spawnDirs[i] = defaultSpawnDirs[(i + offset) % 8];
         }
-        Logger.Log("Tryna spawn: " + spawnType.toString());
         if(Util.tryBuild(spawnType, spawnDirs) != Direction.CENTER){
+            comms.addRobotCount(spawnType, 1);
             if(spawnType == RobotType.MINER){
                 Logger.Log("Successfully spawned a miner!");
                 rc.setIndicatorString("Built a miner");
-                comms.addRobotCount(RobotType.MINER, 1);
                 myMiners++;
             }
             else if(spawnType == RobotType.SOLDIER){
                 Logger.Log("Successfully spawned a soldier!");
                 rc.setIndicatorString("Built a soldier");
-                comms.addRobotCount(RobotType.SOLDIER, 1);
                 mySoldiers++;
+            }
+            else if(spawnType == RobotType.BUILDER){
+                Logger.Log("Successfully spawned a builder!");
+                rc.setIndicatorString("Built a builder");
+                myBuilders++;
             }
         }
         // TODO: Instead of going in order, check where the current miners are and try to spawn in the direction opposite of the most miners
