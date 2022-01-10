@@ -257,5 +257,21 @@ public class Util {
         return new MapLocation(avgX / count, avgY / count);
     }
 
+    public static MapLocation getLowestRubble(MapLocation[] locs) throws GameActionException {
+        int lowest = Integer.MAX_VALUE;
+        MapLocation lowestLoc = null;
+        for(int i = 0; i < locs.length; i++){
+            if(!rc.canSenseLocation(locs[i])){
+                continue;
+            }
+            int rubble = rc.senseRubble(locs[i]);
+            if(rubble < lowest){
+                lowestLoc = locs[i];
+            }
+        }
+        return lowestLoc;
+    }
+
+
 
 }

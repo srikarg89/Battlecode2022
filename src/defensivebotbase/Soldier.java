@@ -183,7 +183,7 @@ public class Soldier extends Robot {
             }
         }
 
-        if (toAttack != null && rc.canAttack(toAttack)) {
+        if (toAttack != null && rc.canAttack(toAttack)) { // TODO: If you can move to a better spot and then continue attacking, do that instead
             // Check if you have more friendly soldiers than enemy soldiers
             rc.attack(toAttack);
             rc.setIndicatorString("Attacking: " + toAttack.toString());
@@ -207,7 +207,9 @@ public class Soldier extends Robot {
 //        if(rc.canSenseLocation(currentTarget) && rc.isLocationOccupied(currentTarget) && rc.senseRobotAtLocation(currentTarget).team != myTeam){
         if(targetLevel == 5){ // Bugnav if going for visible enemy
 //            nav.bug0nav(currentTarget);
-            nav.goTo(currentTarget);
+//            nav.goTo(currentTarget);
+//            nav.moveTowardsSafe(currentTarget); // TODO: If you have overwhelming forces, then just move in that direction anyways
+            moveForwardSafely(currentTarget);
             rc.setIndicatorLine(myLoc, currentTarget, 255, 0, 0);
             rc.setIndicatorString("Bugnav to enemy at: " + currentTarget.toString());
         }
@@ -217,6 +219,54 @@ public class Soldier extends Robot {
             rc.setIndicatorString("Fuzzynav to location: " + currentTarget.toString());
         }
 //        Logger.Log("Bytecode left at end of soldier class: " + Clock.getBytecodesLeft());
+    }
+
+    public void moveForwardSafely(MapLocation attackTarget) throws GameActionException {
+        double friendlyDPS = 0.0;
+        double enemyDPS = 0.0;
+        for(int i = 0; i < nearby.length; i++){
+            RobotInfo info = nearby[i];
+            if(info.type != RobotType.SOLDIER || info.type != RobotType.WATCHTOWER){
+                continue;
+            }
+            double cooldown = rc.senseRubble(info.location) + 10.0;
+            double dps = info.type.damage / cooldown;
+            if(info.team == myTeam){
+                friendlyDPS += dps;
+            }
+            else{
+                enemyDPS += dps;
+            }
+        }
+
+        int lowestRubble = Integer.MAX_VALUE;
+        MapLocation lowestLoc = null;
+        Direction targetDir = myLoc.directionTo(attackTarget);
+        MapLocation[] testLocs = {myLoc.add(targetDir), myLoc.add(targetDir.rotateLeft()), myLoc.add(targetDir.rotateRight()), myLoc.add(targetDir.rotateLeft().rotateLeft()), myLoc.add(targetDir.rotateRight().rotateRight())};
+        for(int i = 0; i < testLocs.length; i++){
+            if(!rc.canSenseLocation(testLocs[i])){
+                continue;
+            }
+            if(!rc.canMove(myLoc.directionTo(testLocs[i]))){
+                continue;
+            }
+            int rubble = rc.senseRubble(testLocs[i]);
+            if(rubble < lowestRubble){
+                lowestLoc = testLocs[i];
+                lowestRubble = rubble;
+            }
+        }
+        if(lowestLoc == null){
+            return;
+        }
+        double cooldown = rc.senseRubble(lowestLoc) + 10.0;
+        double dps = myType.damage / cooldown;
+        friendlyDPS += dps;
+
+        if(friendlyDPS >= enemyDPS){
+            rc.move(myLoc.directionTo(lowestLoc));
+        }
+
     }
 
     public void resetTarget() throws GameActionException {

@@ -221,4 +221,31 @@ public class Navigation {
         }
     }
 
+    public boolean moveTowardsSafe(MapLocation target) throws GameActionException {
+        Direction dir = robot.myLoc.directionTo(target);
+        Direction[] movePoss = {dir, dir.rotateLeft(), dir.rotateRight(), dir.rotateLeft().rotateLeft(), dir.rotateRight().rotateRight()};
+        int lowestRubble = rc.senseRubble(robot.myLoc) + 1;
+        Direction bestDir = null;
+        for(int i = 0; i < movePoss.length; i++){
+            Direction testDir = movePoss[i];
+            MapLocation newLoc = robot.myLoc.add(testDir);
+            if(!rc.canSenseLocation(newLoc)){
+                continue;
+            }
+            if(!rc.canMove(testDir)){
+                continue;
+            }
+            int newRubble = rc.senseRubble(newLoc);
+            if(newRubble < lowestRubble){
+                lowestRubble = newRubble;
+                bestDir = testDir;
+            }
+        }
+        if(bestDir != null){ // Only move to an area w/ less rubble
+            rc.move(bestDir);
+            return true;
+        }
+        return false;
+    }
+
 }
