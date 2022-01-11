@@ -10,7 +10,7 @@ public class Miner extends Robot {
     MapLocation archonLoc = null;
     MapLocation mineLocation = null;
     Direction spawnDir = null;
-    MapLocation target = null;
+    MapLocation currentTarget = null;
 
     int[][] goldMap = new int[5][5];
     int[][] leadMap = new int[5][5];
@@ -78,7 +78,10 @@ public class Miner extends Robot {
                 MapLocation targetLoc = findClosestMine();
                 // Logger.Log("Found closest mine: " + Clock.getBytecodesLeft());
                 if(targetLoc == null){
-                    targetLoc = nav.getRandomMapLocation();
+                    if(currentTarget == null || myLoc.distanceSquaredTo(currentTarget) <= 4){
+                        currentTarget = nav.getRandomMapLocation();
+                    }
+                    targetLoc = currentTarget;
                 }
                 nav.goTo(targetLoc);
                 indicatorString += "NAV " + Util.mapLocationToInt(targetLoc) + "; ";

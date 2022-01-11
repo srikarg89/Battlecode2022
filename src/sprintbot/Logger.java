@@ -6,7 +6,7 @@ public class Logger {
 
     static boolean limitToIDs = false;
     static int[] allowedIDs = {-1};
-    static boolean limitToTypes = true;
+    static boolean limitToTypes = false;
     static RobotType[] allowedTypes = {RobotType.MINER};
 
     static RobotType myType;

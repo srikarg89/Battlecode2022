@@ -157,6 +157,7 @@ public class Soldier extends Robot {
             lastAttackLoc = toAttack.getLocation();
             // Check if you killed an archon, and if you did, update comms
             if(toAttack.type == RobotType.ARCHON && toAttack.team == myTeam.opponent() && !rc.canSenseRobot(toAttack.ID)){
+                System.out.println("HOLY SHIT I JUST KILLED THE ARCHON");
                 comms.updateEnemyArchonDeath(toAttack.ID, toAttack.location);
             }
             return true;
@@ -382,7 +383,7 @@ public class Soldier extends Robot {
         int closestDist = Integer.MAX_VALUE;
         for(int i = 8; i < 12; i++){
             int val = rc.readSharedArray(i);
-            if(val != 0 && val != comms.MAX_COMMS_VAL){
+            if(val != 0 && val < comms.ARCHON_DEATH_OFFSET){
                 MapLocation enemyLoc = Util.intToMapLocation(val);
                 int enemyDist = myLoc.distanceSquaredTo(enemyLoc);
                 if(enemyDist < closestDist){

@@ -59,9 +59,9 @@ public class Comms {
         if(symmetry == 0){
             symmetry = 7;
         }
-        if(symmetry == 1 || symmetry == 2 || symmetry == 4){ // Already determined symmetry
-            return;
-        }
+//        if(symmetry == 1 || symmetry == 2 || symmetry == 4){ // Already determined symmetry
+//            return;
+//        }
         int[] binVals = {1, 2, 4};
         for(int j = 0; j < 3; j++){
             int reflectionType = j + 1;
@@ -75,8 +75,9 @@ public class Comms {
                     if(!Util.checkRobotPresent(enemyArchonLocs[i], RobotType.ARCHON, robot.myTeam.opponent())){
                         if(!checkEnemyArchonDied(enemyArchonLocs[i])){
                             symmetry &= (7 ^ binVal);
+                            System.out.println("Updating symmetry! New symmetry is: " + symmetry);
+                            break;
                         }
-                        break;
                     }
                 }
             }
@@ -100,8 +101,9 @@ public class Comms {
 
     // Update the locInt of an enemy archon when it dies. NOTE: Only works if archon has alr been detected and added to comms (which it should've been previously)
     public void updateEnemyArchonDeath(int archonID, MapLocation archonLoc) throws GameActionException {
+        System.out.println("Updating archon death: " + archonID + ", " + archonLoc.toString());
         for(int i = 4; i < 8; i++){
-            int id = rc.readSharedArray(i);
+            int id = rc.readSharedArray(i) - 1;
             if(id != archonID){
                 continue;
             }
@@ -227,7 +229,7 @@ public class Comms {
             }
         }
         if(rc.getType() == RobotType.ARCHON){ // Archons require double protection :)
-            threatLevel *= 2;
+            threatLevel *= 1.5;
         }
 
         Logger.Log("After calculating threat level: " + Clock.getBytecodesLeft());

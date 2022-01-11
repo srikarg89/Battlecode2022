@@ -78,6 +78,10 @@ public class Navigation {
         Direction bestDir = null;
         int bestCost = Integer.MAX_VALUE;
 
+//        if(robot.rc.getID() == 10886){
+//            System.out.println("Current: " + robot.myLoc.toString() + ", Target: " + target.toString());
+//        }
+
         for(int i = moveOptions.length; i-- > 0; ){
             Direction dir = moveOptions[i];
             MapLocation newLoc = robot.myLoc.add(dir);
@@ -102,6 +106,10 @@ public class Navigation {
             else{
                 cost += Util.minMovesToReach(newLoc, target) * 10;
             }
+
+//            if(robot.rc.getID() == 10886){
+//                System.out.println("Direction: " + dir.toString() + ", cost: " + cost);
+//            }
 
             if(cost < bestCost){
                 bestCost = cost;
