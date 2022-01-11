@@ -6,6 +6,9 @@ public class Soldier extends Robot {
     MapLocation archonLoc = null;
     int archonIndex = -1;
 
+    int turnsSinceAttack = 0;
+    MapLocation lastAttackLoc = null;
+
     // Proportion of soldiers that are defensive (offensive will go to enemy, defensive will stay close to spawning archon)
     // might be smart to have a few created for each archon in the beginning of each game
 
@@ -18,6 +21,7 @@ public class Soldier extends Robot {
 
     // Defending soldier variables
     int targetLevel = 0;
+    // TODO: Remember where enemies (that possibly haven't been killed) are
 
     public Soldier(RobotController rc) throws GameActionException {
         super(rc);
@@ -63,10 +67,10 @@ public class Soldier extends Robot {
                     else { // Attack and back up (you know the drill)
                         Logger.Log("Punch and pull back");
                         attack(attackTarget);
-//                        if(attackTarget.type != RobotType.SOLDIER && attackTarget.type != RobotType.WATCHTOWER){
-//                            retreat(enemyCOM);
-//                        }
-                        retreat(enemyCOM);
+                        if(attackTarget.type == RobotType.SOLDIER || attackTarget.type == RobotType.WATCHTOWER){
+                            retreat(enemyCOM);
+                        }
+//                        retreat(enemyCOM);
                     }
                 }
                 else if(rc.isActionReady()) { // If you can attack, just attack
@@ -76,15 +80,22 @@ public class Soldier extends Robot {
                 else{
                     // Well you can't attack, so back up so that they can't attack you
                     Logger.Log("Can't attack, jus retreating");
-                    retreat(enemyCOM);
+//                    retreat(enemyCOM);
+                    // Retreat safely
+                    Direction dirToEnemyCOM = myLoc.directionTo(enemyCOM);
+                    moveForwardSafely(myLoc.subtract(dirToEnemyCOM).subtract(dirToEnemyCOM).subtract(dirToEnemyCOM));
                 }
             }
             else{
                 // If you can both attack and move, do that
-                if(rc.isMovementReady() && rc.isActionReady() && nearestEnemyInfo != null){ // If you can see an enemy push him and attack him
+                if(rc.isMovementReady() && rc.isActionReady() && (nearestEnemyInfo != null || (turnsSinceAttack < 3 && lastAttackLoc != null))){ // If you can see an enemy push him and attack him
                     Logger.Log("Push and punch");
-                    push(enemyCOM, nearestEnemyInfo.location);
-                    nearbyActionEnemies = rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam);
+                    MapLocation pushLoc = lastAttackLoc;
+                    if(nearestEnemyInfo != null){
+                        pushLoc = nearestEnemyInfo.location;
+                    }
+                    push(enemyCOM, pushLoc);
+                    nearbyActionEnemies = rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam.opponent());
                     attackTarget = findAttackTarget(nearbyActionEnemies);
                     attack(attackTarget);
                 }
@@ -97,14 +108,19 @@ public class Soldier extends Robot {
         else{
             Logger.Log("Not in safe zone!");
             attack(attackTarget);
-            retreat(enemyCOM); // Get the hell out of there
+            // Retreat safely
+            Direction dirToEnemyCOM = myLoc.directionTo(enemyCOM);
+            moveForwardSafely(myLoc.subtract(dirToEnemyCOM).subtract(dirToEnemyCOM).subtract(dirToEnemyCOM));
+//            retreat(enemyCOM); // Get the hell out of there
         }
+
+        turnsSinceAttack++;
 
     }
 
     public void retreat(MapLocation enemyCOM) throws GameActionException { // Movement method
         Logger.Log("Retreating from: " + enemyCOM.toString());
-        rc.setIndicatorString("Retreating from: " + enemyCOM.toString());
+        indicatorString += "Retreating from: " + enemyCOM.toString();
         if(enemyCOM.equals(myLoc)){ // No enemies nearby, just retreat back to base
             nav.goTo(archonLoc);
         }
@@ -116,7 +132,7 @@ public class Soldier extends Robot {
 
     public void push(MapLocation enemyCOM, MapLocation bestAttackTarget) throws GameActionException { // Movement method
         Logger.Log("Pushing towards: " + enemyCOM.toString());
-        rc.setIndicatorString("Pushing towards: " + enemyCOM.toString());
+        indicatorString += "Pushing towards: " + enemyCOM.toString();
         if(enemyCOM.equals(myLoc)){ // No enemy soldiers nearby, go after whatever else there is
             nav.goTo(bestAttackTarget);
         }
@@ -125,19 +141,27 @@ public class Soldier extends Robot {
         }
     }
 
-    public void attack(RobotInfo toAttack) throws GameActionException { // Action method
+    public boolean attack(RobotInfo toAttack) throws GameActionException { // Action method
         if(toAttack == null){
-            return;
+            return false;
         }
         Logger.Log("Trying to attack: " + toAttack.location.toString());
         if(!rc.isActionReady()){
-            return;
+            return false;
         }
         if (rc.canAttack(toAttack.location)) { // TODO: If you can move to a better spot and then continue attacking, do that instead
             // Check if you have more friendly soldiers than enemy soldiers
             rc.attack(toAttack.location);
-            rc.setIndicatorString("Attacking: " + toAttack.location.toString());
+            indicatorString += "Attacking: " + toAttack.location.toString();
+            turnsSinceAttack = 0;
+            lastAttackLoc = toAttack.getLocation();
+            // Check if you killed an archon, and if you did, update comms
+            if(toAttack.type == RobotType.ARCHON && toAttack.team == myTeam.opponent() && !rc.canSenseRobot(toAttack.ID)){
+                comms.updateEnemyArchonDeath(toAttack.ID, toAttack.location);
+            }
+            return true;
         }
+        return false;
     }
 
     public RobotInfo findAttackTarget(RobotInfo[] nearbyEnemies) throws GameActionException {
@@ -211,17 +235,26 @@ public class Soldier extends Robot {
                 friendlyDamage += info.type.damage / attackCooldown;
                 friendlyHP += info.getHealth();
             }
+            if(info.type == RobotType.ARCHON){ // NOTE: Archons can't attack, but this just makes you more likely to wanna protect your own archon
+                friendlyHP += info.getHealth();
+            }
+        }
+
+        if(enemyHP == 0){
+            return true;
         }
 
         double myAttackCooldown = rc.senseRubble(myLoc) + 10;
         friendlyDamage += myType.damage / myAttackCooldown;
         friendlyHP += rc.getHealth();
 
-        double myTurnsNeeded = friendlyDamage / enemyHP;
-        double enemyTurnsNeeded = enemyDamage / friendlyHP;
+        double myTurnsNeeded = enemyHP / friendlyDamage;
+        double enemyTurnsNeeded = friendlyHP / enemyDamage;
+
+        indicatorString += "myTurns: " + myTurnsNeeded + ", eTurns: " + enemyTurnsNeeded;
 
         // 1.5 simply because im ballsy and wanna go for it
-        return myTurnsNeeded <= enemyTurnsNeeded * 1.5; // If you can kill them faster than they can kill you, return true
+        return myTurnsNeeded <= enemyTurnsNeeded * 1.2; // If you can kill them faster than they can kill you, return true
     }
 
     public boolean moveForwardSafely(MapLocation target) throws GameActionException { // Maybe instead do smth else
@@ -295,7 +328,7 @@ public class Soldier extends Robot {
 //        Logger.Log("Current target: " + currentTarget.toString());
         nav.goTo(currentTarget);
         rc.setIndicatorLine(myLoc, currentTarget, 0, 255, 0);
-        rc.setIndicatorString("Fuzzynav to location: " + currentTarget.toString());
+        indicatorString += "Fuzzynav to: " + currentTarget.toString() + " becuz " + targetLevel;
 //        Logger.Log("Bytecode left at end of soldier class: " + Clock.getBytecodesLeft());
     }
 

@@ -11,10 +11,7 @@ public class Archon extends Robot {
     int mySoldiers = 0;
     int myMiners = 0;
     int myBuilders = 0;
-    int prevMinerCount = 0;
-    int prevSoldierCount = 0;
-    boolean givingChance = false;
-    int id = 0;
+    int myCommsIdx = 0;
     int prevLead = 10000;
 
     public Archon(RobotController rc) throws GameActionException {
@@ -25,7 +22,7 @@ public class Archon extends Robot {
         for(int i = 0; i < 4; i++){
             if(rc.readSharedArray(i) == 0){
                 rc.writeSharedArray(i, locNum);
-                id = i;
+                myCommsIdx = i;
                 break;
             }
         }
@@ -38,7 +35,9 @@ public class Archon extends Robot {
         builderCount = comms.getRobotCount(RobotType.BUILDER);
 
         comms.findFriendlyArchons();
-        this.comms.updateCenterOfAttackingMass(id);
+        RobotInfo[] enemiesInVision = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
+        MapLocation enemyCOM = Util.calculateEnemySoldierCOM(enemiesInVision);
+        comms.updateCurrAttackLoc(enemiesInVision, enemyCOM);
 
         Logger.Log(myMiners + "");
         Logger.Log(mySoldiers + "");
@@ -60,9 +59,7 @@ public class Archon extends Robot {
         int soldierCost = RobotType.SOLDIER.buildCostLead;
         // If the current miners can build a soldier every round, then just build a soldier every round
 
-//
-//        if(rc.getRoundNum()%10 < 7) spawnUniformly(RobotType.MINER, myMiners);
-//        else spawnUniformly(RobotType.BUILDER, myBuilders);
+        int leadDiff = lead - prevLead;
 
         if(lead > 1500 && builderCount*30 < rc.getRoundNum() && builderCount < 4) {
 //        if(false){
@@ -74,7 +71,7 @@ public class Archon extends Robot {
         else if(rc.getRoundNum() < 30){
             spawnUniformly(RobotType.MINER, myMiners);
         }
-        else if (soldierCount < minerCount * 2){
+        else if (soldierCount < minerCount * 1.5){
             spawnUniformly(RobotType.SOLDIER, mySoldiers);
         }
         else if(minerCount < soldierCount){
@@ -89,8 +86,10 @@ public class Archon extends Robot {
         // If you're building a soldier and you can see enemy soldier, spawn in direction of enemy
         MapLocation closest = null;
         int closestDist = 1000000;
-        for(int i = nearby.length; i-- > 0; ){
-            if(nearby[i].team == myTeam.opponent() && nearby[i].type == RobotType.SOLDIER){
+        RobotInfo[] enemiesNearby = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
+        for(int i = enemiesNearby.length; i-- > 0; ){
+            RobotInfo info = enemiesNearby[i];
+            if(info.type == RobotType.SOLDIER || info.type == RobotType.WATCHTOWER){
                 int dist = myLoc.distanceSquaredTo(nearby[i].location);
                 if(dist < closestDist){
                     closest = nearby[i].location;
@@ -102,7 +101,7 @@ public class Archon extends Robot {
             return false;
         }
         Direction dir = myLoc.directionTo(closest);
-        Direction[] spawnDirs = Navigation.closeDirections(dir);
+        Direction[] spawnDirs = Util.closeDirections(dir);
         if(Util.tryBuild(RobotType.SOLDIER, spawnDirs) != Direction.CENTER){
             Logger.Log("Successfully defended myself uwu");
             return true;
@@ -112,25 +111,22 @@ public class Archon extends Robot {
 
     public void spawnUniformly(RobotType spawnType, int offset) throws GameActionException {
         Direction[] defaultSpawnDirs = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NORTHEAST, Direction.SOUTHWEST, Direction.NORTHWEST, Direction.SOUTHEAST};
-        Direction[] spawnDirs = new Direction[8];
-        for(int i = 0; i < 8; i++){
-            spawnDirs[i] = defaultSpawnDirs[(i + offset) % 8];
-        }
+        Direction[] spawnDirs = Util.closeDirections(defaultSpawnDirs[offset % 8]);
         if(Util.tryBuild(spawnType, spawnDirs) != Direction.CENTER){
             comms.addRobotCount(spawnType, 1);
             if(spawnType == RobotType.MINER){
                 Logger.Log("Successfully spawned a miner!");
-                rc.setIndicatorString("Built a miner");
+                indicatorString += "Built a miner; ";
                 myMiners++;
             }
             else if(spawnType == RobotType.SOLDIER){
                 Logger.Log("Successfully spawned a soldier!");
-                rc.setIndicatorString("Built a soldier");
+                indicatorString += "Built a soldier; ";
                 mySoldiers++;
             }
             else if(spawnType == RobotType.BUILDER){
                 Logger.Log("Successfully spawned a builder!");
-                rc.setIndicatorString("Built a builder");
+                indicatorString += "Built a builder; ";
                 myBuilders++;
             }
         }
@@ -145,6 +141,9 @@ public class Archon extends Robot {
                 continue;
             }
             int repairPriority = 0;
+            if(nearby[i].getType() == RobotType.WATCHTOWER){ // Prioritize repairing watchtowers
+                repairPriority += 10000;
+            }
             if(nearby[i].getType() == RobotType.SOLDIER){ // Prioritize healing soldiers
                 repairPriority += 100;
             }
@@ -159,8 +158,8 @@ public class Archon extends Robot {
         }
         if(rc.canRepair(toRepair)){
             rc.repair(toRepair);
-            Logger.Log("Repairing a soldier: " + toRepair.toString());
-            rc.setIndicatorString("Repairing a soldier: " + toRepair.toString());
+            Logger.Log("Repairing: " + toRepair.toString());
+            indicatorString += "Repairing: " + toRepair.toString() + "; ";
         }
     }
 

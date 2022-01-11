@@ -12,14 +12,19 @@ public class Miner extends Robot {
     Direction spawnDir = null;
     MapLocation target = null;
 
+    int[][] goldMap = new int[5][5];
+    int[][] leadMap = new int[5][5];
+
+    int leadVal00 = 0; int leadVal01 = 0; int leadVal02 = 0; int leadVal03 = 0; int leadVal04 = 0; int leadVal10 = 0; int leadVal11 = 0; int leadVal12 = 0; int leadVal13 = 0; int leadVal14 = 0; int leadVal20 = 0; int leadVal21 = 0; int leadVal22 = 0; int leadVal23 = 0; int leadVal24 = 0; int leadVal30 = 0; int leadVal31 = 0; int leadVal32 = 0; int leadVal33 = 0; int leadVal34 = 0; int leadVal40 = 0; int leadVal41 = 0; int leadVal42 = 0; int leadVal43 = 0; int leadVal44 = 0;
+
     public Miner(RobotController rc) throws GameActionException {
         super(rc);
-        Logger.Log("Running constructor!");
+        // Logger.Log("Running constructor!");
     }
 
     public void run() throws GameActionException {
         super.run();
-//        Logger.Log("Round number: " + rc.getRoundNum());
+//        // Logger.Log("Round number: " + rc.getRoundNum());
         // Find the location of the archon that spawned you
         if(archonLoc == null) {
             for(int i = 0; i < numFriendlyArchons; i++){
@@ -32,281 +37,127 @@ public class Miner extends Robot {
         assert(archonLoc != null);
 
         // Bytecode here is 5800 (1700 used before this line)
-        Logger.Log("A: " + Clock.getBytecodesLeft());
+        // Logger.Log("A: " + Clock.getBytecodesLeft());
 
         // TODO: If you're blocking the way of a fellow miner, move forward so that he can help you mine
         // Movement strat: if you're right next to a miner and there's mineable blocks if you separate yourself, then separate yourself.
 
         // Calculate mineLocation
-        comms.scanEnemyArchons(); // 500 bytecode
+        comms.scanEnemyArchons(); // Costs 500 bytecode
 
-        Logger.Log("B: " + Clock.getBytecodesLeft());
-        // If you're under attack (or you sense an enemy soldier), retreat!
-        if(Util.countRobotTypes(nearby, RobotType.SOLDIER, myTeam.opponent()) > Util.countRobotTypes(nearby, RobotType.SOLDIER, myTeam)){ // 100 bytecode
-            nav.goTo(archonLoc);
-            tryMineAllDirections();
-            return;
-        }
-
-        Logger.Log("C: " + Clock.getBytecodesLeft());
-        MapLocation mineLocation = findClosestMine(); // 1700 bytecode for 56 leadlocs
-        Logger.Log("D: " + Clock.getBytecodesLeft());
-
-        // TODO: Better Scouting
-        // If there's nowhere that I can sense to mine, find a new mineLocation
-        if(mineLocation == null){
-            // Go scout for a mine location
-            if(target != null && myLoc.distanceSquaredTo(target) <= myType.actionRadiusSquared){
-                target = null; // Reset target since you've reached there
-            }
-            if(target == null){
-                target = nav.getRandomMapLocation(); // Find new target
-            }
-            nav.goTo(target); // Go towards target!
-            Logger.Log("D1: " + Clock.getBytecodesLeft());
-            tryMineAllDirections();
-            return;
-        }
-        else if(myLoc.distanceSquaredTo(mineLocation) > 2){
-            nav.goTo(mineLocation);
-            Logger.Log("D2: " + Clock.getBytecodesLeft());
-            tryMineAllDirections();
-            return;
-        }
-        else if(rc.isMovementReady()){ // 300 byetecode (doesn't check if the location has led)
-            // Spreading out code
-            Logger.Log("D3: " + Clock.getBytecodesLeft());
-            Direction bestMoveDir = moveAwayFromTeammates(); // 800 bytecode
-            if(bestMoveDir != null){
-//                    if(Util.tryMove(Util.getDirectionsGoingTowards(bestMoveDir))){
-                if(nav.goTo(myLoc.add(bestMoveDir).add(bestMoveDir).add(bestMoveDir))){
-                    tryMineAllDirections();
-                    return; // Moved away from adjacent teammates
+        // Logger.Log("Before filling: " + Clock.getBytecodesLeft());
+        boolean movedTowardsGold = goToClosestGold();
+        if(!movedTowardsGold){
+            RobotInfo[] nearbyEnemies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
+            fillMapsUnrolled(); // Costs 1125 bytecode. Bytecode here is 4491
+            double currHeuristic = getHeursitic(myLoc, nearbyEnemies); // Costs 800 bytecode
+            // Logger.Log("Single heuristic: " + Clock.getBytecodesLeft());
+            // Logger.Log("Heuristic value: " + currHeuristic);
+            double bestHeuristic = currHeuristic;
+            if(bestHeuristic > 0){ // Can currently mine from this location
+                Direction bestDir = null;
+                for(int i = 0; i < Util.directions.length; i++){ // If you can move to a better spot, do so
+                    Direction dir = Util.directions[i];
+                    if(!rc.canMove(dir)){
+                        continue;
+                    }
+                    MapLocation newLoc = myLoc.add(dir);
+                    double newHeuristic = getHeursitic(newLoc, nearbyEnemies);
+                    if(newHeuristic > bestHeuristic){
+                        bestHeuristic = newHeuristic;
+                        bestDir = dir;
+                    }
+                    // Logger.Log("Next heuristic: " + Clock.getBytecodesLeft());
+                }
+                if(bestDir != null){ // If you can move in a better direction, do so
+                    rc.move(bestDir);
+                    indicatorString += "CH: " + (int)currHeuristic + ",BH: " + (int)bestHeuristic + ", Dir:" + bestDir + "; ";
                 }
             }
-            Logger.Log("D4: " + Clock.getBytecodesLeft());
-        }
-
-        // Try to mine on squares around us.
-        if(mineLocation != null){
-            // If you can go to a better spot and mine from there, do that
-            double currCooldown = rc.senseRubble(myLoc) + 10.0;
-            double bestCooldown = currCooldown;
-            Direction bestDir = null;
-            for(int i = 0; i < Navigation.directions.length; i++){
-                MapLocation newLoc = myLoc.add(Navigation.directions[i]);
-                if(!rc.canSenseLocation(newLoc)) {
-                    continue;
+            else{ // Find nearest mine
+                MapLocation targetLoc = findClosestMine();
+                // Logger.Log("Found closest mine: " + Clock.getBytecodesLeft());
+                if(targetLoc == null){
+                    targetLoc = nav.getRandomMapLocation();
                 }
-                double newCooldown = rc.senseRubble(newLoc) + 10.0;
-                if(newCooldown >= bestCooldown){
-                    continue;
-                }
-                if(!checkMineable(newLoc)){
-                    continue;
-                }
-                bestCooldown = newCooldown;
-                bestDir = Navigation.directions[i];
+                nav.goTo(targetLoc);
+                indicatorString += "NAV " + Util.mapLocationToInt(targetLoc) + "; ";
             }
-            if(bestCooldown < currCooldown / 1.5){
-                Util.tryMove(bestDir);
-            }
-            // Otherwise, just mine
-            Logger.Log("Trying to mine at: " + mineLocation.toString());
-            tryMine(mineLocation);
         }
         tryMineAllDirections();
-        Logger.Log("E: " + Clock.getBytecodesLeft());
-
+        // Logger.Log("After mining: " + Clock.getBytecodesLeft());
     }
 
-    // Just move away from ppl in general, whether they're teammates or not
-    public Direction moveAwayFromTeammates() throws GameActionException {
-        // West: [-2, 0] : [-1, 1]
-        // East: [0, 2] : [-1, 1]
-        // North: [-1, 1] : [0, 2]
-        // South: [-1, 1] : [-2, 0]
-        // Northwest: [-2, 0] : [0, 2]
-        // Northeast: [0, 2] : [0, ]
-        // Southwest: [-2, 0] : [-2, 0]
-        // Southeast: [0, 2] : [-2, 0]
-//        boolean[][] valid = new boolean[5][5];
-//        boolean[] validMoveDirs = new boolean[8];
-//
-//        for(int dx = -2; dx <= 2; dx++){
-//            for(int dy = -2; dy <= 2; dy++){
-//                MapLocation testLoc = new MapLocation(myLoc.x + dx, myLoc.y + dy);
-//                if(rc.canSenseLocation(testLoc)){
-//                    boolean valid = false;
-//                    if(rc.senseLead(testLoc) > 1){
-//                        valid = true;
-//                    }
-//                    else if(rc.senseGold(testLoc) > 0){
-//                        valid = true;
-//                    }
-//                    if(valid){
-//                        if(dx >= -2 && dx <= 0)
-//                    }
-//                }
-//            }
-//        }
-
-        int northAdj = 0;
-        int southAdj = 0;
-        int westAdj = 0;
-        int eastAdj = 0;
-
-        Logger.Log("Bytecode before dxdy: " + Clock.getBytecodesLeft());
-
-        int myAdj = 0;
-        if(friendlyRobotAtLocationDxDy(1, 0)){
-            myAdj++;
-        }
-        if(friendlyRobotAtLocationDxDy(-1, 0)){
-            myAdj++;
-        }
-        if(friendlyRobotAtLocationDxDy(0, 1)){
-            myAdj++;
-        }
-        if(friendlyRobotAtLocationDxDy(0, -1)){
-            myAdj++;
-        }
-
-        if(friendlyRobotAtLocationDxDy(-2, 0)){
-            westAdj++;
-        }
-        if(friendlyRobotAtLocationDxDy(-1, 1)){
-            westAdj++;
-            northAdj++;
-        }
-        if(friendlyRobotAtLocationDxDy(0, 2)){
-            northAdj++;
-        }
-        if(friendlyRobotAtLocationDxDy(1, 1)){
-            northAdj++;
-            eastAdj++;
-        }
-        if(friendlyRobotAtLocationDxDy(2, 0)){
-            eastAdj++;
-        }
-        if(friendlyRobotAtLocationDxDy(1, -1)){
-            eastAdj++;
-            southAdj++;
-        }
-        if(friendlyRobotAtLocationDxDy(0, -2)){
-            southAdj++;
-        }
-        if(friendlyRobotAtLocationDxDy(-1, -1)){
-            southAdj++;
-            westAdj++;
-        }
-
-        Logger.Log("Bytecode after dxdy: " + Clock.getBytecodesLeft());
-
-        if(myAdj == 0){
-            return null;
-        }
-
-        // Go in the best direction
-        if(eastAdj < northAdj && eastAdj < southAdj && eastAdj < westAdj && eastAdj < myAdj){
-            return Direction.EAST;
-        }
-        if(westAdj < northAdj && westAdj < southAdj && westAdj < eastAdj && westAdj < myAdj){
-            return Direction.WEST;
-        }
-        if(southAdj < northAdj && southAdj < eastAdj && southAdj < westAdj && southAdj < myAdj){
-            return Direction.SOUTH;
-        }
-        if(northAdj < eastAdj && northAdj < southAdj && northAdj < westAdj && northAdj < myAdj){
-            return Direction.NORTH;
-        }
-
-        return null;
-    }
-
-    public boolean friendlyRobotAtLocationDxDy(int dx, int dy) throws GameActionException {
-        MapLocation newLoc = new MapLocation(myLoc.x + dx, myLoc.y + dy);
-        if(!rc.canSenseLocation(newLoc)){
+    public boolean goToClosestGold() throws GameActionException {
+        MapLocation[] goldLocs = rc.senseNearbyLocationsWithGold();
+        if(goldLocs.length == 0){
             return false;
         }
-        RobotInfo info = rc.senseRobotAtLocation(newLoc);
-        if(info == null){
-            return false;
+        int closestDist = 100000;
+        MapLocation closest = null;
+        for(int i = 0; i < goldLocs.length; i++){
+            int dist = myLoc.distanceSquaredTo(goldLocs[i]);
+            if(dist < closestDist){
+                closestDist = dist;
+                closest = goldLocs[i];
+            }
         }
-        return info.team == myTeam;
+        if(closestDist <= 2){ // Can alr mine the gold
+            return true;
+        }
+        nav.goTo(closest);
+        return true;
     }
 
-
-    // TODO: Better miner movement in general. They get stuck in corners and don't explore (copy over soldier code)
-
-    public int getAdjacentTeammatesCount(MapLocation center, boolean cardinal) throws GameActionException {
-        Direction[] dirs = Navigation.directions;
-        if(cardinal){
-            dirs = Navigation.cardinalDirections;
-        }
-        int count = 0;
-//        Logger.Log("Dirs: " + dirs.length);
-        for(int i = dirs.length; i-- > 0; ){
-            MapLocation adjLoc = center.add(dirs[i]); // Can use rc.isLocationOccupied to save bytecode
-//            Logger.Log("\tChecking adjacent location: " + adjLoc.toString());
-            if(rc.canSenseLocation(adjLoc)){
-                RobotInfo info = rc.senseRobotAtLocation(adjLoc);
-                if(info == null){
-                    continue;
-                }
-                if(info.team == myTeam){
-                    count++;
-                }
-            }
-        }
-        return count;
+    // Check if you can mine lead from a given location
+    public int numLeadMineable(int dx, int dy) throws GameActionException {
+        return leadMap[dx + 1][dy + 1]
+        + leadMap[dx + 2][dy + 1]
+        + leadMap[dx + 3][dy + 1]
+        + leadMap[dx + 1][dy + 2]
+        + leadMap[dx + 2][dy + 2]
+        + leadMap[dx + 3][dy + 2]
+        + leadMap[dx + 1][dy + 3]
+        + leadMap[dx + 2][dy + 3]
+        + leadMap[dx + 3][dy + 3];
     }
 
-    // True if you can mine from a given area, false if you can't
-    public boolean checkMineable(MapLocation center) throws GameActionException {
-        Logger.Log("Checkmineable start: " + Clock.getBytecodesLeft());
-        for (int i = 0; i < Navigation.allDirections.length; i++) { // Maximum mine radius is 2
-            MapLocation newLoc = center.add(Navigation.allDirections[i]);
-            if(!rc.canSenseLocation(newLoc)){
-                continue;
-            }
-            int lead = rc.senseLead(newLoc);
-            int gold = rc.senseGold(newLoc);
-            if(lead > 1 || gold > 0){
-                return true;
+    // TODO: Move away from enemies
+    // Higher heuristic value is better
+    public double getHeursitic(MapLocation center, RobotInfo[] nearbyEnemies) throws GameActionException { // 1000 bytecode
+        if(!rc.canSenseLocation(center)){
+            return -10000;
+        }
+        double numTeammates = rc.senseNearbyRobots(center, 2, myTeam).length; // 100 bytecode
+        double numEnemies = 0.0;
+        for(int i = nearbyEnemies.length; i-- > 0; ){
+            RobotInfo info = nearbyEnemies[i];
+            if(info.type.damage > 0 && myLoc.distanceSquaredTo(info.location) <= info.type.actionRadiusSquared){
+                numEnemies++;
             }
         }
-        Logger.Log("Checkmineable end: " + Clock.getBytecodesLeft());
-        return false;
+        int dx = center.x - myLoc.x;
+        int dy = center.y - myLoc.y;
+        // Logger.Log("XD A " + Clock.getBytecodesLeft());
+//        double leadMineable = numLeadMineable(dx, dy);
+        double leadMineable = numLeadMineableUnrolled(dx, dy); // 50 bytecode baby. // TODO: Do the same thing for gold
+        // Logger.Log("XD C " + Clock.getBytecodesLeft());
+        double cooldown = 10.0 + rc.senseRubble(center);
+        return (leadMineable - numTeammates * 5 - numEnemies * 15) / cooldown; // Larger heuristic is better
     }
-
-    // True if you can mine from a given area, false if you can't
-    public MapLocation getAdjacentMine(MapLocation center) throws GameActionException {
-        for (int i = 0; i < Navigation.allDirections.length; i++) { // Maximum mine radius is 2
-            MapLocation newLoc = center.add(Navigation.allDirections[i]);
-            if(!rc.canSenseLocation(newLoc)){
-                continue;
-            }
-            int lead = rc.senseLead(newLoc);
-            int gold = rc.senseGold(newLoc);
-            if(lead > 1 || gold > 0){
-                return newLoc;
-            }
-        }
-        return null;
-    }
-
 
     // Find the closest location with the most reserves (gold and lead) to mine from. If there is no location to mine from, return null
     public MapLocation findClosestMine() throws GameActionException {
         MapLocation bestLoc = null;
-        int bestDist = 100000;
+        int bestHeuristic = 100000;
         // Go to nearest gold mine
         MapLocation[] goldLocs = rc.senseNearbyLocationsWithGold(myType.visionRadiusSquared);
         for(int i = 0; i < goldLocs.length; i++){
             int dist = myLoc.distanceSquaredTo(goldLocs[i]);
-            if(dist < bestDist){
-                bestDist = dist;
+            int cooldown = 10 + rc.senseRubble(goldLocs[i]);
+            int heuristic = dist + cooldown;
+            if(heuristic < bestHeuristic){
+                bestHeuristic = dist;
                 bestLoc = goldLocs[i];
             }
         }
@@ -314,54 +165,274 @@ public class Miner extends Robot {
             return bestLoc;
         }
 
-//        Logger.Log("Intermediary: " + Clock.getBytecodesLeft());
-
+        // Go to nearest lead mine
         MapLocation[] leadLocs = rc.senseNearbyLocationsWithLead(myType.visionRadiusSquared);
-        Logger.Log("Num leadlocs found: " + leadLocs.length);
+        // Logger.Log("Num leadlocs found: " + leadLocs.length);
         for(int i = 0; i < leadLocs.length; i++){
             int dist = myLoc.distanceSquaredTo(leadLocs[i]);
-            if(dist >= bestDist){
+            int cooldown = 10 + rc.senseRubble(leadLocs[i]);
+            int heuristic = dist + cooldown;
+            if(heuristic >= bestHeuristic){
                 continue;
             }
             if(rc.senseLead(leadLocs[i]) == 1){ // Save for farming
                 continue;
             }
-            bestDist = dist;
+            bestHeuristic = heuristic;
             bestLoc = leadLocs[i];
-//            Logger.Log("LMAO: " + Clock.getBytecodesLeft()); // 25 bytecode per loop * 70 max loops = 2450 max bytecode
         }
 
         return bestLoc;
     }
 
-    public void tryMine(MapLocation mineLocation) throws GameActionException {
-        // TODO: If you reach the limit, then find a new spot to mine at
-        while (rc.canMineGold(mineLocation) && rc.senseGold(mineLocation) > 0) {
-            rc.mineGold(mineLocation);
-        }
-        while (rc.canMineLead(mineLocation) && rc.senseLead(mineLocation) > 1) {  // don't mine if therre's one lead so we can regenerate
-            rc.mineLead(mineLocation);
-        }
-    }
-
     public void tryMineAllDirections() throws GameActionException {
-//        return;
-        for(int i = 0; i < Navigation.directions.length; i++){
-            Direction dir = Navigation.directions[i];
+        for(int i = 0; i < Util.directions.length; i++){
+            Direction dir = Util.directions[i];
             MapLocation loc = myLoc.add(dir);
             while (rc.canMineGold(loc) && rc.senseGold(loc) > 0) {
                 rc.mineGold(loc);
+                indicatorString += "G" + Util.mapLocationToInt(loc);
             }
         }
 
-        for(int i = 0; i < Navigation.directions.length; i++){
-            Direction dir = Navigation.directions[i];
+        for(int i = 0; i < Util.directions.length; i++){
+            Direction dir = Util.directions[i];
             MapLocation loc = myLoc.add(dir);
             while (rc.canMineLead(loc) && rc.senseLead(loc) > 1) {
                 rc.mineLead(loc);
+                indicatorString += "L" + Util.mapLocationToInt(loc);
             }
         }
-
     }
+
+    public void fillMaps() throws GameActionException {
+
+        for(int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                MapLocation temp = new MapLocation(myLoc.x + (i - 2), myLoc.y + (j - 2));
+                if(!rc.canSenseLocation(temp)){
+//                    goldMap[i][j] = 0;
+                    leadMap[i][j] = 0;
+                }
+//                goldMap[i][j] = rc.senseGold(temp);
+                int leadVal = rc.senseLead(temp);
+                if(leadVal > 1){ // Save for farming
+                    leadMap[i][j] = leadVal;
+                }
+                else{
+                    leadMap[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    public void fillMapsUnrolled() throws GameActionException {
+        MapLocation temp = new MapLocation(myLoc.x + -2, myLoc.y + -2);
+        if(!rc.canSenseLocation(temp)){
+            leadVal00 = 0;
+        }
+        else{ leadVal00 = rc.senseLead(temp); }
+        if(leadVal00 == 1){ leadVal00 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + -2, myLoc.y + -1);
+        if(!rc.canSenseLocation(temp)){
+            leadVal01 = 0;
+        }
+        else{ leadVal01 = rc.senseLead(temp); }
+        if(leadVal01 == 1){ leadVal01 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + -2, myLoc.y + 0);
+        if(!rc.canSenseLocation(temp)){
+            leadVal02 = 0;
+        }
+        else{ leadVal02 = rc.senseLead(temp); }
+        if(leadVal02 == 1){ leadVal02 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + -2, myLoc.y + 1);
+        if(!rc.canSenseLocation(temp)){
+            leadVal03 = 0;
+        }
+        else{ leadVal03 = rc.senseLead(temp); }
+        if(leadVal03 == 1){ leadVal03 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + -2, myLoc.y + 2);
+        if(!rc.canSenseLocation(temp)){
+            leadVal04 = 0;
+        }
+        else{ leadVal04 = rc.senseLead(temp); }
+        if(leadVal04 == 1){ leadVal04 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + -1, myLoc.y + -2);
+        if(!rc.canSenseLocation(temp)){
+            leadVal10 = 0;
+        }
+        else{ leadVal10 = rc.senseLead(temp); }
+        if(leadVal10 == 1){ leadVal10 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + -1, myLoc.y + -1);
+        if(!rc.canSenseLocation(temp)){
+            leadVal11 = 0;
+        }
+        else{ leadVal11 = rc.senseLead(temp); }
+        if(leadVal11 == 1){ leadVal11 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + -1, myLoc.y + 0);
+        if(!rc.canSenseLocation(temp)){
+            leadVal12 = 0;
+        }
+        else{ leadVal12 = rc.senseLead(temp); }
+        if(leadVal12 == 1){ leadVal12 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + -1, myLoc.y + 1);
+        if(!rc.canSenseLocation(temp)){
+            leadVal13 = 0;
+        }
+        else{ leadVal13 = rc.senseLead(temp); }
+        if(leadVal13 == 1){ leadVal13 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + -1, myLoc.y + 2);
+        if(!rc.canSenseLocation(temp)){
+            leadVal14 = 0;
+        }
+        else{ leadVal14 = rc.senseLead(temp); }
+        if(leadVal14 == 1){ leadVal14 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 0, myLoc.y + -2);
+        if(!rc.canSenseLocation(temp)){
+            leadVal20 = 0;
+        }
+        else{ leadVal20 = rc.senseLead(temp); }
+        if(leadVal20 == 1){ leadVal20 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 0, myLoc.y + -1);
+        if(!rc.canSenseLocation(temp)){
+            leadVal21 = 0;
+        }
+        else{ leadVal21 = rc.senseLead(temp); }
+        if(leadVal21 == 1){ leadVal21 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 0, myLoc.y + 0);
+        if(!rc.canSenseLocation(temp)){
+            leadVal22 = 0;
+        }
+        else{ leadVal22 = rc.senseLead(temp); }
+        if(leadVal22 == 1){ leadVal22 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 0, myLoc.y + 1);
+        if(!rc.canSenseLocation(temp)){
+            leadVal23 = 0;
+        }
+        else{ leadVal23 = rc.senseLead(temp); }
+        if(leadVal23 == 1){ leadVal23 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 0, myLoc.y + 2);
+        if(!rc.canSenseLocation(temp)){
+            leadVal24 = 0;
+        }
+        else{ leadVal24 = rc.senseLead(temp); }
+        if(leadVal24 == 1){ leadVal24 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 1, myLoc.y + -2);
+        if(!rc.canSenseLocation(temp)){
+            leadVal30 = 0;
+        }
+        else{ leadVal30 = rc.senseLead(temp); }
+        if(leadVal30 == 1){ leadVal30 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 1, myLoc.y + -1);
+        if(!rc.canSenseLocation(temp)){
+            leadVal31 = 0;
+        }
+        else{ leadVal31 = rc.senseLead(temp); }
+        if(leadVal31 == 1){ leadVal31 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 1, myLoc.y + 0);
+        if(!rc.canSenseLocation(temp)){
+            leadVal32 = 0;
+        }
+        else{ leadVal32 = rc.senseLead(temp); }
+        if(leadVal32 == 1){ leadVal32 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 1, myLoc.y + 1);
+        if(!rc.canSenseLocation(temp)){
+            leadVal33 = 0;
+        }
+        else{ leadVal33 = rc.senseLead(temp); }
+        if(leadVal33 == 1){ leadVal33 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 1, myLoc.y + 2);
+        if(!rc.canSenseLocation(temp)){
+            leadVal34 = 0;
+        }
+        else{ leadVal34 = rc.senseLead(temp); }
+        if(leadVal34 == 1){ leadVal34 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 2, myLoc.y + -2);
+        if(!rc.canSenseLocation(temp)){
+            leadVal40 = 0;
+        }
+        else{ leadVal40 = rc.senseLead(temp); }
+        if(leadVal40 == 1){ leadVal40 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 2, myLoc.y + -1);
+        if(!rc.canSenseLocation(temp)){
+            leadVal41 = 0;
+        }
+        else{ leadVal41 = rc.senseLead(temp); }
+        if(leadVal41 == 1){ leadVal41 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 2, myLoc.y + 0);
+        if(!rc.canSenseLocation(temp)){
+            leadVal42 = 0;
+        }
+        else{ leadVal42 = rc.senseLead(temp); }
+        if(leadVal42 == 1){ leadVal42 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 2, myLoc.y + 1);
+        if(!rc.canSenseLocation(temp)){
+            leadVal43 = 0;
+        }
+        else{ leadVal43 = rc.senseLead(temp); }
+        if(leadVal43 == 1){ leadVal43 = 0; } // Save for farming
+
+        temp = new MapLocation(myLoc.x + 2, myLoc.y + 2);
+        if(!rc.canSenseLocation(temp)){
+            leadVal44 = 0;
+        }
+        else{ leadVal44 = rc.senseLead(temp); }
+        if(leadVal44 == 1){ leadVal44 = 0; } // Save for farming
+    }
+
+    public int numLeadMineableUnrolled(int dx, int dy){
+        if(dx == -1 && dy == -1){
+            return leadVal00 + leadVal10 + leadVal20 + leadVal01 + leadVal11 + leadVal21 + leadVal02 + leadVal12  + leadVal22;
+        }
+        if(dx == -1 && dy == 0){
+            return leadVal00 + leadVal11 + leadVal21 + leadVal02 + leadVal12 + leadVal22 + leadVal03 + leadVal13  + leadVal23;
+        }
+        if(dx == -1 && dy == 1){
+            return leadVal00 + leadVal12 + leadVal22 + leadVal03 + leadVal13 + leadVal23 + leadVal04 + leadVal14  + leadVal24;
+        }
+        if(dx == 0 && dy == -1){
+            return leadVal11 + leadVal20 + leadVal30 + leadVal11 + leadVal21 + leadVal31 + leadVal12 + leadVal22  + leadVal32;
+        }
+        if(dx == 0 && dy == 0){
+            return leadVal11 + leadVal21 + leadVal31 + leadVal12 + leadVal22 + leadVal32 + leadVal13 + leadVal23  + leadVal33;
+        }
+        if(dx == 0 && dy == 1){
+            return leadVal11 + leadVal22 + leadVal32 + leadVal13 + leadVal23 + leadVal33 + leadVal14 + leadVal24  + leadVal34;
+        }
+        if(dx == 1 && dy == -1){
+            return leadVal22 + leadVal30 + leadVal40 + leadVal21 + leadVal31 + leadVal41 + leadVal22 + leadVal32  + leadVal42;
+        }
+        if(dx == 1 && dy == 0){
+            return leadVal22 + leadVal31 + leadVal41 + leadVal22 + leadVal32 + leadVal42 + leadVal23 + leadVal33  + leadVal43;
+        }
+        if(dx == 1 && dy == 1){
+            return leadVal22 + leadVal32 + leadVal42 + leadVal23 + leadVal33 + leadVal43 + leadVal24 + leadVal34  + leadVal44;
+        }
+        return 0;
+    }
+
 
 }

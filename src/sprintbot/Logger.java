@@ -6,13 +6,15 @@ public class Logger {
 
     static boolean limitToIDs = false;
     static int[] allowedIDs = {-1};
-    static boolean limitToTypes = false;
+    static boolean limitToTypes = true;
     static RobotType[] allowedTypes = {RobotType.MINER};
 
     static RobotType myType;
     static int myID;
+    static Robot robot;
 
     public static void Log(String str){
+//        robot.indicatorString += str + "; ";
         if(limitToIDs){
             if(Util.getArrayIndex(allowedIDs, myID) != -1){
                 System.out.println(str);
@@ -23,7 +25,7 @@ public class Logger {
 //            if(myType == RobotType.MINER){
 //                System.out.println(str);
 //            }
-            if(myType == RobotType.SOLDIER && myID == 11309){
+            if(myType == RobotType.MINER){
                 System.out.println(str);
             }
         }

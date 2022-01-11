@@ -6,6 +6,9 @@ import java.util.Random;
 
 public class Util {
 
+    static RobotController rc;
+    static Robot robot;
+
     static final Direction[] directions = {
             Direction.NORTH,
             Direction.NORTHEAST,
@@ -17,10 +20,39 @@ public class Util {
             Direction.NORTHWEST,
     };
 
-    static RobotController rc;
-    static Robot robot;
+    static final Direction[] allDirections = {
+            Direction.NORTH,
+            Direction.NORTHEAST,
+            Direction.EAST,
+            Direction.SOUTHEAST,
+            Direction.SOUTH,
+            Direction.SOUTHWEST,
+            Direction.WEST,
+            Direction.NORTHWEST,
+            Direction.CENTER
+    };
 
-    static MapLocation copyLoc(MapLocation loc){ return loc.add(Direction.CENTER); }
+    static final Direction[] cardinalDirections = {
+            Direction.WEST, Direction.EAST, Direction.SOUTH, Direction.NORTH
+    };
+
+    static final Direction[] nonCardinalDirections = {
+            Direction.NORTHWEST, Direction.NORTHEAST, Direction.SOUTHEAST, Direction.SOUTHWEST
+    };
+
+    static Direction[] closeDirections(Direction dir){
+        Direction[] close = {
+                dir,
+                dir.rotateLeft(),
+                dir.rotateRight(),
+                dir.rotateLeft().rotateLeft(),
+                dir.rotateRight().rotateRight(),
+                dir.rotateLeft().rotateLeft().rotateLeft(),
+                dir.rotateRight().rotateRight().rotateRight(),
+                dir.opposite()
+        };
+        return close;
+    }
 
     static Direction tryBuild(RobotType type, Direction[] dirs) throws GameActionException {
         for(int i = 0; i < dirs.length; i++){
@@ -50,22 +82,6 @@ public class Util {
         }
         return false;
     }
-
-    static Direction[] shuffleArr(Direction[] arr){
-        Random rand = new Random();
-        Direction[] copy = new Direction[arr.length];
-        for(int i = 0; i < arr.length; i++){
-            copy[i] = arr[i];
-        }
-        for (int i = 0; i < copy.length; i++) {
-            int randomIndexToSwap = rand.nextInt(copy.length);
-            Direction temp = copy[randomIndexToSwap];
-            copy[randomIndexToSwap] = copy[i];
-            copy[i] = temp;
-        }
-        return copy;
-    }
-
 
     static int xAndYToCompressed(int x, int y){
         return x * 100 + y + 1;
@@ -305,23 +321,16 @@ public class Util {
         }
     }
 
-    public static Direction[] getDirectionsGoingTowards(Direction dir){
+    public static Direction[] getDirectionsStrictlyGoingTowards(Direction dir){
         return new Direction[]{dir, dir.rotateLeft(), dir.rotateRight()};
     }
 
-    public static Direction[] closeDirections(Direction dir){
-        Direction[] close = {
-                dir.rotateLeft().rotateLeft().rotateLeft(),
-                dir.rotateLeft().rotateLeft(),
-                dir.rotateLeft(),
-                dir,
-                dir.rotateRight(),
-                dir.rotateRight().rotateRight(),
-                dir.rotateRight().rotateRight().rotateRight(),
-                dir.opposite()
-        };
-        return close;
+    // Costs 100 bytecode
+    public int getAdjacentTeammatesCount(MapLocation center, boolean cardinal) throws GameActionException {
+        if(cardinal){
+            return rc.senseNearbyRobots(center, 1, robot.myTeam).length;
+        }
+        return rc.senseNearbyRobots(center, 2, robot.myTeam).length;
     }
-
 
 }
