@@ -34,16 +34,16 @@ public strictfp class RobotPlayer {
                 rc.setIndicatorString(robot.indicatorString);
 //                System.out.println("Bytecode left: " + Clock.getBytecodesLeft());
                 if(!checkBytecode(robot, rc)){
-//                    rc.resign();
+                    rc.resign();
                 }
             } catch (GameActionException e) {
                 Logger.Log("CAUGHT GAMEACTIONEXCEPTION");
                 e.printStackTrace();
-//                rc.resign();
+                rc.resign();
             } catch (Exception e) {
                 Logger.Log("CAUGHT EXCEPTION");
                 e.printStackTrace();
-//                rc.resign();
+                rc.resign();
             } finally {
                 Clock.yield();
             }
