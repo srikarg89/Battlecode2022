@@ -1,4 +1,4 @@
-package sprintbot;
+package sprintbot2;
 
 import battlecode.common.*;
 
@@ -39,8 +39,8 @@ public class Archon extends Robot {
         MapLocation enemyCOM = Util.calculateEnemySoldierCOM(enemiesInVision);
         comms.updateCurrAttackLoc(enemiesInVision, enemyCOM);
 
-        Logger.Log(myMiners + "");
-        Logger.Log(mySoldiers + "");
+        System.out.println("My miners: " + minerCount);
+        System.out.println("My soldiers: " + soldierCount);
         // Try building
         if (Util.mapLocationToInt(rc.getLocation()) == rc.readSharedArray(rc.getRoundNum() % this.numFriendlyArchons)) {
             // Build in a different direction than last time
@@ -132,6 +132,7 @@ public class Archon extends Robot {
             }
         }
         // TODO: Instead of going in order, check where the current miners are and try to spawn in the direction opposite of the most miners
+        // TODO: Also look at the cooldown of the block ur spawning on
     }
 
     public void runRepair() throws GameActionException {

@@ -1,4 +1,4 @@
-package sprintbot;
+package sprintbot2;
 
 import battlecode.common.*;
 

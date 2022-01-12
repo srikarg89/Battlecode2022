@@ -1,4 +1,4 @@
-package sprintbot;
+package sprintbot2;
 
 import battlecode.common.*;
 
@@ -78,6 +78,7 @@ public class Builder extends Robot {
                 }
             }
         }
+        checkPossibleDeath();
     }
 
     public void repairNearby() throws GameActionException {

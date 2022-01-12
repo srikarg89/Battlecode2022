@@ -1,4 +1,4 @@
-package sprintbot;
+package sprintbot2;
 
 import battlecode.common.*;
 
@@ -49,7 +49,7 @@ public class Soldier extends Robot {
         RobotInfo[] nearbyActionEnemies = rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam.opponent());
         RobotInfo[] nearbyVisionEnemies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
         RobotInfo nearestEnemyInfo = getNearestEnemy(nearbyActionEnemies);
-        boolean inSafeZone = checkSafe(nearbyFriendlies, nearbyActionEnemies, nearestEnemyInfo); // 2300 bytecode for 31 nearby
+        boolean inSafeZone = checkSafe(nearbyFriendlies, nearbyVisionEnemies, nearestEnemyInfo); // 2300 bytecode for 31 nearby
         Logger.Log("After checking if safe: " + Clock.getBytecodesLeft());
         RobotInfo attackTarget = findAttackTarget(nearbyActionEnemies);
         Logger.Log("Action cooldown: " + rc.getActionCooldownTurns());
@@ -70,7 +70,9 @@ public class Soldier extends Robot {
                         Logger.Log("Punch and pull back");
                         attack(attackTarget);
                         if(attackTarget.type == RobotType.SOLDIER || attackTarget.type == RobotType.WATCHTOWER){
-                            retreat(enemyCOM);
+                            Direction dirToEnemyCOM = myLoc.directionTo(enemyCOM);
+                            moveForwardSafely(myLoc.subtract(dirToEnemyCOM).subtract(dirToEnemyCOM).subtract(dirToEnemyCOM));
+//                            retreat(enemyCOM);
                         }
 //                        retreat(enemyCOM);
                     }
@@ -115,7 +117,7 @@ public class Soldier extends Robot {
             moveForwardSafely(myLoc.subtract(dirToEnemyCOM).subtract(dirToEnemyCOM).subtract(dirToEnemyCOM));
 //            retreat(enemyCOM); // Get the hell out of there
         }
-
+        checkPossibleDeath();
         turnsSinceAttack++;
 
     }
@@ -305,6 +307,8 @@ public class Soldier extends Robot {
             if(myLoc.distanceSquaredTo(targetLoc) > myType.actionRadiusSquared){ // Make sure you can still attack the enemy troop
                 continue;
             }
+            // TODO: If I'm walking into more enemies, don't do that
+
             int rubble = rc.senseRubble(testLoc);
             if(rubble < lowestRubble){
                 lowestLoc = testLoc;
@@ -336,9 +340,8 @@ public class Soldier extends Robot {
     }
 
     public void resetTarget() throws GameActionException {
-        // Search for enemy on comms
         // Check if the squad is currently attacking anyone
-        MapLocation tempLoc = comms.getCurrAttackLoc(); // TODO: Let archon updateCurrAttackLoc so that soldiers will go back to help defend archon
+        MapLocation tempLoc = comms.getCurrAttackLoc();
         if(tempLoc != null){
             currentTarget = tempLoc;
             targetLevel = 4;
