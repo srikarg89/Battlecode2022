@@ -6,21 +6,10 @@ public class Builder extends Robot {
 
 
     MapLocation archonLoc = null;
-    MapLocation lastBuiltTower = null;
     int archonIndex = -1;
-    boolean needToRepair = false;
 
     MapLocation targetBuildSpot = null;
 
-    MapLocation[] watchTowerBuildSpots = new MapLocation[8];
-    int numSpots = 0;
-    int spotIndex = 0;  // index value used to mark which build spot we're navigating to
-    boolean canBuild = false;
-    int direction_multiplier = rc.getRoundNum()/100*4;
-
-    int mid_x = rc.getMapWidth()/2;
-    int mid_y = rc.getMapHeight()/2;
-    MapLocation middle = new MapLocation(mid_x, mid_y);
 
 
 
@@ -31,12 +20,8 @@ public class Builder extends Robot {
 
     public void run() throws GameActionException {
         super.run();
-//        System.out.println(numSpots +", " + spotIndex);
-//        rc.setIndicatorString(""+needToRepair);
-//        desiredDistanceFromArchonSquared = rc.getRobotCount() / 5;  //arbitrary, need to fix
 
-
-        if(archonIndex == -1){
+        if (archonIndex == -1) {
             archonIndex = comms.getClosestFriendlyArchonIndex();
             archonLoc = Util.intToMapLocation(rc.readSharedArray(archonIndex));
         }
@@ -66,31 +51,65 @@ public class Builder extends Robot {
 //
 //        }
 
-        if(myLoc.distanceSquaredTo(archonLoc) <= 2){
-            Logger.Log("Too close to archon, so moving away (towards center)");
-            MapLocation map_center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
-            nav.goTo(map_center);
-        }
-        else{
-            boolean repaired = repair();
-            // TODO: Move out of the archon's way when spawned
-            if(!repaired){
-                // Check if your build location is still available
-                if(rc.getTeamLeadAmount(rc.getTeam()) > RobotType.WATCHTOWER.buildCostLead * 2){      // time to build a tower :D
-                    Logger.Log("Building watchtower");
-                    bulidWatchtower();
-                }
-                else{
-                    Logger.Log("Repairing nearby");
-                    repairNearby();
+
+        //TODO: make builders retreat from enemies if we are getting overpowered
+        boolean enoughLeadForWatchTower = rc.getTeamLeadAmount(rc.getTeam()) > RobotType.WATCHTOWER.buildCostLead * 2;
+
+        if (rc.isActionReady()) {
+            boolean repaired = repair(); // TODO: we already find a potentialRepairSpot in movement code, so just use that instead of this method (which is kinda expensive)
+            if(!repaired && targetBuildSpot != null && myLoc.distanceSquaredTo(targetBuildSpot) <= 2){      //time to build
+                Direction dir = myLoc.directionTo(targetBuildSpot);
+                Direction[] buildDirections = {dir};
+                Direction build_dir = Util.tryBuild(RobotType.WATCHTOWER, buildDirections);
+                if(build_dir.equals(dir)){       // we've built the watchtower
+                    targetBuildSpot = null;     // find a new target buildSpot on the next turn
                 }
             }
         }
 
+        if (targetBuildSpot == null && enoughLeadForWatchTower) {
+            targetBuildSpot = findNearbyBuildSpot();
+        }
+
+        // movement
+        if (rc.isMovementReady()){
+            if (myLoc.distanceSquaredTo(archonLoc) <= 2) {            // move out of the way of the spawning archon
+                Logger.Log("Too close to archon, so moving away");
+                Direction away = myLoc.directionTo(archonLoc).opposite();
+                nav.goTo(myLoc.add(away).add(away).add(away));
+            }
+            else if (targetBuildSpot != null && myLoc.distanceSquaredTo(targetBuildSpot) > 2 && enoughLeadForWatchTower) {        //if we are currently travelling to targetBuildSpot
+                nav.goTo(targetBuildSpot);}
+            else if (targetBuildSpot == null) {       // we can't build a watchtower, so we will either try to repair a nearby building or circle our home archon
+                MapLocation potentialRepairSpot = getNearbyRepairSpot();
+                if(potentialRepairSpot == null){
+                    nav.circle(archonLoc, 10, true);
+                }
+                else{
+                    nav.goTo(potentialRepairSpot);
+                }
+            }
+        }
     }
 
-    public void repairNearby() throws GameActionException {
-        // Search for nearby robot to repair
+
+
+//        boolean repaired = repair();
+//        if(!repaired){
+//            // Check if your build location is still available
+//                if(rc.getTeamLeadAmount(rc.getTeam()) > RobotType.WATCHTOWER.buildCostLead * 2){      // time to build a tower :D
+//                    Logger.Log("Building watchtower");
+//                    buildWatchtower();
+//                }
+//                else{
+//                    Logger.Log("Repairing nearby");
+//                    repairNearby();
+//                }
+//            }
+//        }
+
+    public MapLocation getNearbyRepairSpot() throws GameActionException {
+        // Search for nearby robot to repair and move to that location
         int closestDist = 10000;
         MapLocation closest = null;
         for(int i = 0; i < nearby.length; i++){
@@ -105,54 +124,32 @@ public class Builder extends Robot {
                 }
             }
         }
-        if(closest == null){
-            return;
-        }
-        nav.goTo(closest);
+        return closest;
     }
 
-    public void bulidWatchtower() throws GameActionException {
-//        if(rc.canSenseLocation(targetBuildSpot) && rc.isLocationOccupied(targetBuildSpot)){
-//            targetBuildSpot = null;
+//    public void buildWatchtower() throws GameActionException {
+//        targetBuildSpot = findNearbyBuildSpot();
+//        if (targetBuildSpot == null) {
+//            Logger.Log("Didn't find a build spot! Circling around build spot"); // TODO: Change this to circling around Archon
+//            nav.circle(archonLoc, 10, true);
+//            return;
 //        }
-//        if(targetBuildSpot == null){ // Choose a new build spot
-//            targetBuildSpot = findNearbyBuildSpot();
-//            if(targetBuildSpot == null){
-//                MapLocation map_center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
-//                targetBuildSpot = Util.multiplyDirection(this.archonLoc, myLoc.directionTo(map_center), 10);
-//            }
+//        else{
+//            Logger.Log("Calculated a target build spot: " + targetBuildSpot.toString());
 //        }
-        targetBuildSpot = findNearbyBuildSpot();
-        if (targetBuildSpot == null) {
-            Logger.Log("Didn't find a build spot! Going to center instead"); // TODO: Change this to circling around Archon
-            nav.circle(archonLoc, 10, true);
-            return;
-//            MapLocation map_center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
-//            targetBuildSpot = Util.multiplyDirection(this.archonLoc, myLoc.directionTo(map_center), 10);
-        }
-        else{
-            Logger.Log("Calculated a target build spot: " + targetBuildSpot.toString());
-        }
-        rc.setIndicatorString("Target build spot: " + targetBuildSpot.toString());
-        if (myLoc.distanceSquaredTo(targetBuildSpot) > 2) {
-            Logger.Log("Going towards target build spot: " + targetBuildSpot.toString());
-            nav.goTo(targetBuildSpot);
-        } else {
-            Direction dir = myLoc.directionTo(targetBuildSpot);           // build in direction opposite of the home archon (closer to opposing soldiers)
-            Direction[] buildDirections = {dir};
-//            Direction[] buildDirections = nav.closeDirections(dir);
-            Direction build_dir = Util.tryBuild(RobotType.WATCHTOWER, buildDirections);
-            if (build_dir != Direction.CENTER) {      // yay we built a tower
-                needToRepair = true;                // need to get the tower we just built to max health
-                lastBuiltTower = myLoc.add(build_dir);
-                canBuild = false;                   // set can build to false so we move to the next build location
-                spotIndex++;                        // increment index in array to next spot
-            }
-        }
-    }
+//        rc.setIndicatorString("Target build spot: " + targetBuildSpot.toString());
+//        if (myLoc.distanceSquaredTo(targetBuildSpot) > 2) {
+//            Logger.Log("Going towards target build spot: " + targetBuildSpot.toString());
+//            nav.goTo(targetBuildSpot);
+//        } else {
+//            Direction dir = myLoc.directionTo(targetBuildSpot);           // build in direction opposite of the home archon (closer to opposing soldiers)
+//            Direction[] buildDirections = {dir};
+//            Direction build_dir = Util.tryBuild(RobotType.WATCHTOWER, buildDirections);
+//        }
+//    }
 
     // Build in grid location
-    public MapLocation findNearbyBuildSpot () throws GameActionException {
+    public MapLocation findNearbyBuildSpot() throws GameActionException {
         int closestDist = 10000;
         MapLocation closestLoc = null;
         int startdx = -6;
@@ -188,42 +185,16 @@ public class Builder extends Robot {
         return closestLoc;
     }
 
-    // Build a 3x3 spaced out watchtower fortress
-    public void generateBuildSpots ( int directionMultiplier) throws GameActionException {
-        //generates potential build locations in all cardinal directions going outwards from home archon
-        // builder can go to every one and try to build a watchtower there
-//        System.out.println("hello");
-        Direction[] directions = Util.closeDirections(myLoc.directionTo(middle)); // build towers towards the middle of the map
-        // TODO: need to change to the direction of enemy archons
-        MapLocation closestArchon = enemyArchonOnComms();
-        if (closestArchon != null) {
-            directions = Util.closeDirections(myLoc.directionTo(closestArchon)); // build towers towards the middle of the map
-
-        }
-        this.numSpots = 0;
-        for (int i = 2; i < 7; i++) {        // go in the first 4 best directions
-            Direction direction = directions[i];
-            MapLocation potentialBuildSpot = Util.multiplyDirection(this.archonLoc, direction, directionMultiplier);
-
-            // check if this is a valid mapLocation
-            if (potentialBuildSpot.x < rc.getMapWidth() && potentialBuildSpot.x > 0 && potentialBuildSpot.y < rc.getMapHeight() && potentialBuildSpot.y > 0) {
-                this.watchTowerBuildSpots[numSpots] = potentialBuildSpot;
-                numSpots++;
-            }
-        }
-//        System.out.println(numSpots);
-    }
-
 
     public boolean repair () throws GameActionException {
-        // Try repairing nearby watchtowers
+        // Try repairing nearby buildings
         boolean repaired = false;
         RobotInfo[] potentialTowers = rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam);
         for (int i = 0; i < potentialTowers.length; i++) {
-            if (potentialTowers[i].type != RobotType.WATCHTOWER) {
+            if (!(potentialTowers[i].type == RobotType.WATCHTOWER || potentialTowers[i].type == RobotType.LABORATORY || potentialTowers[i].type == RobotType.ARCHON)) {
                 continue;
             }
-            int max_health = RobotType.WATCHTOWER.getMaxHealth(potentialTowers[i].getLevel());
+            int max_health = potentialTowers[i].getType().getMaxHealth(potentialTowers[i].getLevel());
             if (potentialTowers[i].getHealth() >= max_health) {
                 continue; // No need to repair this boi
             }
@@ -231,26 +202,19 @@ public class Builder extends Robot {
                 repaired = true;
                 rc.repair(potentialTowers[i].location);
                 rc.setIndicatorString("Repairing da boi");
-                ;
             }
         }
         return repaired;
     }
 
-    public MapLocation enemyArchonOnComms () throws GameActionException {
-        MapLocation closestEnemy = null;
-        int closestDist = Integer.MAX_VALUE;
-        for (int i = 8; i < 12; i++) {
-            int val = rc.readSharedArray(i);
-            if (val != 0 && val != comms.MAX_COMMS_VAL) {
-                MapLocation enemyLoc = Util.intToMapLocation(val);
-                int enemyDist = myLoc.distanceSquaredTo(enemyLoc);
-                if (enemyDist < closestDist) {
-                    closestDist = enemyDist;
-                    closestEnemy = enemyLoc;
-                }
-            }
-        }
-        return closestEnemy;
-    }
+//    public void retreat(MapLocation enemyCOM) throws GameActionException { // Movement method
+//        Logger.Log("Retreating from: " + enemyCOM.toString());
+//        if(enemyCOM.equals(myLoc)){ // No enemies nearby, just retreat back to base
+//            nav.goTo(archonLoc);
+//        }
+//        else{
+//            Direction away = myLoc.directionTo(enemyCOM).opposite();
+//            nav.goTo(myLoc.add(away).add(away).add(away).add(away));
+//        }
+//    }
 }
