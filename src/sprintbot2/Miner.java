@@ -11,7 +11,6 @@ public class Miner extends Robot {
     Direction spawnDir = null;
     MapLocation currentTarget = null;
 
-    int[][] goldMap = new int[5][5];
     int[][] leadMap = new int[5][5];
 
     int leadVal00 = 0; int leadVal01 = 0; int leadVal02 = 0; int leadVal03 = 0; int leadVal04 = 0; int leadVal10 = 0; int leadVal11 = 0; int leadVal12 = 0; int leadVal13 = 0; int leadVal14 = 0; int leadVal20 = 0; int leadVal21 = 0; int leadVal22 = 0; int leadVal23 = 0; int leadVal24 = 0; int leadVal30 = 0; int leadVal31 = 0; int leadVal32 = 0; int leadVal33 = 0; int leadVal34 = 0; int leadVal40 = 0; int leadVal41 = 0; int leadVal42 = 0; int leadVal43 = 0; int leadVal44 = 0;
@@ -45,35 +44,36 @@ public class Miner extends Robot {
         comms.scanEnemyArchons(); // Costs 500 bytecode
 
         // Logger.Log("Before filling: " + Clock.getBytecodesLeft());
+        System.out.println("Current location: " + rc.getLocation().toString());
+        indicatorString += "C " + rc.getMovementCooldownTurns() + ", " + rc.getActionCooldownTurns() + "; ";
         boolean movedTowardsGold = goToClosestGold();
         if(!movedTowardsGold){
-            RobotInfo[] nearbyEnemies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
-            fillMapsUnrolled(); // Costs 1125 bytecode. Bytecode here is 4491
-            double currHeuristic = getHeursitic(myLoc, nearbyEnemies); // Costs 800 bytecode
-            // Logger.Log("Single heuristic: " + Clock.getBytecodesLeft());
-            // Logger.Log("Heuristic value: " + currHeuristic);
+            RobotInfo[] nearbyEnemies = rc.senseNearbyRobots(myType.visionRadiusSquared, opponent); // 120 bytecode
+            fillMapsUnrolled2(); // Costs 350 bytecode
+            double currHeuristic = getHeursitic(myLoc, nearbyEnemies); // Costs 1200 bytecode
+            System.out.println("Current heuristic value: " + currHeuristic);
             double bestHeuristic = currHeuristic;
-            if(bestHeuristic > 0){ // Can currently mine from this location
-                Direction bestDir = null;
-                for(int i = 0; i < Util.directions.length; i++){ // If you can move to a better spot, do so
-                    Direction dir = Util.directions[i];
-                    if(!rc.canMove(dir)){
-                        continue;
-                    }
-                    MapLocation newLoc = myLoc.add(dir);
-                    double newHeuristic = getHeursitic(newLoc, nearbyEnemies);
-                    if(newHeuristic > bestHeuristic){
-                        bestHeuristic = newHeuristic;
-                        bestDir = dir;
-                    }
-                    // Logger.Log("Next heuristic: " + Clock.getBytecodesLeft());
+            Direction bestDir = null;
+            for(int i = 0; i < Util.directions.length; i++){ // If you can move to a better spot, do so
+                Direction dir = Util.directions[i];
+                if(!rc.canMove(dir)){
+                    continue;
                 }
-                if(bestDir != null){ // If you can move in a better direction, do so
-                    rc.move(bestDir);
-                    indicatorString += "CH: " + (int)currHeuristic + ",BH: " + (int)bestHeuristic + ", Dir:" + bestDir + "; ";
+                MapLocation newLoc = myLoc.add(dir);
+                double newHeuristic = getHeursitic(newLoc, nearbyEnemies);
+                if(newHeuristic > bestHeuristic){
+                    bestHeuristic = newHeuristic;
+                    bestDir = dir;
                 }
+                System.out.println("Direction: " + dir.toString() + ", Heuristic value: " + newHeuristic);
+                // Logger.Log("Next heuristic: " + Clock.getBytecodesLeft());
             }
-            else{ // Find nearest mine
+            if(bestDir != null){ // If you can move in a better direction, do so
+                rc.move(bestDir);
+                indicatorString += "CH: " + (int)currHeuristic + ",BH: " + (int)bestHeuristic + ", Dir:" + bestDir + "; ";
+                System.out.println("Moving towards best dir: " + bestDir.toString());
+            }
+            else if(currHeuristic == 0){ // Find nearest mine
                 MapLocation targetLoc = findClosestMine();
                 // Logger.Log("Found closest mine: " + Clock.getBytecodesLeft());
                 if(targetLoc == null){
@@ -84,6 +84,9 @@ public class Miner extends Robot {
                 }
                 nav.goTo(targetLoc);
                 indicatorString += "NAV " + Util.mapLocationToInt(targetLoc) + "; ";
+            }
+            else{
+                indicatorString += "STAY; ";
             }
         }
         tryMineAllDirections();
@@ -127,15 +130,16 @@ public class Miner extends Robot {
 
     // TODO: Move away from enemies
     // Higher heuristic value is better
+    // 300 bytecode method
     public double getHeursitic(MapLocation center, RobotInfo[] nearbyEnemies) throws GameActionException { // 1000 bytecode
         if(!rc.canSenseLocation(center)){
             return -10000;
         }
-        double numTeammates = rc.senseNearbyRobots(center, 2, myTeam).length; // 100 bytecode
+        double numTeammates = rc.senseNearbyRobots(center, 1, myTeam).length; // 100 bytecode
         double numEnemies = 0.0;
         for(int i = nearbyEnemies.length; i-- > 0; ){
             RobotInfo info = nearbyEnemies[i];
-            if(info.type.damage > 0 && myLoc.distanceSquaredTo(info.location) <= info.type.actionRadiusSquared){
+            if(info.type.damage > 0 && center.distanceSquaredTo(info.location) <= info.type.actionRadiusSquared){
                 numEnemies++;
             }
         }
@@ -146,7 +150,9 @@ public class Miner extends Robot {
         double leadMineable = numLeadMineableUnrolled(dx, dy); // 50 bytecode baby.
         // Logger.Log("XD C " + Clock.getBytecodesLeft());
         double cooldown = 10.0 + rc.senseRubble(center);
-        return (leadMineable - numTeammates * 5 - numEnemies * 15) / cooldown; // Larger heuristic is better
+        // TODO maybe instead of couting enemies in attack radius, count how far away you are from said enemy? And then you could do like 1 / distance so that larger distance = lower heuristic
+        System.out.println("Yeet: " + leadMineable + ", " + numTeammates + ", " + numEnemies + ", " + cooldown);
+        return (leadMineable - numTeammates * 5 - numEnemies * 40) / cooldown; // Larger heuristic is better
     }
 
     // Find the closest location with the most reserves (gold and lead) to mine from. If there is no location to mine from, return null
@@ -194,7 +200,7 @@ public class Miner extends Robot {
             MapLocation loc = myLoc.add(dir);
             while (rc.canMineGold(loc) && rc.senseGold(loc) > 0) {
                 rc.mineGold(loc);
-                indicatorString += "G" + Util.mapLocationToInt(loc);
+                indicatorString += "G;";
             }
         }
 
@@ -203,7 +209,7 @@ public class Miner extends Robot {
             MapLocation loc = myLoc.add(dir);
             while (rc.canMineLead(loc) && rc.senseLead(loc) > 1) {
                 rc.mineLead(loc);
-                indicatorString += "L" + Util.mapLocationToInt(loc);
+                indicatorString += "L;";
             }
         }
     }
@@ -230,12 +236,18 @@ public class Miner extends Robot {
     }
 
     public void fillMapsUnrolled() throws GameActionException {
-        MapLocation temp = new MapLocation(myLoc.x + -2, myLoc.y + -2);
-        if(!rc.canSenseLocation(temp)){
+        // Syso is 7 bytecode
+        // 36 bytecode per group * 25 groups = 900 bytecode total
+        MapLocation temp = new MapLocation(myLoc.x + -2, myLoc.y + -2); // 13 bytecode
+        if(!rc.canSenseLocation(temp)){ // 9 bytecode (5 for method, 4 for if statement)
             leadVal00 = 0;
         }
-        else{ leadVal00 = rc.senseLead(temp); }
-        if(leadVal00 == 1){ leadVal00 = 0; } // Save for farming
+        else{
+            leadVal00 = rc.senseLead(temp); // 10 bytecode
+        }
+        if(leadVal00 == 1){ // 4 bytecode
+            leadVal00 = 0;
+        }
 
         temp = new MapLocation(myLoc.x + -2, myLoc.y + -1);
         if(!rc.canSenseLocation(temp)){
@@ -250,6 +262,8 @@ public class Miner extends Robot {
         }
         else{ leadVal02 = rc.senseLead(temp); }
         if(leadVal02 == 1){ leadVal02 = 0; } // Save for farming
+
+        System.out.println("B: " + Clock.getBytecodesLeft());
 
         temp = new MapLocation(myLoc.x + -2, myLoc.y + 1);
         if(!rc.canSenseLocation(temp)){
@@ -406,34 +420,149 @@ public class Miner extends Robot {
         if(leadVal44 == 1){ leadVal44 = 0; } // Save for farming
     }
 
+    public void fillMapsUnrolled2() throws GameActionException {
+        leadVal00 = 0; leadVal01 = 0; leadVal02 = 0; leadVal03 = 0; leadVal04 = 0; leadVal10 = 0; leadVal11 = 0; leadVal12 = 0; leadVal13 = 0; leadVal14 = 0; leadVal20 = 0; leadVal21 = 0; leadVal22 = 0; leadVal23 = 0; leadVal24 = 0; leadVal30 = 0; leadVal31 = 0; leadVal32 = 0; leadVal33 = 0; leadVal34 = 0; leadVal40 = 0; leadVal41 = 0; leadVal42 = 0; leadVal43 = 0; leadVal44 = 0;
+        MapLocation[] nearbyLead = rc.senseNearbyLocationsWithLead(8, 2);
+        int x = myLoc.x;
+        int y = myLoc.y;
+        for(int i = nearbyLead.length; i-- > 0; ){
+            int dx = nearbyLead[i].x - x;
+            int dy = nearbyLead[i].y - y;
+            switch(dx){
+                case -2:
+                    switch(dy){
+                        case -2:
+                            leadVal00 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case -1:
+                            leadVal01 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 0:
+                            leadVal02 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 1:
+                            leadVal03 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 2:
+                            leadVal04 = rc.senseLead(nearbyLead[i]);
+                            break;
+                    }
+                    break;
+                case -1:
+                    switch(dy){
+                        case -2:
+                            leadVal10 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case -1:
+                            leadVal11 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 0:
+                            leadVal12 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 1:
+                            leadVal13 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 2:
+                            leadVal14 = rc.senseLead(nearbyLead[i]);
+                            break;
+                    }
+                    break;
+                case 0:
+                    switch(dy){
+                        case -2:
+                            leadVal20 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case -1:
+                            leadVal21 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 0:
+                            leadVal22 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 1:
+                            leadVal23 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 2:
+                            leadVal24 = rc.senseLead(nearbyLead[i]);
+                            break;
+                    }
+                    break;
+                case 1:
+                    switch(dy){
+                        case -2:
+                            leadVal30 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case -1:
+                            leadVal31 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 0:
+                            leadVal32 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 1:
+                            leadVal33 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 2:
+                            leadVal34 = rc.senseLead(nearbyLead[i]);
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch(dy){
+                        case -2:
+                            leadVal40 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case -1:
+                            leadVal41 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 0:
+                            leadVal42 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 1:
+                            leadVal43 = rc.senseLead(nearbyLead[i]);
+                            break;
+                        case 2:
+                            leadVal44 = rc.senseLead(nearbyLead[i]);
+                            break;
+                    }
+                    break;
+            }
+        }
+    }
+
     public int numLeadMineableUnrolled(int dx, int dy){
-        if(dx == -1 && dy == -1){
-            return leadVal00 + leadVal10 + leadVal20 + leadVal01 + leadVal11 + leadVal21 + leadVal02 + leadVal12  + leadVal22;
+        // TODO Use switch statements instead
+        switch(dx){
+            case -1:
+                switch(dy){
+                    case -1:
+                        return leadVal00 + leadVal01 + leadVal02 + leadVal10 + leadVal11 + leadVal12 + leadVal20 + leadVal21 + leadVal22;
+                    case 0:
+                        return leadVal01 + leadVal02 + leadVal03 + leadVal11 + leadVal12 + leadVal13 + leadVal21 + leadVal22 + leadVal23;
+                    case 1:
+                        return leadVal02 + leadVal03 + leadVal04 + leadVal12 + leadVal13 + leadVal14 + leadVal22 + leadVal23 + leadVal24;
+                }
+                break;
+            case 0:
+                switch(dy){
+                    case -1:
+                        return leadVal10 + leadVal11 + leadVal12 + leadVal20 + leadVal21 + leadVal22 + leadVal30 + leadVal31 + leadVal32;
+                    case 0:
+                        return leadVal11 + leadVal12 + leadVal13 + leadVal21 + leadVal22 + leadVal23 + leadVal31 + leadVal32 + leadVal33;
+                    case 1:
+                        return leadVal12 + leadVal13 + leadVal14 + leadVal22 + leadVal23 + leadVal24 + leadVal32 + leadVal33 + leadVal34;
+                }
+                break;
+            case 1:
+                switch(dy){
+                    case -1:
+                        return leadVal20 + leadVal21 + leadVal22 + leadVal30 + leadVal31 + leadVal32 + leadVal40 + leadVal41 + leadVal42;
+                    case 0:
+                        return leadVal21 + leadVal22 + leadVal23 + leadVal31 + leadVal32 + leadVal33 + leadVal41 + leadVal42 + leadVal43;
+                    case 1:
+                        return leadVal22 + leadVal23 + leadVal24 + leadVal32 + leadVal33 + leadVal34 + leadVal42 + leadVal43 + leadVal44;
+                }
+                break;
         }
-        if(dx == -1 && dy == 0){
-            return leadVal00 + leadVal11 + leadVal21 + leadVal02 + leadVal12 + leadVal22 + leadVal03 + leadVal13  + leadVal23;
-        }
-        if(dx == -1 && dy == 1){
-            return leadVal00 + leadVal12 + leadVal22 + leadVal03 + leadVal13 + leadVal23 + leadVal04 + leadVal14  + leadVal24;
-        }
-        if(dx == 0 && dy == -1){
-            return leadVal11 + leadVal20 + leadVal30 + leadVal11 + leadVal21 + leadVal31 + leadVal12 + leadVal22  + leadVal32;
-        }
-        if(dx == 0 && dy == 0){
-            return leadVal11 + leadVal21 + leadVal31 + leadVal12 + leadVal22 + leadVal32 + leadVal13 + leadVal23  + leadVal33;
-        }
-        if(dx == 0 && dy == 1){
-            return leadVal11 + leadVal22 + leadVal32 + leadVal13 + leadVal23 + leadVal33 + leadVal14 + leadVal24  + leadVal34;
-        }
-        if(dx == 1 && dy == -1){
-            return leadVal22 + leadVal30 + leadVal40 + leadVal21 + leadVal31 + leadVal41 + leadVal22 + leadVal32  + leadVal42;
-        }
-        if(dx == 1 && dy == 0){
-            return leadVal22 + leadVal31 + leadVal41 + leadVal22 + leadVal32 + leadVal42 + leadVal23 + leadVal33  + leadVal43;
-        }
-        if(dx == 1 && dy == 1){
-            return leadVal22 + leadVal32 + leadVal42 + leadVal23 + leadVal33 + leadVal43 + leadVal24 + leadVal34  + leadVal44;
-        }
+        assert(false);
         return 0;
     }
 

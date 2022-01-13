@@ -25,7 +25,7 @@ public class Logger {
 //            if(myType == RobotType.MINER){
 //                System.out.println(str);
 //            }
-            if(myType == RobotType.MINER){
+            if(myType == RobotType.SOLDIER && robot.rc.getID() == 10186){
                 System.out.println(str);
             }
         }

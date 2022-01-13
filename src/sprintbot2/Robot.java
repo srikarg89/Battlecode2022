@@ -49,6 +49,7 @@ public class Robot {
     }
 
     public void run() throws GameActionException {
+        Logger.Log("My Location: " + rc.getLocation());
         roundNum = rc.getRoundNum();
         nearby = rc.senseNearbyRobots();
         nearbyFriendlies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam);

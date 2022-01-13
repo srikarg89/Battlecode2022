@@ -39,8 +39,8 @@ public class Archon extends Robot {
         MapLocation enemyCOM = Util.calculateEnemySoldierCOM(enemiesInVision);
         comms.updateCurrAttackLoc(enemiesInVision, enemyCOM);
 
-        System.out.println("My miners: " + minerCount);
-        System.out.println("My soldiers: " + soldierCount);
+//        System.out.println("My miners: " + minerCount);
+//        System.out.println("My soldiers: " + soldierCount);
         // Try building
         if (Util.mapLocationToInt(rc.getLocation()) == rc.readSharedArray(rc.getRoundNum() % this.numFriendlyArchons)) {
             // Build in a different direction than last time
