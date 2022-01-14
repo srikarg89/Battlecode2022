@@ -23,7 +23,7 @@ public strictfp class RobotPlayer {
         }
 
         while (true) {
-//            if(rc.getRoundNum() > 120){
+//            if(rc.getRoundNum() > 265){
 //                rc.resign();
 //            }
 

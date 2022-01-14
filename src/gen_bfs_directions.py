@@ -350,18 +350,18 @@ for x, y in full_order:
     f.write("\n"*2)
 
 
-gen_code(f, "runBFSNorth", [0, 1])
-gen_code(f, "runBFSSouth", [0, -1])
-gen_code(f, "runBFSEast", [1, 0])
-gen_code(f, "runBFSWest", [-1, 0])
-gen_code(f, "runBFSNortheast", [1, 1])
-gen_code(f, "runBFSNorthwest", [-1, 1])
-gen_code(f, "runBFSSoutheast", [1, -1])
-gen_code(f, "runBFSSouthwest", [-1, -1])
-f.write(extra_code)
+# gen_code(f, "runBFSNorth", [0, 1])
+# gen_code(f, "runBFSSouth", [0, -1])
+# gen_code(f, "runBFSEast", [1, 0])
+# gen_code(f, "runBFSWest", [-1, 0])
+# gen_code(f, "runBFSNortheast", [1, 1])
+# gen_code(f, "runBFSNorthwest", [-1, 1])
+# gen_code(f, "runBFSSoutheast", [1, -1])
+# gen_code(f, "runBFSSouthwest", [-1, -1])
+# f.write(extra_code)
 
-# gen_code(f, "runBFS", [0, 0])
-# f.write(extra_code_commented)
+gen_code(f, "runBFS", [0, 0])
+f.write(extra_code_commented)
 
 
 f.write("}\n")
