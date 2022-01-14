@@ -1,9 +1,10 @@
 RADIUS_SQUARED = 20
+CLASS_NAME = "BFS20"
 OUTPUT_FILENAME = "bfs_code.txt"
 # OUTPUT_FILENAME = "sprintbot/BFS20.java"
 PACKAGE_NAME = "sprintbot"
 start_loc = (5, 4)  # you may need to increase these vals if the RADIUS_SQUARED is increased from 20
-THRESHOLD_KEEP_ALL_DIRECTIONS = 8
+THRESHOLD_KEEP_ALL_DIRECTIONS = 2
 
 def get_neighbor_locs(loc, order=None):
     neighbors = []
@@ -63,6 +64,42 @@ def valid_point(start_loc, point, target_dir):
 
     return True
 
+def clockwise(dir):
+    if dir == [0, 1]:
+        return [1, 1]
+    if dir == [1, 1]:
+        return [1, 0]
+    if dir == [1, 0]:
+        return [1, -1]
+    if dir == [1, -1]:
+        return [0, -1]
+    if dir == [0, -1]:
+        return [-1, -1]
+    if dir == [-1, -1]:
+        return [-1, 0]
+    if dir == [-1, 0]:
+        return [-1, 1]
+    if dir == [-1, 1]:
+        return [0, 1]
+
+def counter_clockwise(dir):
+    for i in range(7):
+        dir = clockwise(dir)
+    return dir
+
+
+def get_dirs(target_dir):
+    # return [target_dir,
+    #         clockwise(target_dir),
+    #         counter_clockwise(target_dir),
+    #         clockwise(clockwise(target_dir)),
+    #         counter_clockwise(counter_clockwise(target_dir)),
+    #         clockwise(clockwise(clockwise(target_dir))),
+    #         counter_clockwise(counter_clockwise(counter_clockwise(target_dir))),
+    #         clockwise(clockwise(clockwise(clockwise(target_dir))))]
+    dirs = [(-1, 0), (-1, -1), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1)]
+    return sorted(dirs, key=lambda d: distSquared(d, target_dir))
+
 def get_order(target_dir):
     move_arr = []
     for i in range(0, RADIUS_SQUARED):
@@ -120,7 +157,7 @@ def gen_code(f, methodname, target_dir):
     direction_arr = [(start_loc, None)]
     for i in range(1, len(order)):
         curr_x, curr_y = order[i]
-        dirs = [(-1, -1), (-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1)]
+        dirs = get_dirs(target_dir)
         for dir in dirs:
             prev_loc = (curr_x+dir[0], curr_y+dir[1])
             if prev_loc in order[0:i]:
@@ -165,12 +202,15 @@ def gen_code(f, methodname, target_dir):
     for i in range(1, len(order)):
         x, y = order[i]
         f.write("if(rc.onTheMap(l{}{})){{\n".format(x, y))
-        # if start_loc in get_neighbor_locs((x, y)):
-        if True:
+        if start_loc in get_neighbor_locs((x, y)):
+        # if True:
             f.write("if(!rc.isLocationOccupied(l{}{})){{\n".format(x, y))
         f.write("p{}{} = 20*(rc.senseRubble(l{}{})/10 + 1);\n".format(x, y, x, y))
 
-        for neighbor in get_neighbor_locs((x, y)):
+
+        neighbors = get_neighbor_locs((x, y))
+        neighbors = sorted(neighbors, key=lambda n: distSquared(n, start_loc))
+        for neighbor in neighbors:
             if neighbor in order[0:i]:        # check if we have updated this neighbor's value already
                 n_x, n_y = neighbor
                 f.write("sum = v{}{} + p{}{};\n".format(n_x, n_y, x, y))
@@ -185,8 +225,8 @@ def gen_code(f, methodname, target_dir):
                     f.write("d{}{} = d{}{};\n".format(x, y, n_x, n_y))
                 f.write("}\n")
 
-        # if start_loc in get_neighbor_locs((x, y)):
-        if True:
+        if start_loc in get_neighbor_locs((x, y)):
+        # if True:
             f.write("}\n")
         f.write("}\n")
 
@@ -239,10 +279,10 @@ f = open(OUTPUT_FILENAME, "w")
 
 f.write("package {};\n".format(PACKAGE_NAME))
 f.write("import battlecode.common.*;\n")
-f.write("public class BFS{}{{\n".format(RADIUS_SQUARED))
+f.write("public class {}{{\n".format(CLASS_NAME))
 f.write("RobotController rc;\nRobot robot;\n")
 
-f.write("BFS{}(RobotController rc, Robot robot){{\n".format(RADIUS_SQUARED))
+f.write("{}(RobotController rc, Robot robot){{\n".format(CLASS_NAME))
 f.write("this.rc = rc;\nthis.robot=robot;\n}\n")
 
 # section 1
@@ -265,6 +305,32 @@ for x, y in full_order:
 # gen_code(f, "runBFSSouthwest", [-1, -1])
 gen_code(f, "runBFS", [0, 0])
 
+extra_code_commented = """
+    public Direction getBestDir(MapLocation target) throws GameActionException {
+        Direction targetDir = robot.myLoc.directionTo(target);
+//        switch(targetDir){
+//            case NORTH:
+//                return runBFSNorth(target);
+//            case SOUTH:
+//                return runBFSSouth(target);
+//            case EAST:
+//                return runBFSEast(target);
+//            case WEST:
+//                return runBFSWest(target);
+//            case NORTHEAST:
+//                return runBFSNortheast(target);
+//            case NORTHWEST:
+//                return runBFSNorthwest(target);
+//            case SOUTHEAST:
+//                return runBFSSoutheast(target);
+//            case SOUTHWEST:
+//                return runBFSSouthwest(target);
+//        }
+        return runBFS(target);
+//        System.out.println("ERROR DIRECTION UNKNOWN");
+//        return null;
+    }
+"""
 extra_code = """
     public Direction getBestDir(MapLocation target) throws GameActionException {
         Direction targetDir = robot.myLoc.directionTo(target);
@@ -286,12 +352,12 @@ extra_code = """
 //            case SOUTHWEST:
 //                return runBFSSouthwest(target);
 //        }
-        runBFS();
-        System.out.println("ERROR DIRECTION UNKNOWN");
-        return null;
+        return runBFS(target);
+//        System.out.println("ERROR DIRECTION UNKNOWN");
+//        return null;
     }
 """
-f.write(extra_code)
+f.write(extra_code_commented)
 
 
 f.write("}\n")
