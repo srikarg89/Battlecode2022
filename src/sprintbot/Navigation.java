@@ -96,6 +96,31 @@ public class Navigation {
         return false;
     }
 
+    public boolean goToBFSOld(MapLocation target) throws GameActionException {
+        if (robot.myLoc.distanceSquaredTo(target) <= minDistToSatisfy) {
+            return true;
+        }
+        rc.setIndicatorLine(robot.myLoc, target, 0, 255, 0);
+        if (!rc.isMovementReady()) {
+            return false;
+        }
+        if(currentTarget != target){
+            // Reset pathfinding vars
+            currentTarget = target;
+        }
+        Direction toGo = robot.bfsold.getBestDir(target);
+        if (toGo == null) {
+            return false;
+        }
+        System.out.println("Going in direction: " + toGo.toString());
+        if (Util.tryMove(toGo)) {
+            goTo(target);
+            return true;
+        }
+        return false;
+    }
+
+
     public boolean goTo(MapLocation target) throws GameActionException {
         if (robot.myLoc.distanceSquaredTo(target) <= minDistToSatisfy) {
             return true;

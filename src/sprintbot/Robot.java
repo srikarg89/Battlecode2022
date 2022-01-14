@@ -10,6 +10,7 @@ public class Robot {
     RobotController rc;
     Navigation nav;
     BFS20 bfs;
+    BFSOld bfsold;
     Comms comms;
     MapLocation myLoc;
     Team myTeam;
@@ -41,6 +42,7 @@ public class Robot {
         mapHeight = rc.getMapHeight();
         nav = new Navigation(rc, this);
         bfs = new BFS20(rc, this);
+        bfsold = new BFSOld(rc, this);
         comms = new Comms(rc, this);
         if(myType != RobotType.ARCHON){
             comms.findFriendlyArchons();

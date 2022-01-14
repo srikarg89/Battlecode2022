@@ -66,12 +66,13 @@ public class Miner extends Robot {
             target = courseOrder[targetNum];
         }
         if(rc.getID() > 11000){
-            indicatorString += "NAV " + target.toString();
-            nav.goTo(target);
+            indicatorString += "BFSOLD " + target.toString();
+//            nav.goTo(target);
+            nav.goToBFSOld(target);
         }
         else{
             System.out.println("Starting bytecode: " + Clock.getBytecodesLeft());
-            indicatorString += "NAV " + target.toString();
+            indicatorString += "BFSNEW " + target.toString();
             nav.goToBFS(target);
             System.out.println("Ending bytecode: " + Clock.getBytecodesLeft());
         }

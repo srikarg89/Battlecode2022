@@ -23,9 +23,9 @@ public strictfp class RobotPlayer {
         }
 
         while (true) {
-//            if(rc.getRoundNum() > 265){
-//                rc.resign();
-//            }
+            if(rc.getRoundNum() > 265){
+                rc.resign();
+            }
 
             // Try/catch blocks stop unhandled exceptions, which cause your robot to explode.
             try {
