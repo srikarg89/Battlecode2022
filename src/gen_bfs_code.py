@@ -1,5 +1,6 @@
 RADIUS_SQUARED = 20
 OUTPUT_FILENAME = "bfs_code.txt"
+PACKAGE_NAME = "sprintbot"
 start_loc = (5, 4)  # you may need to increase these vals if the RADIUS_SQUARED is increased from 20
 
 
@@ -87,6 +88,7 @@ for key in diff_dict.keys():
 # CODE GENERATION
 f = open(OUTPUT_FILENAME, "w")
 
+f.write("package {};\n".format(PACKAGE_NAME))
 f.write("import battlecode.common.*;\n")
 f.write("public class BFS{}{{\n".format(RADIUS_SQUARED))
 f.write("RobotController rc;\nRobot robot;\n")
@@ -106,19 +108,26 @@ for x, y in order:
 # section 2
 f.write("Direction getBestDir(MapLocation target) throws GameActionException{\n")
 
+f.write("System.out.println(\"Starting BFS Method: \" + Clock.getBytecodesLeft());\n")
+
 f.write("l{}{} = robot.myLoc;\n".format(start_loc[0], start_loc[1]))
 f.write("v{}{} = 0;\n\n".format(start_loc[0], start_loc[1]))
 
+var_set = set()
 for d in direction_arr[1:]:
     curr_x, curr_y = d[0]
     prev_x, prev_y = d[1]
     dir = d[2]
+    if (curr_x, curr_y) in var_set:
+        continue
+    var_set.add((curr_x, curr_y))
     f.write("l{}{} = l{}{}.add(Direction.{});\n".format(curr_x, curr_y, prev_x, prev_y, dir))
     f.write("v{}{} = 100000000;\n".format(curr_x, curr_y, prev_x, prev_y, dir))
     f.write("d{}{} = null;\n\n".format(curr_x, curr_y))
 
 
 # section 3
+f.write("System.out.println(\"Initialized vars: \" + Clock.getBytecodesLeft());\n")
 f.write("try{ ")
 f.write("double sum;")
 for i in range(1, len(order)):
@@ -149,6 +158,8 @@ for i in range(1, len(order)):
 
 
 # section 4 (try catch section to check if we have just explored the target)
+f.write("System.out.println(\"Ran BFS: \" + Clock.getBytecodesLeft());\n")
+
 f.write("int dx = target.x - l{}{}.x;\n".format(start_loc[0], start_loc[1]))
 f.write("int dy = target.x - l{}{}.y;\n".format(start_loc[0], start_loc[1]))
 
@@ -164,6 +175,7 @@ for dx in sorted(list(diff_dict.keys())):
     f.write("break;\n")
 f.write("}\n")
 
+f.write("System.out.println(\"Didn't find within radius, gonna use distance heuristic: \" + Clock.getBytecodesLeft());\n")
 
 f.write("Direction ans = null;\n")
 f.write("double bestScore = 0;\n")

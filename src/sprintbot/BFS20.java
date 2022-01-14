@@ -422,6 +422,9 @@ public class BFS20{
 
 
     Direction getBestDir(MapLocation target) throws GameActionException{
+
+        System.out.println("Starting BFS Method: " + Clock.getBytecodesLeft());
+
         l54 = robot.myLoc;
         v54 = 0;
 
@@ -437,23 +440,7 @@ public class BFS20{
         v53 = 100000000;
         d53 = null;
 
-        l53 = l54.add(Direction.WEST);
-        v53 = 100000000;
-        d53 = null;
-
-        l53 = l64.add(Direction.NORTHWEST);
-        v53 = 100000000;
-        d53 = null;
-
         l55 = l44.add(Direction.SOUTHEAST);
-        v55 = 100000000;
-        d55 = null;
-
-        l55 = l64.add(Direction.NORTHEAST);
-        v55 = 100000000;
-        d55 = null;
-
-        l55 = l54.add(Direction.EAST);
         v55 = 100000000;
         d55 = null;
 
@@ -461,23 +448,7 @@ public class BFS20{
         v43 = 100000000;
         d43 = null;
 
-        l43 = l54.add(Direction.NORTHWEST);
-        v43 = 100000000;
-        d43 = null;
-
-        l43 = l53.add(Direction.NORTH);
-        v43 = 100000000;
-        d43 = null;
-
         l45 = l55.add(Direction.NORTH);
-        v45 = 100000000;
-        d45 = null;
-
-        l45 = l54.add(Direction.NORTHEAST);
-        v45 = 100000000;
-        d45 = null;
-
-        l45 = l44.add(Direction.EAST);
         v45 = 100000000;
         d45 = null;
 
@@ -485,23 +456,7 @@ public class BFS20{
         v63 = 100000000;
         d63 = null;
 
-        l63 = l54.add(Direction.SOUTHWEST);
-        v63 = 100000000;
-        d63 = null;
-
-        l63 = l64.add(Direction.WEST);
-        v63 = 100000000;
-        d63 = null;
-
         l65 = l54.add(Direction.SOUTHEAST);
-        v65 = 100000000;
-        d65 = null;
-
-        l65 = l55.add(Direction.SOUTH);
-        v65 = 100000000;
-        d65 = null;
-
-        l65 = l64.add(Direction.EAST);
         v65 = 100000000;
         d65 = null;
 
@@ -509,23 +464,7 @@ public class BFS20{
         v34 = 100000000;
         d34 = null;
 
-        l34 = l44.add(Direction.NORTH);
-        v34 = 100000000;
-        d34 = null;
-
-        l34 = l43.add(Direction.NORTHEAST);
-        v34 = 100000000;
-        d34 = null;
-
         l74 = l63.add(Direction.SOUTHEAST);
-        v74 = 100000000;
-        d74 = null;
-
-        l74 = l64.add(Direction.SOUTH);
-        v74 = 100000000;
-        d74 = null;
-
-        l74 = l65.add(Direction.SOUTHWEST);
         v74 = 100000000;
         d74 = null;
 
@@ -533,23 +472,7 @@ public class BFS20{
         v52 = 100000000;
         d52 = null;
 
-        l52 = l53.add(Direction.WEST);
-        v52 = 100000000;
-        d52 = null;
-
-        l52 = l63.add(Direction.NORTHWEST);
-        v52 = 100000000;
-        d52 = null;
-
         l56 = l45.add(Direction.SOUTHEAST);
-        v56 = 100000000;
-        d56 = null;
-
-        l56 = l65.add(Direction.NORTHEAST);
-        v56 = 100000000;
-        d56 = null;
-
-        l56 = l55.add(Direction.EAST);
         v56 = 100000000;
         d56 = null;
 
@@ -557,23 +480,7 @@ public class BFS20{
         v33 = 100000000;
         d33 = null;
 
-        l33 = l44.add(Direction.NORTHWEST);
-        v33 = 100000000;
-        d33 = null;
-
-        l33 = l43.add(Direction.NORTH);
-        v33 = 100000000;
-        d33 = null;
-
         l35 = l45.add(Direction.NORTH);
-        v35 = 100000000;
-        d35 = null;
-
-        l35 = l44.add(Direction.NORTHEAST);
-        v35 = 100000000;
-        d35 = null;
-
-        l35 = l34.add(Direction.EAST);
         v35 = 100000000;
         d35 = null;
 
@@ -581,23 +488,7 @@ public class BFS20{
         v73 = 100000000;
         d73 = null;
 
-        l73 = l64.add(Direction.SOUTHWEST);
-        v73 = 100000000;
-        d73 = null;
-
-        l73 = l74.add(Direction.WEST);
-        v73 = 100000000;
-        d73 = null;
-
         l75 = l64.add(Direction.SOUTHEAST);
-        v75 = 100000000;
-        d75 = null;
-
-        l75 = l65.add(Direction.SOUTH);
-        v75 = 100000000;
-        d75 = null;
-
-        l75 = l74.add(Direction.EAST);
         v75 = 100000000;
         d75 = null;
 
@@ -605,31 +496,7 @@ public class BFS20{
         v42 = 100000000;
         d42 = null;
 
-        l42 = l43.add(Direction.WEST);
-        v42 = 100000000;
-        d42 = null;
-
-        l42 = l53.add(Direction.NORTHWEST);
-        v42 = 100000000;
-        d42 = null;
-
-        l42 = l52.add(Direction.NORTH);
-        v42 = 100000000;
-        d42 = null;
-
         l46 = l35.add(Direction.SOUTHEAST);
-        v46 = 100000000;
-        d46 = null;
-
-        l46 = l56.add(Direction.NORTH);
-        v46 = 100000000;
-        d46 = null;
-
-        l46 = l55.add(Direction.NORTHEAST);
-        v46 = 100000000;
-        d46 = null;
-
-        l46 = l45.add(Direction.EAST);
         v46 = 100000000;
         d46 = null;
 
@@ -637,31 +504,7 @@ public class BFS20{
         v62 = 100000000;
         d62 = null;
 
-        l62 = l53.add(Direction.SOUTHWEST);
-        v62 = 100000000;
-        d62 = null;
-
-        l62 = l63.add(Direction.WEST);
-        v62 = 100000000;
-        d62 = null;
-
-        l62 = l73.add(Direction.NORTHWEST);
-        v62 = 100000000;
-        d62 = null;
-
         l66 = l55.add(Direction.SOUTHEAST);
-        v66 = 100000000;
-        d66 = null;
-
-        l66 = l56.add(Direction.SOUTH);
-        v66 = 100000000;
-        d66 = null;
-
-        l66 = l75.add(Direction.NORTHEAST);
-        v66 = 100000000;
-        d66 = null;
-
-        l66 = l65.add(Direction.EAST);
         v66 = 100000000;
         d66 = null;
 
@@ -669,23 +512,7 @@ public class BFS20{
         v32 = 100000000;
         d32 = null;
 
-        l32 = l43.add(Direction.NORTHWEST);
-        v32 = 100000000;
-        d32 = null;
-
-        l32 = l42.add(Direction.NORTH);
-        v32 = 100000000;
-        d32 = null;
-
         l36 = l46.add(Direction.NORTH);
-        v36 = 100000000;
-        d36 = null;
-
-        l36 = l45.add(Direction.NORTHEAST);
-        v36 = 100000000;
-        d36 = null;
-
-        l36 = l35.add(Direction.EAST);
         v36 = 100000000;
         d36 = null;
 
@@ -693,23 +520,7 @@ public class BFS20{
         v72 = 100000000;
         d72 = null;
 
-        l72 = l63.add(Direction.SOUTHWEST);
-        v72 = 100000000;
-        d72 = null;
-
-        l72 = l73.add(Direction.WEST);
-        v72 = 100000000;
-        d72 = null;
-
         l76 = l65.add(Direction.SOUTHEAST);
-        v76 = 100000000;
-        d76 = null;
-
-        l76 = l66.add(Direction.SOUTH);
-        v76 = 100000000;
-        d76 = null;
-
-        l76 = l75.add(Direction.EAST);
         v76 = 100000000;
         d76 = null;
 
@@ -717,23 +528,7 @@ public class BFS20{
         v24 = 100000000;
         d24 = null;
 
-        l24 = l34.add(Direction.NORTH);
-        v24 = 100000000;
-        d24 = null;
-
-        l24 = l33.add(Direction.NORTHEAST);
-        v24 = 100000000;
-        d24 = null;
-
         l84 = l73.add(Direction.SOUTHEAST);
-        v84 = 100000000;
-        d84 = null;
-
-        l84 = l74.add(Direction.SOUTH);
-        v84 = 100000000;
-        d84 = null;
-
-        l84 = l75.add(Direction.SOUTHWEST);
         v84 = 100000000;
         d84 = null;
 
@@ -741,23 +536,7 @@ public class BFS20{
         v51 = 100000000;
         d51 = null;
 
-        l51 = l52.add(Direction.WEST);
-        v51 = 100000000;
-        d51 = null;
-
-        l51 = l62.add(Direction.NORTHWEST);
-        v51 = 100000000;
-        d51 = null;
-
         l57 = l46.add(Direction.SOUTHEAST);
-        v57 = 100000000;
-        d57 = null;
-
-        l57 = l66.add(Direction.NORTHEAST);
-        v57 = 100000000;
-        d57 = null;
-
-        l57 = l56.add(Direction.EAST);
         v57 = 100000000;
         d57 = null;
 
@@ -765,31 +544,7 @@ public class BFS20{
         v23 = 100000000;
         d23 = null;
 
-        l23 = l34.add(Direction.NORTHWEST);
-        v23 = 100000000;
-        d23 = null;
-
-        l23 = l33.add(Direction.NORTH);
-        v23 = 100000000;
-        d23 = null;
-
-        l23 = l32.add(Direction.NORTHEAST);
-        v23 = 100000000;
-        d23 = null;
-
         l25 = l36.add(Direction.NORTHWEST);
-        v25 = 100000000;
-        d25 = null;
-
-        l25 = l35.add(Direction.NORTH);
-        v25 = 100000000;
-        d25 = null;
-
-        l25 = l34.add(Direction.NORTHEAST);
-        v25 = 100000000;
-        d25 = null;
-
-        l25 = l24.add(Direction.EAST);
         v25 = 100000000;
         d25 = null;
 
@@ -797,31 +552,7 @@ public class BFS20{
         v83 = 100000000;
         d83 = null;
 
-        l83 = l73.add(Direction.SOUTH);
-        v83 = 100000000;
-        d83 = null;
-
-        l83 = l74.add(Direction.SOUTHWEST);
-        v83 = 100000000;
-        d83 = null;
-
-        l83 = l84.add(Direction.WEST);
-        v83 = 100000000;
-        d83 = null;
-
         l85 = l74.add(Direction.SOUTHEAST);
-        v85 = 100000000;
-        d85 = null;
-
-        l85 = l75.add(Direction.SOUTH);
-        v85 = 100000000;
-        d85 = null;
-
-        l85 = l76.add(Direction.SOUTHWEST);
-        v85 = 100000000;
-        d85 = null;
-
-        l85 = l84.add(Direction.EAST);
         v85 = 100000000;
         d85 = null;
 
@@ -829,31 +560,7 @@ public class BFS20{
         v41 = 100000000;
         d41 = null;
 
-        l41 = l42.add(Direction.WEST);
-        v41 = 100000000;
-        d41 = null;
-
-        l41 = l52.add(Direction.NORTHWEST);
-        v41 = 100000000;
-        d41 = null;
-
-        l41 = l51.add(Direction.NORTH);
-        v41 = 100000000;
-        d41 = null;
-
         l47 = l36.add(Direction.SOUTHEAST);
-        v47 = 100000000;
-        d47 = null;
-
-        l47 = l57.add(Direction.NORTH);
-        v47 = 100000000;
-        d47 = null;
-
-        l47 = l56.add(Direction.NORTHEAST);
-        v47 = 100000000;
-        d47 = null;
-
-        l47 = l46.add(Direction.EAST);
         v47 = 100000000;
         d47 = null;
 
@@ -861,31 +568,7 @@ public class BFS20{
         v61 = 100000000;
         d61 = null;
 
-        l61 = l52.add(Direction.SOUTHWEST);
-        v61 = 100000000;
-        d61 = null;
-
-        l61 = l62.add(Direction.WEST);
-        v61 = 100000000;
-        d61 = null;
-
-        l61 = l72.add(Direction.NORTHWEST);
-        v61 = 100000000;
-        d61 = null;
-
         l67 = l56.add(Direction.SOUTHEAST);
-        v67 = 100000000;
-        d67 = null;
-
-        l67 = l57.add(Direction.SOUTH);
-        v67 = 100000000;
-        d67 = null;
-
-        l67 = l76.add(Direction.NORTHEAST);
-        v67 = 100000000;
-        d67 = null;
-
-        l67 = l66.add(Direction.EAST);
         v67 = 100000000;
         d67 = null;
 
@@ -893,23 +576,7 @@ public class BFS20{
         v22 = 100000000;
         d22 = null;
 
-        l22 = l33.add(Direction.NORTHWEST);
-        v22 = 100000000;
-        d22 = null;
-
-        l22 = l32.add(Direction.NORTH);
-        v22 = 100000000;
-        d22 = null;
-
         l26 = l36.add(Direction.NORTH);
-        v26 = 100000000;
-        d26 = null;
-
-        l26 = l35.add(Direction.NORTHEAST);
-        v26 = 100000000;
-        d26 = null;
-
-        l26 = l25.add(Direction.EAST);
         v26 = 100000000;
         d26 = null;
 
@@ -917,23 +584,7 @@ public class BFS20{
         v82 = 100000000;
         d82 = null;
 
-        l82 = l73.add(Direction.SOUTHWEST);
-        v82 = 100000000;
-        d82 = null;
-
-        l82 = l83.add(Direction.WEST);
-        v82 = 100000000;
-        d82 = null;
-
         l86 = l75.add(Direction.SOUTHEAST);
-        v86 = 100000000;
-        d86 = null;
-
-        l86 = l76.add(Direction.SOUTH);
-        v86 = 100000000;
-        d86 = null;
-
-        l86 = l85.add(Direction.EAST);
         v86 = 100000000;
         d86 = null;
 
@@ -941,31 +592,7 @@ public class BFS20{
         v31 = 100000000;
         d31 = null;
 
-        l31 = l32.add(Direction.WEST);
-        v31 = 100000000;
-        d31 = null;
-
-        l31 = l42.add(Direction.NORTHWEST);
-        v31 = 100000000;
-        d31 = null;
-
-        l31 = l41.add(Direction.NORTH);
-        v31 = 100000000;
-        d31 = null;
-
         l37 = l26.add(Direction.SOUTHEAST);
-        v37 = 100000000;
-        d37 = null;
-
-        l37 = l47.add(Direction.NORTH);
-        v37 = 100000000;
-        d37 = null;
-
-        l37 = l46.add(Direction.NORTHEAST);
-        v37 = 100000000;
-        d37 = null;
-
-        l37 = l36.add(Direction.EAST);
         v37 = 100000000;
         d37 = null;
 
@@ -973,31 +600,7 @@ public class BFS20{
         v71 = 100000000;
         d71 = null;
 
-        l71 = l62.add(Direction.SOUTHWEST);
-        v71 = 100000000;
-        d71 = null;
-
-        l71 = l72.add(Direction.WEST);
-        v71 = 100000000;
-        d71 = null;
-
-        l71 = l82.add(Direction.NORTHWEST);
-        v71 = 100000000;
-        d71 = null;
-
         l77 = l66.add(Direction.SOUTHEAST);
-        v77 = 100000000;
-        d77 = null;
-
-        l77 = l67.add(Direction.SOUTH);
-        v77 = 100000000;
-        d77 = null;
-
-        l77 = l86.add(Direction.NORTHEAST);
-        v77 = 100000000;
-        d77 = null;
-
-        l77 = l76.add(Direction.EAST);
         v77 = 100000000;
         d77 = null;
 
@@ -1005,23 +608,7 @@ public class BFS20{
         v21 = 100000000;
         d21 = null;
 
-        l21 = l32.add(Direction.NORTHWEST);
-        v21 = 100000000;
-        d21 = null;
-
-        l21 = l31.add(Direction.NORTH);
-        v21 = 100000000;
-        d21 = null;
-
         l27 = l37.add(Direction.NORTH);
-        v27 = 100000000;
-        d27 = null;
-
-        l27 = l36.add(Direction.NORTHEAST);
-        v27 = 100000000;
-        d27 = null;
-
-        l27 = l26.add(Direction.EAST);
         v27 = 100000000;
         d27 = null;
 
@@ -1029,23 +616,7 @@ public class BFS20{
         v81 = 100000000;
         d81 = null;
 
-        l81 = l72.add(Direction.SOUTHWEST);
-        v81 = 100000000;
-        d81 = null;
-
-        l81 = l82.add(Direction.WEST);
-        v81 = 100000000;
-        d81 = null;
-
         l87 = l76.add(Direction.SOUTHEAST);
-        v87 = 100000000;
-        d87 = null;
-
-        l87 = l77.add(Direction.SOUTH);
-        v87 = 100000000;
-        d87 = null;
-
-        l87 = l86.add(Direction.EAST);
         v87 = 100000000;
         d87 = null;
 
@@ -1053,23 +624,7 @@ public class BFS20{
         v14 = 100000000;
         d14 = null;
 
-        l14 = l24.add(Direction.NORTH);
-        v14 = 100000000;
-        d14 = null;
-
-        l14 = l23.add(Direction.NORTHEAST);
-        v14 = 100000000;
-        d14 = null;
-
         l94 = l83.add(Direction.SOUTHEAST);
-        v94 = 100000000;
-        d94 = null;
-
-        l94 = l84.add(Direction.SOUTH);
-        v94 = 100000000;
-        d94 = null;
-
-        l94 = l85.add(Direction.SOUTHWEST);
         v94 = 100000000;
         d94 = null;
 
@@ -1077,23 +632,7 @@ public class BFS20{
         v50 = 100000000;
         d50 = null;
 
-        l50 = l51.add(Direction.WEST);
-        v50 = 100000000;
-        d50 = null;
-
-        l50 = l61.add(Direction.NORTHWEST);
-        v50 = 100000000;
-        d50 = null;
-
         l58 = l47.add(Direction.SOUTHEAST);
-        v58 = 100000000;
-        d58 = null;
-
-        l58 = l67.add(Direction.NORTHEAST);
-        v58 = 100000000;
-        d58 = null;
-
-        l58 = l57.add(Direction.EAST);
         v58 = 100000000;
         d58 = null;
 
@@ -1101,31 +640,7 @@ public class BFS20{
         v13 = 100000000;
         d13 = null;
 
-        l13 = l24.add(Direction.NORTHWEST);
-        v13 = 100000000;
-        d13 = null;
-
-        l13 = l23.add(Direction.NORTH);
-        v13 = 100000000;
-        d13 = null;
-
-        l13 = l22.add(Direction.NORTHEAST);
-        v13 = 100000000;
-        d13 = null;
-
         l15 = l26.add(Direction.NORTHWEST);
-        v15 = 100000000;
-        d15 = null;
-
-        l15 = l25.add(Direction.NORTH);
-        v15 = 100000000;
-        d15 = null;
-
-        l15 = l24.add(Direction.NORTHEAST);
-        v15 = 100000000;
-        d15 = null;
-
-        l15 = l14.add(Direction.EAST);
         v15 = 100000000;
         d15 = null;
 
@@ -1133,31 +648,7 @@ public class BFS20{
         v93 = 100000000;
         d93 = null;
 
-        l93 = l83.add(Direction.SOUTH);
-        v93 = 100000000;
-        d93 = null;
-
-        l93 = l84.add(Direction.SOUTHWEST);
-        v93 = 100000000;
-        d93 = null;
-
-        l93 = l94.add(Direction.WEST);
-        v93 = 100000000;
-        d93 = null;
-
         l95 = l84.add(Direction.SOUTHEAST);
-        v95 = 100000000;
-        d95 = null;
-
-        l95 = l85.add(Direction.SOUTH);
-        v95 = 100000000;
-        d95 = null;
-
-        l95 = l86.add(Direction.SOUTHWEST);
-        v95 = 100000000;
-        d95 = null;
-
-        l95 = l94.add(Direction.EAST);
         v95 = 100000000;
         d95 = null;
 
@@ -1165,31 +656,7 @@ public class BFS20{
         v40 = 100000000;
         d40 = null;
 
-        l40 = l41.add(Direction.WEST);
-        v40 = 100000000;
-        d40 = null;
-
-        l40 = l51.add(Direction.NORTHWEST);
-        v40 = 100000000;
-        d40 = null;
-
-        l40 = l50.add(Direction.NORTH);
-        v40 = 100000000;
-        d40 = null;
-
         l48 = l37.add(Direction.SOUTHEAST);
-        v48 = 100000000;
-        d48 = null;
-
-        l48 = l58.add(Direction.NORTH);
-        v48 = 100000000;
-        d48 = null;
-
-        l48 = l57.add(Direction.NORTHEAST);
-        v48 = 100000000;
-        d48 = null;
-
-        l48 = l47.add(Direction.EAST);
         v48 = 100000000;
         d48 = null;
 
@@ -1197,31 +664,7 @@ public class BFS20{
         v60 = 100000000;
         d60 = null;
 
-        l60 = l51.add(Direction.SOUTHWEST);
-        v60 = 100000000;
-        d60 = null;
-
-        l60 = l61.add(Direction.WEST);
-        v60 = 100000000;
-        d60 = null;
-
-        l60 = l71.add(Direction.NORTHWEST);
-        v60 = 100000000;
-        d60 = null;
-
         l68 = l57.add(Direction.SOUTHEAST);
-        v68 = 100000000;
-        d68 = null;
-
-        l68 = l58.add(Direction.SOUTH);
-        v68 = 100000000;
-        d68 = null;
-
-        l68 = l77.add(Direction.NORTHEAST);
-        v68 = 100000000;
-        d68 = null;
-
-        l68 = l67.add(Direction.EAST);
         v68 = 100000000;
         d68 = null;
 
@@ -1229,31 +672,7 @@ public class BFS20{
         v12 = 100000000;
         d12 = null;
 
-        l12 = l23.add(Direction.NORTHWEST);
-        v12 = 100000000;
-        d12 = null;
-
-        l12 = l22.add(Direction.NORTH);
-        v12 = 100000000;
-        d12 = null;
-
-        l12 = l21.add(Direction.NORTHEAST);
-        v12 = 100000000;
-        d12 = null;
-
         l16 = l27.add(Direction.NORTHWEST);
-        v16 = 100000000;
-        d16 = null;
-
-        l16 = l26.add(Direction.NORTH);
-        v16 = 100000000;
-        d16 = null;
-
-        l16 = l25.add(Direction.NORTHEAST);
-        v16 = 100000000;
-        d16 = null;
-
-        l16 = l15.add(Direction.EAST);
         v16 = 100000000;
         d16 = null;
 
@@ -1261,31 +680,7 @@ public class BFS20{
         v92 = 100000000;
         d92 = null;
 
-        l92 = l82.add(Direction.SOUTH);
-        v92 = 100000000;
-        d92 = null;
-
-        l92 = l83.add(Direction.SOUTHWEST);
-        v92 = 100000000;
-        d92 = null;
-
-        l92 = l93.add(Direction.WEST);
-        v92 = 100000000;
-        d92 = null;
-
         l96 = l85.add(Direction.SOUTHEAST);
-        v96 = 100000000;
-        d96 = null;
-
-        l96 = l86.add(Direction.SOUTH);
-        v96 = 100000000;
-        d96 = null;
-
-        l96 = l87.add(Direction.SOUTHWEST);
-        v96 = 100000000;
-        d96 = null;
-
-        l96 = l95.add(Direction.EAST);
         v96 = 100000000;
         d96 = null;
 
@@ -1293,31 +688,7 @@ public class BFS20{
         v30 = 100000000;
         d30 = null;
 
-        l30 = l31.add(Direction.WEST);
-        v30 = 100000000;
-        d30 = null;
-
-        l30 = l41.add(Direction.NORTHWEST);
-        v30 = 100000000;
-        d30 = null;
-
-        l30 = l40.add(Direction.NORTH);
-        v30 = 100000000;
-        d30 = null;
-
         l38 = l27.add(Direction.SOUTHEAST);
-        v38 = 100000000;
-        d38 = null;
-
-        l38 = l48.add(Direction.NORTH);
-        v38 = 100000000;
-        d38 = null;
-
-        l38 = l47.add(Direction.NORTHEAST);
-        v38 = 100000000;
-        d38 = null;
-
-        l38 = l37.add(Direction.EAST);
         v38 = 100000000;
         d38 = null;
 
@@ -1325,36 +696,12 @@ public class BFS20{
         v70 = 100000000;
         d70 = null;
 
-        l70 = l61.add(Direction.SOUTHWEST);
-        v70 = 100000000;
-        d70 = null;
-
-        l70 = l71.add(Direction.WEST);
-        v70 = 100000000;
-        d70 = null;
-
-        l70 = l81.add(Direction.NORTHWEST);
-        v70 = 100000000;
-        d70 = null;
-
         l78 = l67.add(Direction.SOUTHEAST);
         v78 = 100000000;
         d78 = null;
 
-        l78 = l68.add(Direction.SOUTH);
-        v78 = 100000000;
-        d78 = null;
+        System.out.println("Initialized vars: " + Clock.getBytecodesLeft());
 
-        l78 = l87.add(Direction.NORTHEAST);
-        v78 = 100000000;
-        d78 = null;
-
-        l78 = l77.add(Direction.EAST);
-        v78 = 100000000;
-        d78 = null;
-
-
-        System.out.println(Clock.getBytecodesLeft());
         try{ double sum;if(rc.onTheMap(l44)){
             if(!rc.isLocationOccupied(l44)){
                 p44 = 20*(rc.senseRubble(l44)/10 + 1);
@@ -2736,8 +2083,7 @@ public class BFS20{
                 }
             }
 
-
-            System.out.println(Clock.getBytecodesLeft());
+            System.out.println("Ran BFS: " + Clock.getBytecodesLeft());
 
             int dx = target.x - l54.x;
             int dy = target.x - l54.y;
@@ -2918,7 +2264,7 @@ public class BFS20{
                     break;
             }
 
-            System.out.println(Clock.getBytecodesLeft());
+            System.out.println("Didn't find within radius, gonna use distance heuristic: " + Clock.getBytecodesLeft());
 
             Direction ans = null;
             double bestScore = 0;
@@ -3086,7 +2432,6 @@ public class BFS20{
             return ans;
         } catch (Exception e){
             e.printStackTrace();
-        }
-        return null;
+        }return null;
     }
 }
