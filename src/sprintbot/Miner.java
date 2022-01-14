@@ -55,7 +55,8 @@ public class Miner extends Robot {
             return;
         }
 //        MapLocation[] courseOrder = {new MapLocation(0, 30), new MapLocation(30, 15), new MapLocation(0, 0), new MapLocation(30, 0)};
-        MapLocation[] courseOrder = {new MapLocation(1, 28), new MapLocation(28, 15), new MapLocation(7, 12), new MapLocation(10, 12), new MapLocation(18, 21), new MapLocation(28, 1)};
+//        MapLocation[] courseOrder = {new MapLocation(1, 28), new MapLocation(28, 15), new MapLocation(7, 12), new MapLocation(10, 12), new MapLocation(18, 21), new MapLocation(28, 1)};
+        MapLocation[] courseOrder = {new MapLocation(1, 58), new MapLocation(52, 29), new MapLocation(2, 2), new MapLocation(28, 52)};
         MapLocation target = courseOrder[targetNum];
         if(myLoc.distanceSquaredTo(target) <= 4){
             targetNum++;
@@ -64,7 +65,7 @@ public class Miner extends Robot {
             }
             target = courseOrder[targetNum];
         }
-        if(rc.getID() % 2 == 1){
+        if(rc.getID() > 11000){
             indicatorString += "NAV " + target.toString();
             nav.goTo(target);
         }

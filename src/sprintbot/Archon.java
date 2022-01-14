@@ -61,7 +61,7 @@ public class Archon extends Robot {
         // If the current miners can build a soldier every round, then just build a soldier every round
 
         int leadDiff = lead - prevLead;
-        if(rc.getID() == 5){
+        if(rc.getID() == 5 || rc.getID() == 9){
             return;
         }
         if(myTeam == Team.A){

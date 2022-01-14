@@ -264,6 +264,7 @@ def gen_code(f, methodname, target_dir):
         f.write("if(currScore < bestScore){\n")
         f.write("bestScore = currScore;\n")
         f.write("ans = d{}{};\n".format(e_x, e_y))
+        f.write("System.out.println(\"Best end location: \" + l{}{}.toString());".format(e_x, e_y))
         f.write("}\n")
 
     f.write("return ans;\n")

@@ -2268,193 +2268,193 @@ public class BFS20{
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d22;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l22.toString());}
             tempDist = v26/10;
             currScore = l26.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d26;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l26.toString());}
             tempDist = v82/10;
             currScore = l82.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d82;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l82.toString());}
             tempDist = v86/10;
             currScore = l86.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d86;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l86.toString());}
             tempDist = v31/10;
             currScore = l31.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d31;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l31.toString());}
             tempDist = v37/10;
             currScore = l37.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d37;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l37.toString());}
             tempDist = v71/10;
             currScore = l71.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d71;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l71.toString());}
             tempDist = v77/10;
             currScore = l77.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d77;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l77.toString());}
             tempDist = v21/10;
             currScore = l21.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d21;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l21.toString());}
             tempDist = v27/10;
             currScore = l27.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d27;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l27.toString());}
             tempDist = v81/10;
             currScore = l81.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d81;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l81.toString());}
             tempDist = v87/10;
             currScore = l87.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d87;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l87.toString());}
             tempDist = v14/10;
             currScore = l14.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d14;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l14.toString());}
             tempDist = v94/10;
             currScore = l94.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d94;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l94.toString());}
             tempDist = v50/10;
             currScore = l50.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d50;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l50.toString());}
             tempDist = v58/10;
             currScore = l58.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d58;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l58.toString());}
             tempDist = v13/10;
             currScore = l13.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d13;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l13.toString());}
             tempDist = v15/10;
             currScore = l15.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d15;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l15.toString());}
             tempDist = v93/10;
             currScore = l93.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d93;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l93.toString());}
             tempDist = v95/10;
             currScore = l95.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d95;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l95.toString());}
             tempDist = v40/10;
             currScore = l40.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d40;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l40.toString());}
             tempDist = v48/10;
             currScore = l48.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d48;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l48.toString());}
             tempDist = v60/10;
             currScore = l60.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d60;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l60.toString());}
             tempDist = v68/10;
             currScore = l68.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d68;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l68.toString());}
             tempDist = v12/10;
             currScore = l12.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d12;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l12.toString());}
             tempDist = v16/10;
             currScore = l16.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d16;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l16.toString());}
             tempDist = v92/10;
             currScore = l92.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d92;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l92.toString());}
             tempDist = v96/10;
             currScore = l96.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d96;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l96.toString());}
             tempDist = v30/10;
             currScore = l30.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d30;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l30.toString());}
             tempDist = v38/10;
             currScore = l38.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d38;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l38.toString());}
             tempDist = v70/10;
             currScore = l70.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d70;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l70.toString());}
             tempDist = v78/10;
             currScore = l78.distanceSquaredTo(target) + tempDist*tempDist;
             if(currScore < bestScore){
                 bestScore = currScore;
                 ans = d78;
-            }
+                System.out.println("Best end location: " + bestScore + ", " + l78.toString());}
             return ans;
         } catch (Exception e){
             e.printStackTrace();
