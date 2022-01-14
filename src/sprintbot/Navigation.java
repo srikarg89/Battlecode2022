@@ -60,7 +60,7 @@ public class Navigation {
             currentTarget = target;
             visited.clear();
         }
-        Direction toGo = fuzzynav(target);
+        Direction toGo = robot.bfs.getBestDir(target);
         if (toGo == null) {
             return false;
         }
