@@ -132,6 +132,8 @@ public class Soldier extends Robot {
         }
     }
 
+    // TODO: Don't push archon unless you have an overwhelming force
+
     public void push(MapLocation enemyCOM, MapLocation bestAttackTarget) throws GameActionException { // Movement method
         Logger.Log("Pushing towards: " + enemyCOM.toString());
         indicatorString += "Pushing towards: " + enemyCOM.toString();

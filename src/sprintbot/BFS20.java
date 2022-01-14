@@ -701,7 +701,7 @@ public class BFS20{
         System.out.println("Initialized vars: " + Clock.getBytecodesLeft());
         try{ double sum;if(rc.onTheMap(l44)){
             if(!rc.isLocationOccupied(l44)){
-                p44 = 20*(rc.senseRubble(l44)/10 + 1);
+                p44 = 20*((double)rc.senseRubble(l44)/10.0 + 1);
                 sum = v54 + p44;
                 if(v44 > sum){
                     v44 = sum;
@@ -711,7 +711,7 @@ public class BFS20{
         }
             if(rc.onTheMap(l64)){
                 if(!rc.isLocationOccupied(l64)){
-                    p64 = 20*(rc.senseRubble(l64)/10 + 1);
+                    p64 = 20*((double)rc.senseRubble(l64)/10.0 + 1);
                     sum = v54 + p64;
                     if(v64 > sum){
                         v64 = sum;
@@ -721,7 +721,7 @@ public class BFS20{
             }
             if(rc.onTheMap(l53)){
                 if(!rc.isLocationOccupied(l53)){
-                    p53 = 20*(rc.senseRubble(l53)/10 + 1);
+                    p53 = 20*((double)rc.senseRubble(l53)/10.0 + 1);
                     sum = v54 + p53;
                     if(v53 > sum){
                         v53 = sum;
@@ -741,7 +741,7 @@ public class BFS20{
             }
             if(rc.onTheMap(l55)){
                 if(!rc.isLocationOccupied(l55)){
-                    p55 = 20*(rc.senseRubble(l55)/10 + 1);
+                    p55 = 20*((double)rc.senseRubble(l55)/10.0 + 1);
                     sum = v54 + p55;
                     if(v55 > sum){
                         v55 = sum;
@@ -761,7 +761,7 @@ public class BFS20{
             }
             if(rc.onTheMap(l43)){
                 if(!rc.isLocationOccupied(l43)){
-                    p43 = 20*(rc.senseRubble(l43)/10 + 1);
+                    p43 = 20*((double)rc.senseRubble(l43)/10.0 + 1);
                     sum = v54 + p43;
                     if(v43 > sum){
                         v43 = sum;
@@ -781,7 +781,7 @@ public class BFS20{
             }
             if(rc.onTheMap(l45)){
                 if(!rc.isLocationOccupied(l45)){
-                    p45 = 20*(rc.senseRubble(l45)/10 + 1);
+                    p45 = 20*((double)rc.senseRubble(l45)/10.0 + 1);
                     sum = v54 + p45;
                     if(v45 > sum){
                         v45 = sum;
@@ -801,7 +801,7 @@ public class BFS20{
             }
             if(rc.onTheMap(l63)){
                 if(!rc.isLocationOccupied(l63)){
-                    p63 = 20*(rc.senseRubble(l63)/10 + 1);
+                    p63 = 20*((double)rc.senseRubble(l63)/10.0 + 1);
                     sum = v54 + p63;
                     if(v63 > sum){
                         v63 = sum;
@@ -821,7 +821,7 @@ public class BFS20{
             }
             if(rc.onTheMap(l65)){
                 if(!rc.isLocationOccupied(l65)){
-                    p65 = 20*(rc.senseRubble(l65)/10 + 1);
+                    p65 = 20*((double)rc.senseRubble(l65)/10.0 + 1);
                     sum = v54 + p65;
                     if(v65 > sum){
                         v65 = sum;
@@ -840,7 +840,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l34)){
-                p34 = 20*(rc.senseRubble(l34)/10 + 1);
+                p34 = 20*((double)rc.senseRubble(l34)/10.0 + 1);
                 sum = v44 + p34;
                 if(v34 > sum){
                     v34 = sum;
@@ -858,7 +858,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l74)){
-                p74 = 20*(rc.senseRubble(l74)/10 + 1);
+                p74 = 20*((double)rc.senseRubble(l74)/10.0 + 1);
                 sum = v64 + p74;
                 if(v74 > sum){
                     v74 = sum;
@@ -876,7 +876,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l52)){
-                p52 = 20*(rc.senseRubble(l52)/10 + 1);
+                p52 = 20*((double)rc.senseRubble(l52)/10.0 + 1);
                 sum = v53 + p52;
                 if(v52 > sum){
                     v52 = sum;
@@ -894,7 +894,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l56)){
-                p56 = 20*(rc.senseRubble(l56)/10 + 1);
+                p56 = 20*((double)rc.senseRubble(l56)/10.0 + 1);
                 sum = v55 + p56;
                 if(v56 > sum){
                     v56 = sum;
@@ -912,7 +912,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l33)){
-                p33 = 20*(rc.senseRubble(l33)/10 + 1);
+                p33 = 20*((double)rc.senseRubble(l33)/10.0 + 1);
                 sum = v44 + p33;
                 if(v33 > sum){
                     v33 = sum;
@@ -930,7 +930,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l35)){
-                p35 = 20*(rc.senseRubble(l35)/10 + 1);
+                p35 = 20*((double)rc.senseRubble(l35)/10.0 + 1);
                 sum = v44 + p35;
                 if(v35 > sum){
                     v35 = sum;
@@ -948,7 +948,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l73)){
-                p73 = 20*(rc.senseRubble(l73)/10 + 1);
+                p73 = 20*((double)rc.senseRubble(l73)/10.0 + 1);
                 sum = v64 + p73;
                 if(v73 > sum){
                     v73 = sum;
@@ -966,7 +966,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l75)){
-                p75 = 20*(rc.senseRubble(l75)/10 + 1);
+                p75 = 20*((double)rc.senseRubble(l75)/10.0 + 1);
                 sum = v64 + p75;
                 if(v75 > sum){
                     v75 = sum;
@@ -984,7 +984,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l42)){
-                p42 = 20*(rc.senseRubble(l42)/10 + 1);
+                p42 = 20*((double)rc.senseRubble(l42)/10.0 + 1);
                 sum = v53 + p42;
                 if(v42 > sum){
                     v42 = sum;
@@ -1007,7 +1007,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l46)){
-                p46 = 20*(rc.senseRubble(l46)/10 + 1);
+                p46 = 20*((double)rc.senseRubble(l46)/10.0 + 1);
                 sum = v55 + p46;
                 if(v46 > sum){
                     v46 = sum;
@@ -1030,7 +1030,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l62)){
-                p62 = 20*(rc.senseRubble(l62)/10 + 1);
+                p62 = 20*((double)rc.senseRubble(l62)/10.0 + 1);
                 sum = v53 + p62;
                 if(v62 > sum){
                     v62 = sum;
@@ -1053,7 +1053,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l66)){
-                p66 = 20*(rc.senseRubble(l66)/10 + 1);
+                p66 = 20*((double)rc.senseRubble(l66)/10.0 + 1);
                 sum = v55 + p66;
                 if(v66 > sum){
                     v66 = sum;
@@ -1076,7 +1076,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l32)){
-                p32 = 20*(rc.senseRubble(l32)/10 + 1);
+                p32 = 20*((double)rc.senseRubble(l32)/10.0 + 1);
                 sum = v43 + p32;
                 if(v32 > sum){
                     v32 = sum;
@@ -1094,7 +1094,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l36)){
-                p36 = 20*(rc.senseRubble(l36)/10 + 1);
+                p36 = 20*((double)rc.senseRubble(l36)/10.0 + 1);
                 sum = v45 + p36;
                 if(v36 > sum){
                     v36 = sum;
@@ -1112,7 +1112,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l72)){
-                p72 = 20*(rc.senseRubble(l72)/10 + 1);
+                p72 = 20*((double)rc.senseRubble(l72)/10.0 + 1);
                 sum = v63 + p72;
                 if(v72 > sum){
                     v72 = sum;
@@ -1130,7 +1130,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l76)){
-                p76 = 20*(rc.senseRubble(l76)/10 + 1);
+                p76 = 20*((double)rc.senseRubble(l76)/10.0 + 1);
                 sum = v65 + p76;
                 if(v76 > sum){
                     v76 = sum;
@@ -1148,7 +1148,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l24)){
-                p24 = 20*(rc.senseRubble(l24)/10 + 1);
+                p24 = 20*((double)rc.senseRubble(l24)/10.0 + 1);
                 sum = v34 + p24;
                 if(v24 > sum){
                     v24 = sum;
@@ -1166,7 +1166,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l84)){
-                p84 = 20*(rc.senseRubble(l84)/10 + 1);
+                p84 = 20*((double)rc.senseRubble(l84)/10.0 + 1);
                 sum = v74 + p84;
                 if(v84 > sum){
                     v84 = sum;
@@ -1184,7 +1184,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l51)){
-                p51 = 20*(rc.senseRubble(l51)/10 + 1);
+                p51 = 20*((double)rc.senseRubble(l51)/10.0 + 1);
                 sum = v52 + p51;
                 if(v51 > sum){
                     v51 = sum;
@@ -1202,7 +1202,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l57)){
-                p57 = 20*(rc.senseRubble(l57)/10 + 1);
+                p57 = 20*((double)rc.senseRubble(l57)/10.0 + 1);
                 sum = v56 + p57;
                 if(v57 > sum){
                     v57 = sum;
@@ -1220,7 +1220,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l23)){
-                p23 = 20*(rc.senseRubble(l23)/10 + 1);
+                p23 = 20*((double)rc.senseRubble(l23)/10.0 + 1);
                 sum = v34 + p23;
                 if(v23 > sum){
                     v23 = sum;
@@ -1243,7 +1243,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l25)){
-                p25 = 20*(rc.senseRubble(l25)/10 + 1);
+                p25 = 20*((double)rc.senseRubble(l25)/10.0 + 1);
                 sum = v34 + p25;
                 if(v25 > sum){
                     v25 = sum;
@@ -1266,7 +1266,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l83)){
-                p83 = 20*(rc.senseRubble(l83)/10 + 1);
+                p83 = 20*((double)rc.senseRubble(l83)/10.0 + 1);
                 sum = v74 + p83;
                 if(v83 > sum){
                     v83 = sum;
@@ -1289,7 +1289,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l85)){
-                p85 = 20*(rc.senseRubble(l85)/10 + 1);
+                p85 = 20*((double)rc.senseRubble(l85)/10.0 + 1);
                 sum = v74 + p85;
                 if(v85 > sum){
                     v85 = sum;
@@ -1312,7 +1312,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l41)){
-                p41 = 20*(rc.senseRubble(l41)/10 + 1);
+                p41 = 20*((double)rc.senseRubble(l41)/10.0 + 1);
                 sum = v52 + p41;
                 if(v41 > sum){
                     v41 = sum;
@@ -1335,7 +1335,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l47)){
-                p47 = 20*(rc.senseRubble(l47)/10 + 1);
+                p47 = 20*((double)rc.senseRubble(l47)/10.0 + 1);
                 sum = v56 + p47;
                 if(v47 > sum){
                     v47 = sum;
@@ -1358,7 +1358,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l61)){
-                p61 = 20*(rc.senseRubble(l61)/10 + 1);
+                p61 = 20*((double)rc.senseRubble(l61)/10.0 + 1);
                 sum = v52 + p61;
                 if(v61 > sum){
                     v61 = sum;
@@ -1381,7 +1381,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l67)){
-                p67 = 20*(rc.senseRubble(l67)/10 + 1);
+                p67 = 20*((double)rc.senseRubble(l67)/10.0 + 1);
                 sum = v56 + p67;
                 if(v67 > sum){
                     v67 = sum;
@@ -1404,7 +1404,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l22)){
-                p22 = 20*(rc.senseRubble(l22)/10 + 1);
+                p22 = 20*((double)rc.senseRubble(l22)/10.0 + 1);
                 sum = v33 + p22;
                 if(v22 > sum){
                     v22 = sum;
@@ -1422,7 +1422,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l26)){
-                p26 = 20*(rc.senseRubble(l26)/10 + 1);
+                p26 = 20*((double)rc.senseRubble(l26)/10.0 + 1);
                 sum = v35 + p26;
                 if(v26 > sum){
                     v26 = sum;
@@ -1440,7 +1440,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l82)){
-                p82 = 20*(rc.senseRubble(l82)/10 + 1);
+                p82 = 20*((double)rc.senseRubble(l82)/10.0 + 1);
                 sum = v73 + p82;
                 if(v82 > sum){
                     v82 = sum;
@@ -1458,7 +1458,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l86)){
-                p86 = 20*(rc.senseRubble(l86)/10 + 1);
+                p86 = 20*((double)rc.senseRubble(l86)/10.0 + 1);
                 sum = v75 + p86;
                 if(v86 > sum){
                     v86 = sum;
@@ -1476,7 +1476,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l31)){
-                p31 = 20*(rc.senseRubble(l31)/10 + 1);
+                p31 = 20*((double)rc.senseRubble(l31)/10.0 + 1);
                 sum = v42 + p31;
                 if(v31 > sum){
                     v31 = sum;
@@ -1499,7 +1499,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l37)){
-                p37 = 20*(rc.senseRubble(l37)/10 + 1);
+                p37 = 20*((double)rc.senseRubble(l37)/10.0 + 1);
                 sum = v46 + p37;
                 if(v37 > sum){
                     v37 = sum;
@@ -1522,7 +1522,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l71)){
-                p71 = 20*(rc.senseRubble(l71)/10 + 1);
+                p71 = 20*((double)rc.senseRubble(l71)/10.0 + 1);
                 sum = v62 + p71;
                 if(v71 > sum){
                     v71 = sum;
@@ -1545,7 +1545,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l77)){
-                p77 = 20*(rc.senseRubble(l77)/10 + 1);
+                p77 = 20*((double)rc.senseRubble(l77)/10.0 + 1);
                 sum = v66 + p77;
                 if(v77 > sum){
                     v77 = sum;
@@ -1568,7 +1568,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l21)){
-                p21 = 20*(rc.senseRubble(l21)/10 + 1);
+                p21 = 20*((double)rc.senseRubble(l21)/10.0 + 1);
                 sum = v32 + p21;
                 if(v21 > sum){
                     v21 = sum;
@@ -1586,7 +1586,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l27)){
-                p27 = 20*(rc.senseRubble(l27)/10 + 1);
+                p27 = 20*((double)rc.senseRubble(l27)/10.0 + 1);
                 sum = v36 + p27;
                 if(v27 > sum){
                     v27 = sum;
@@ -1604,7 +1604,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l81)){
-                p81 = 20*(rc.senseRubble(l81)/10 + 1);
+                p81 = 20*((double)rc.senseRubble(l81)/10.0 + 1);
                 sum = v72 + p81;
                 if(v81 > sum){
                     v81 = sum;
@@ -1622,7 +1622,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l87)){
-                p87 = 20*(rc.senseRubble(l87)/10 + 1);
+                p87 = 20*((double)rc.senseRubble(l87)/10.0 + 1);
                 sum = v76 + p87;
                 if(v87 > sum){
                     v87 = sum;
@@ -1640,7 +1640,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l14)){
-                p14 = 20*(rc.senseRubble(l14)/10 + 1);
+                p14 = 20*((double)rc.senseRubble(l14)/10.0 + 1);
                 sum = v24 + p14;
                 if(v14 > sum){
                     v14 = sum;
@@ -1658,7 +1658,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l94)){
-                p94 = 20*(rc.senseRubble(l94)/10 + 1);
+                p94 = 20*((double)rc.senseRubble(l94)/10.0 + 1);
                 sum = v84 + p94;
                 if(v94 > sum){
                     v94 = sum;
@@ -1676,7 +1676,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l50)){
-                p50 = 20*(rc.senseRubble(l50)/10 + 1);
+                p50 = 20*((double)rc.senseRubble(l50)/10.0 + 1);
                 sum = v51 + p50;
                 if(v50 > sum){
                     v50 = sum;
@@ -1694,7 +1694,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l58)){
-                p58 = 20*(rc.senseRubble(l58)/10 + 1);
+                p58 = 20*((double)rc.senseRubble(l58)/10.0 + 1);
                 sum = v57 + p58;
                 if(v58 > sum){
                     v58 = sum;
@@ -1712,7 +1712,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l13)){
-                p13 = 20*(rc.senseRubble(l13)/10 + 1);
+                p13 = 20*((double)rc.senseRubble(l13)/10.0 + 1);
                 sum = v24 + p13;
                 if(v13 > sum){
                     v13 = sum;
@@ -1735,7 +1735,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l15)){
-                p15 = 20*(rc.senseRubble(l15)/10 + 1);
+                p15 = 20*((double)rc.senseRubble(l15)/10.0 + 1);
                 sum = v24 + p15;
                 if(v15 > sum){
                     v15 = sum;
@@ -1758,7 +1758,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l93)){
-                p93 = 20*(rc.senseRubble(l93)/10 + 1);
+                p93 = 20*((double)rc.senseRubble(l93)/10.0 + 1);
                 sum = v84 + p93;
                 if(v93 > sum){
                     v93 = sum;
@@ -1781,7 +1781,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l95)){
-                p95 = 20*(rc.senseRubble(l95)/10 + 1);
+                p95 = 20*((double)rc.senseRubble(l95)/10.0 + 1);
                 sum = v84 + p95;
                 if(v95 > sum){
                     v95 = sum;
@@ -1804,7 +1804,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l40)){
-                p40 = 20*(rc.senseRubble(l40)/10 + 1);
+                p40 = 20*((double)rc.senseRubble(l40)/10.0 + 1);
                 sum = v51 + p40;
                 if(v40 > sum){
                     v40 = sum;
@@ -1827,7 +1827,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l48)){
-                p48 = 20*(rc.senseRubble(l48)/10 + 1);
+                p48 = 20*((double)rc.senseRubble(l48)/10.0 + 1);
                 sum = v57 + p48;
                 if(v48 > sum){
                     v48 = sum;
@@ -1850,7 +1850,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l60)){
-                p60 = 20*(rc.senseRubble(l60)/10 + 1);
+                p60 = 20*((double)rc.senseRubble(l60)/10.0 + 1);
                 sum = v51 + p60;
                 if(v60 > sum){
                     v60 = sum;
@@ -1873,7 +1873,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l68)){
-                p68 = 20*(rc.senseRubble(l68)/10 + 1);
+                p68 = 20*((double)rc.senseRubble(l68)/10.0 + 1);
                 sum = v57 + p68;
                 if(v68 > sum){
                     v68 = sum;
@@ -1896,7 +1896,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l12)){
-                p12 = 20*(rc.senseRubble(l12)/10 + 1);
+                p12 = 20*((double)rc.senseRubble(l12)/10.0 + 1);
                 sum = v23 + p12;
                 if(v12 > sum){
                     v12 = sum;
@@ -1919,7 +1919,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l16)){
-                p16 = 20*(rc.senseRubble(l16)/10 + 1);
+                p16 = 20*((double)rc.senseRubble(l16)/10.0 + 1);
                 sum = v25 + p16;
                 if(v16 > sum){
                     v16 = sum;
@@ -1942,7 +1942,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l92)){
-                p92 = 20*(rc.senseRubble(l92)/10 + 1);
+                p92 = 20*((double)rc.senseRubble(l92)/10.0 + 1);
                 sum = v83 + p92;
                 if(v92 > sum){
                     v92 = sum;
@@ -1965,7 +1965,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l96)){
-                p96 = 20*(rc.senseRubble(l96)/10 + 1);
+                p96 = 20*((double)rc.senseRubble(l96)/10.0 + 1);
                 sum = v85 + p96;
                 if(v96 > sum){
                     v96 = sum;
@@ -1988,7 +1988,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l30)){
-                p30 = 20*(rc.senseRubble(l30)/10 + 1);
+                p30 = 20*((double)rc.senseRubble(l30)/10.0 + 1);
                 sum = v41 + p30;
                 if(v30 > sum){
                     v30 = sum;
@@ -2011,7 +2011,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l38)){
-                p38 = 20*(rc.senseRubble(l38)/10 + 1);
+                p38 = 20*((double)rc.senseRubble(l38)/10.0 + 1);
                 sum = v47 + p38;
                 if(v38 > sum){
                     v38 = sum;
@@ -2034,7 +2034,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l70)){
-                p70 = 20*(rc.senseRubble(l70)/10 + 1);
+                p70 = 20*((double)rc.senseRubble(l70)/10.0 + 1);
                 sum = v61 + p70;
                 if(v70 > sum){
                     v70 = sum;
@@ -2057,7 +2057,7 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l78)){
-                p78 = 20*(rc.senseRubble(l78)/10 + 1);
+                p78 = 20*((double)rc.senseRubble(l78)/10.0 + 1);
                 sum = v67 + p78;
                 if(v78 > sum){
                     v78 = sum;
@@ -2260,201 +2260,202 @@ public class BFS20{
             }
             System.out.println("Didn't find within radius, gonna use distance heuristic: " + Clock.getBytecodesLeft());
             Direction ans = null;
-            double bestScore = Double.MAX_VALUE;
+            double bestScore = 0;
+            double initialDist = robot.myLoc.distanceSquaredTo(target);
             double currScore;
             double tempDist;
             tempDist = v22/10;
-            currScore = l22.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l22.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d22;
-                System.out.println("Best end location: " + bestScore + ", " + l22.toString());}
+                System.out.println("Best end location: " + l22.toString());}
             tempDist = v26/10;
-            currScore = l26.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l26.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d26;
-                System.out.println("Best end location: " + bestScore + ", " + l26.toString());}
+                System.out.println("Best end location: " + l26.toString());}
             tempDist = v82/10;
-            currScore = l82.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l82.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d82;
-                System.out.println("Best end location: " + bestScore + ", " + l82.toString());}
+                System.out.println("Best end location: " + l82.toString());}
             tempDist = v86/10;
-            currScore = l86.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l86.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d86;
-                System.out.println("Best end location: " + bestScore + ", " + l86.toString());}
+                System.out.println("Best end location: " + l86.toString());}
             tempDist = v31/10;
-            currScore = l31.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l31.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d31;
-                System.out.println("Best end location: " + bestScore + ", " + l31.toString());}
+                System.out.println("Best end location: " + l31.toString());}
             tempDist = v37/10;
-            currScore = l37.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l37.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d37;
-                System.out.println("Best end location: " + bestScore + ", " + l37.toString());}
+                System.out.println("Best end location: " + l37.toString());}
             tempDist = v71/10;
-            currScore = l71.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l71.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d71;
-                System.out.println("Best end location: " + bestScore + ", " + l71.toString());}
+                System.out.println("Best end location: " + l71.toString());}
             tempDist = v77/10;
-            currScore = l77.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l77.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d77;
-                System.out.println("Best end location: " + bestScore + ", " + l77.toString());}
+                System.out.println("Best end location: " + l77.toString());}
             tempDist = v21/10;
-            currScore = l21.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l21.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d21;
-                System.out.println("Best end location: " + bestScore + ", " + l21.toString());}
+                System.out.println("Best end location: " + l21.toString());}
             tempDist = v27/10;
-            currScore = l27.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l27.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d27;
-                System.out.println("Best end location: " + bestScore + ", " + l27.toString());}
+                System.out.println("Best end location: " + l27.toString());}
             tempDist = v81/10;
-            currScore = l81.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l81.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d81;
-                System.out.println("Best end location: " + bestScore + ", " + l81.toString());}
+                System.out.println("Best end location: " + l81.toString());}
             tempDist = v87/10;
-            currScore = l87.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l87.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d87;
-                System.out.println("Best end location: " + bestScore + ", " + l87.toString());}
+                System.out.println("Best end location: " + l87.toString());}
             tempDist = v14/10;
-            currScore = l14.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l14.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d14;
-                System.out.println("Best end location: " + bestScore + ", " + l14.toString());}
+                System.out.println("Best end location: " + l14.toString());}
             tempDist = v94/10;
-            currScore = l94.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l94.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d94;
-                System.out.println("Best end location: " + bestScore + ", " + l94.toString());}
+                System.out.println("Best end location: " + l94.toString());}
             tempDist = v50/10;
-            currScore = l50.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l50.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d50;
-                System.out.println("Best end location: " + bestScore + ", " + l50.toString());}
+                System.out.println("Best end location: " + l50.toString());}
             tempDist = v58/10;
-            currScore = l58.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l58.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d58;
-                System.out.println("Best end location: " + bestScore + ", " + l58.toString());}
+                System.out.println("Best end location: " + l58.toString());}
             tempDist = v13/10;
-            currScore = l13.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l13.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d13;
-                System.out.println("Best end location: " + bestScore + ", " + l13.toString());}
+                System.out.println("Best end location: " + l13.toString());}
             tempDist = v15/10;
-            currScore = l15.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l15.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d15;
-                System.out.println("Best end location: " + bestScore + ", " + l15.toString());}
+                System.out.println("Best end location: " + l15.toString());}
             tempDist = v93/10;
-            currScore = l93.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l93.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d93;
-                System.out.println("Best end location: " + bestScore + ", " + l93.toString());}
+                System.out.println("Best end location: " + l93.toString());}
             tempDist = v95/10;
-            currScore = l95.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l95.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d95;
-                System.out.println("Best end location: " + bestScore + ", " + l95.toString());}
+                System.out.println("Best end location: " + l95.toString());}
             tempDist = v40/10;
-            currScore = l40.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l40.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d40;
-                System.out.println("Best end location: " + bestScore + ", " + l40.toString());}
+                System.out.println("Best end location: " + l40.toString());}
             tempDist = v48/10;
-            currScore = l48.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l48.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d48;
-                System.out.println("Best end location: " + bestScore + ", " + l48.toString());}
+                System.out.println("Best end location: " + l48.toString());}
             tempDist = v60/10;
-            currScore = l60.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l60.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d60;
-                System.out.println("Best end location: " + bestScore + ", " + l60.toString());}
+                System.out.println("Best end location: " + l60.toString());}
             tempDist = v68/10;
-            currScore = l68.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l68.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d68;
-                System.out.println("Best end location: " + bestScore + ", " + l68.toString());}
+                System.out.println("Best end location: " + l68.toString());}
             tempDist = v12/10;
-            currScore = l12.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l12.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d12;
-                System.out.println("Best end location: " + bestScore + ", " + l12.toString());}
+                System.out.println("Best end location: " + l12.toString());}
             tempDist = v16/10;
-            currScore = l16.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l16.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d16;
-                System.out.println("Best end location: " + bestScore + ", " + l16.toString());}
+                System.out.println("Best end location: " + l16.toString());}
             tempDist = v92/10;
-            currScore = l92.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l92.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d92;
-                System.out.println("Best end location: " + bestScore + ", " + l92.toString());}
+                System.out.println("Best end location: " + l92.toString());}
             tempDist = v96/10;
-            currScore = l96.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l96.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d96;
-                System.out.println("Best end location: " + bestScore + ", " + l96.toString());}
+                System.out.println("Best end location: " + l96.toString());}
             tempDist = v30/10;
-            currScore = l30.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l30.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d30;
-                System.out.println("Best end location: " + bestScore + ", " + l30.toString());}
+                System.out.println("Best end location: " + l30.toString());}
             tempDist = v38/10;
-            currScore = l38.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l38.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d38;
-                System.out.println("Best end location: " + bestScore + ", " + l38.toString());}
+                System.out.println("Best end location: " + l38.toString());}
             tempDist = v70/10;
-            currScore = l70.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l70.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d70;
-                System.out.println("Best end location: " + bestScore + ", " + l70.toString());}
+                System.out.println("Best end location: " + l70.toString());}
             tempDist = v78/10;
-            currScore = l78.distanceSquaredTo(target) + tempDist*tempDist;
-            if(currScore < bestScore){
+            currScore = (initialDist - l78.distanceSquaredTo(target)) / tempDist;
+            if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d78;
-                System.out.println("Best end location: " + bestScore + ", " + l78.toString());}
+                System.out.println("Best end location: " + l78.toString());}
             return ans;
         } catch (Exception e){
             e.printStackTrace();

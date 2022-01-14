@@ -70,8 +70,10 @@ public class Miner extends Robot {
             nav.goTo(target);
         }
         else{
+            System.out.println("Starting bytecode: " + Clock.getBytecodesLeft());
             indicatorString += "NAV " + target.toString();
             nav.goToBFS(target);
+            System.out.println("Ending bytecode: " + Clock.getBytecodesLeft());
         }
 
 //        boolean movedTowardsGold = goToClosestGold();

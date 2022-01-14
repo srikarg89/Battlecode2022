@@ -4,7 +4,7 @@ OUTPUT_FILENAME = "bfs_code.txt"
 # OUTPUT_FILENAME = "sprintbot/BFS20.java"
 PACKAGE_NAME = "sprintbot"
 start_loc = (5, 4)  # you may need to increase these vals if the RADIUS_SQUARED is increased from 20
-THRESHOLD_KEEP_ALL_DIRECTIONS = 2
+THRESHOLD_KEEP_ALL_DIRECTIONS = 100
 
 def get_neighbor_locs(loc, order=None):
     neighbors = []
@@ -205,7 +205,7 @@ def gen_code(f, methodname, target_dir):
         if start_loc in get_neighbor_locs((x, y)):
         # if True:
             f.write("if(!rc.isLocationOccupied(l{}{})){{\n".format(x, y))
-        f.write("p{}{} = 20*(rc.senseRubble(l{}{})/10 + 1);\n".format(x, y, x, y))
+        f.write("p{}{} = 20*((double)rc.senseRubble(l{}{})/10.0 + 1);\n".format(x, y, x, y))
 
 
         neighbors = get_neighbor_locs((x, y))
@@ -252,7 +252,9 @@ def gen_code(f, methodname, target_dir):
     f.write("System.out.println(\"Didn't find within radius, gonna use distance heuristic: \" + Clock.getBytecodesLeft());\n")
 
     f.write("Direction ans = null;\n")
-    f.write("double bestScore = Double.MAX_VALUE;\n")
+    # f.write("double bestScore = Double.MAX_VALUE;\n")
+    f.write("double bestScore = 0;\n")
+    f.write("double initialDist = robot.myLoc.distanceSquaredTo(target);\n")
     f.write("double currScore;\n")
     f.write("double tempDist;\n")
 
@@ -260,8 +262,11 @@ def gen_code(f, methodname, target_dir):
     for edge_loc in edge_locs:
         e_x, e_y = edge_loc
         f.write("tempDist = v{}{}/10;\n".format(e_x, e_y, e_x, e_y))
-        f.write("currScore = l{}{}.distanceSquaredTo(target) + tempDist*tempDist;\n".format(e_x, e_y))
-        f.write("if(currScore < bestScore){\n")
+        # f.write("currScore = l{}{}.distanceSquaredTo(target) + tempDist*tempDist;\n".format(e_x, e_y))
+        # f.write("currScore = Util.minMovesToReach(l{}{}, target)*Util.minMovesToReach(l{}{}, target) + l{}{}.distanceSquaredTo(target) + tempDist*tempDist;\n".format(e_x, e_y))
+        f.write("currScore = (initialDist - l{}{}.distanceSquaredTo(target)) / tempDist;\n".format(e_x, e_y))
+        # f.write("if(currScore < bestScore){\n")
+        f.write("if(currScore > bestScore){\n")
         f.write("bestScore = currScore;\n")
         f.write("ans = d{}{};\n".format(e_x, e_y))
         f.write("System.out.println(\"Best end location: \" + l{}{}.toString());".format(e_x, e_y))
