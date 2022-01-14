@@ -1,7 +1,6 @@
-package sprintbot;
+package bfstesting;
 
 import battlecode.common.*;
-import scala.collection.Map;
 
 // TODO: Revamp miner class. Just make a massive map of heuristics for each spot leadAvailable / (rubble + 10) + distance + (50 if adjacent friendly else 0)
 // And then just go to the spot with the best heuristic
@@ -14,6 +13,7 @@ public class Miner extends Robot {
     MapLocation currentTarget = null;
     int targetNum = 0;
 
+    int[][] goldMap = new int[5][5];
     int[][] leadMap = new int[5][5];
 
     int leadVal00 = 0; int leadVal01 = 0; int leadVal02 = 0; int leadVal03 = 0; int leadVal04 = 0; int leadVal10 = 0; int leadVal11 = 0; int leadVal12 = 0; int leadVal13 = 0; int leadVal14 = 0; int leadVal20 = 0; int leadVal21 = 0; int leadVal22 = 0; int leadVal23 = 0; int leadVal24 = 0; int leadVal30 = 0; int leadVal31 = 0; int leadVal32 = 0; int leadVal33 = 0; int leadVal34 = 0; int leadVal40 = 0; int leadVal41 = 0; int leadVal42 = 0; int leadVal43 = 0; int leadVal44 = 0;
@@ -50,51 +50,75 @@ public class Miner extends Robot {
         comms.scanEnemyArchons(); // Costs 500 bytecode
 
         // Logger.Log("Before filling: " + Clock.getBytecodesLeft());
-        System.out.println("Bytecode left at start of miner method: " + Clock.getBytecodesLeft());
-
-        boolean movedTowardsGold = goToClosestGold();
-        if(!movedTowardsGold){
-            RobotInfo[] nearbyEnemies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
-            fillMapsUnrolled(); // Costs 1125 bytecode. Bytecode here is 4491
-            double currHeuristic = getHeursitic(myLoc, nearbyEnemies); // Costs 800 bytecode
-            // Logger.Log("Single heuristic: " + Clock.getBytecodesLeft());
-            // Logger.Log("Heuristic value: " + currHeuristic);
-            double bestHeuristic = currHeuristic;
-            if(bestHeuristic > 0){ // Can currently mine from this location
-                Direction bestDir = null;
-                for(int i = 0; i < Util.directions.length; i++){ // If you can move to a better spot, do so
-                    Direction dir = Util.directions[i];
-                    if(!rc.canMove(dir)){
-                        continue;
-                    }
-                    MapLocation newLoc = myLoc.add(dir);
-                    double newHeuristic = getHeursitic(newLoc, nearbyEnemies);
-                    if(newHeuristic > bestHeuristic){
-                        bestHeuristic = newHeuristic;
-                        bestDir = dir;
-                    }
-                    // Logger.Log("Next heuristic: " + Clock.getBytecodesLeft());
-                }
-                if(bestDir != null){ // If you can move in a better direction, do so
-                    rc.move(bestDir);
-                    indicatorString += "CH: " + (int)currHeuristic + ",BH: " + (int)bestHeuristic + ", Dir:" + bestDir + "; ";
-                }
-            }
-            else{ // Find nearest mine
-                MapLocation targetLoc = findClosestMine();
-                // Logger.Log("Found closest mine: " + Clock.getBytecodesLeft());
-                System.out.println("Bytecode left after finding closest mine: " + Clock.getBytecodesLeft());
-                if(targetLoc == null){
-                    if(currentTarget == null || myLoc.distanceSquaredTo(currentTarget) <= 8){
-                        currentTarget = nav.getRandomMapLocation();
-                    }
-                    targetLoc = currentTarget;
-                }
-                nav.goTo(targetLoc);
-                indicatorString += "NAV " + Util.mapLocationToInt(targetLoc) + "; ";
-            }
+        if(rc.getRoundNum() < 10){
+            return;
         }
-        tryMineAllDirections();
+//        MapLocation[] courseOrder = {new MapLocation(0, 30), new MapLocation(30, 15), new MapLocation(0, 0), new MapLocation(30, 0)};
+//        MapLocation[] courseOrder = {new MapLocation(1, 28), new MapLocation(28, 15), new MapLocation(7, 12), new MapLocation(10, 12), new MapLocation(18, 21), new MapLocation(28, 1)};
+        MapLocation[] courseOrder = {new MapLocation(1, 58), new MapLocation(52, 29), new MapLocation(2, 2), new MapLocation(28, 52)};
+        MapLocation target = courseOrder[targetNum];
+        if(myLoc.distanceSquaredTo(target) <= 4){
+            targetNum++;
+            if(targetNum >= courseOrder.length){
+                targetNum--;
+            }
+            target = courseOrder[targetNum];
+        }
+        if(rc.getID() > 11000){
+            indicatorString += "BFSOLD " + target.toString();
+//            nav.goTo(target);
+            nav.goToBFSOld(target);
+        }
+        else{
+            System.out.println("Starting bytecode: " + Clock.getBytecodesLeft());
+            indicatorString += "BFSNEW " + target.toString();
+            nav.update();
+            nav.goToBFS(target);
+            System.out.println("Ending bytecode: " + Clock.getBytecodesLeft());
+        }
+
+//        boolean movedTowardsGold = goToClosestGold();
+//        if(!movedTowardsGold){
+//            RobotInfo[] nearbyEnemies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
+//            fillMapsUnrolled(); // Costs 1125 bytecode. Bytecode here is 4491
+//            double currHeuristic = getHeursitic(myLoc, nearbyEnemies); // Costs 800 bytecode
+//            // Logger.Log("Single heuristic: " + Clock.getBytecodesLeft());
+//            // Logger.Log("Heuristic value: " + currHeuristic);
+//            double bestHeuristic = currHeuristic;
+//            if(bestHeuristic > 0){ // Can currently mine from this location
+//                Direction bestDir = null;
+//                for(int i = 0; i < Util.directions.length; i++){ // If you can move to a better spot, do so
+//                    Direction dir = Util.directions[i];
+//                    if(!rc.canMove(dir)){
+//                        continue;
+//                    }
+//                    MapLocation newLoc = myLoc.add(dir);
+//                    double newHeuristic = getHeursitic(newLoc, nearbyEnemies);
+//                    if(newHeuristic > bestHeuristic){
+//                        bestHeuristic = newHeuristic;
+//                        bestDir = dir;
+//                    }
+//                    // Logger.Log("Next heuristic: " + Clock.getBytecodesLeft());
+//                }
+//                if(bestDir != null){ // If you can move in a better direction, do so
+//                    rc.move(bestDir);
+//                    indicatorString += "CH: " + (int)currHeuristic + ",BH: " + (int)bestHeuristic + ", Dir:" + bestDir + "; ";
+//                }
+//            }
+//            else{ // Find nearest mine
+//                MapLocation targetLoc = findClosestMine();
+//                // Logger.Log("Found closest mine: " + Clock.getBytecodesLeft());
+//                if(targetLoc == null){
+//                    if(currentTarget == null || myLoc.distanceSquaredTo(currentTarget) <= 8){
+//                        currentTarget = nav.getRandomMapLocation();
+//                    }
+//                    targetLoc = currentTarget;
+//                }
+//                nav.goTo(targetLoc);
+//                indicatorString += "NAV " + Util.mapLocationToInt(targetLoc) + "; ";
+//            }
+//        }
+//        tryMineAllDirections();
         // Logger.Log("After mining: " + Clock.getBytecodesLeft());
     }
 

@@ -1,4 +1,4 @@
-package sprintbot;
+package bfstesting;
 
 import battlecode.common.*;
 
@@ -61,6 +61,15 @@ public class Archon extends Robot {
         // If the current miners can build a soldier every round, then just build a soldier every round
 
         int leadDiff = lead - prevLead;
+        if(rc.getID() == 5 || rc.getID() == 9){
+            return;
+        }
+        if(myTeam == Team.A){
+            return;
+        }
+        if(myTeam == Team.B && minerCount >= 2){
+            return;
+        }
 
         if(lead > 1500 && builderCount*30 < rc.getRoundNum() && builderCount < 4) {
 //        if(false){

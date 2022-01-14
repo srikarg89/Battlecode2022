@@ -1,4 +1,4 @@
-package sprintbot;
+package bfstesting;
 
 import battlecode.common.Clock;
 import battlecode.common.GameActionException;
@@ -23,15 +23,18 @@ public strictfp class RobotPlayer {
         }
 
         while (true) {
+            if(rc.getRoundNum() > 1000){
+                rc.resign();
+            }
 
             // Try/catch blocks stop unhandled exceptions, which cause your robot to explode.
             try {
                 robot.indicatorString = "";
                 robot.run();
                 rc.setIndicatorString(robot.indicatorString);
-                System.out.println("Bytecode left: " + Clock.getBytecodesLeft());
+//                System.out.println("Bytecode left: " + Clock.getBytecodesLeft());
                 if(!checkBytecode(robot, rc)){
-                    rc.resign();
+//                    rc.resign();
                 }
             } catch (GameActionException e) {
                 Logger.Log("CAUGHT GAMEACTIONEXCEPTION");

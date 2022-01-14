@@ -1,5 +1,6 @@
-package sprintbot;
+package bfstesting;
 import battlecode.common.*;
+
 public class BFSOld{
     RobotController rc;
     Robot robot;

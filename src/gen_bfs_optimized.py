@@ -140,8 +140,7 @@ def gen_code(f, methodname, target_dir):
     # section 3
     f.write("Direction " + methodname + "(MapLocation target) throws GameActionException{\n")
     f.write("System.out.println(\"Starting BFS Method: \" + Clock.getBytecodesLeft());\n")
-    f.write("try{ ")
-    f.write("double sum;")
+    f.write("try{ \n")
     for i in range(1, len(order)):
         x, y = order[i]
         f.write("if(rc.onTheMap(l{}{})){{\n".format(x, y))
@@ -213,10 +212,13 @@ def gen_code(f, methodname, target_dir):
         # f.write("currScore = (initialDist - l{}{}.distanceSquaredTo(target)) / tempDist;\n".format(e_x, e_y))
         f.write("currScore = (initialDist - l{}{}.distanceSquaredTo(target)) / v{}{};\n".format(e_x, e_y, e_x, e_y))
         # f.write("if(currScore < bestScore){\n")
-        f.write("if(currScore > bestScore){\n")
+        # f.write("if(currScore > bestScore){\n")
+        f.write("switch(currScore > bestScore){\n")
+        f.write("case true:\n")
         f.write("bestScore = currScore;\n")
         f.write("ans = d{}{};\n".format(e_x, e_y))
-        f.write("System.out.println(\"Best end location: \" + l{}{}.toString());".format(e_x, e_y))
+        f.write("System.out.println(\"Best end location: \" + l{}{}.toString());\n".format(e_x, e_y))
+        f.write("break;\n")
         f.write("}\n")
 
     f.write("return ans;\n")

@@ -1,4 +1,4 @@
-package sprintbot;
+package bfstesting;
 
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
@@ -20,7 +20,6 @@ public class Navigation {
     MapLocation[] lastVisited = new MapLocation[10];
     boolean goingLeft = true;
     int turnsToRunFuzzy = 5;
-    BFS20 bfs;
 
     public Navigation(RobotController rc, Robot robot){
         this.rc = rc;
@@ -29,13 +28,12 @@ public class Navigation {
         Util.robot = robot;
         currentTarget = null;
         visited = new HashSet<Integer>();
-        bfs = new BFS20(rc, this.robot);
     }
 
     public void update() throws GameActionException {
-        if(!bfs.vars_are_reset){
+        if(!robot.bfs.vars_are_reset){
             // Use extra turn to reset variables
-            bfs.resetVars();
+            robot.bfs.resetVars();
         }
     }
 
@@ -57,7 +55,7 @@ public class Navigation {
         Util.tryMove(oppDirections);
     }
 
-    public boolean goTo(MapLocation target) throws GameActionException {
+    public boolean goToBFS(MapLocation target) throws GameActionException {
         if(currentTarget != target){
             // Reset pathfinding vars
             currentTarget = target;
@@ -89,7 +87,7 @@ public class Navigation {
         if (!rc.isMovementReady()) {
             return false;
         }
-        Direction toGo = bfs.getBestDir(target);
+        Direction toGo = robot.bfs.getBestDir(target);
         if (toGo == null) {
             return false;
         }
@@ -105,6 +103,54 @@ public class Navigation {
         return false;
     }
 
+    public boolean goToBFSOld(MapLocation target) throws GameActionException {
+        if (robot.myLoc.distanceSquaredTo(target) <= minDistToSatisfy) {
+            return true;
+        }
+        rc.setIndicatorLine(robot.myLoc, target, 0, 255, 0);
+        if (!rc.isMovementReady()) {
+            return false;
+        }
+        if(currentTarget != target){
+            // Reset pathfinding vars
+            currentTarget = target;
+        }
+        Direction toGo = robot.bfsold.getBestDir(target);
+        if (toGo == null) {
+            return false;
+        }
+        System.out.println("Going in direction: " + toGo.toString());
+        if (Util.tryMove(toGo)) {
+            goTo(target);
+            return true;
+        }
+        return false;
+    }
+
+
+    public boolean goTo(MapLocation target) throws GameActionException {
+        if (robot.myLoc.distanceSquaredTo(target) <= minDistToSatisfy) {
+            return true;
+        }
+        rc.setIndicatorLine(robot.myLoc, target, 0, 255, 0);
+        if (!rc.isMovementReady()) {
+            return false;
+        }
+        if(currentTarget != target){
+            // Reset pathfinding vars
+            currentTarget = target;
+        }
+        Direction toGo = fuzzynav(target);
+        if (toGo == null) {
+            return false;
+        }
+        System.out.println("Going in direction: " + toGo.toString());
+        if (Util.tryMove(toGo)) {
+            goTo(target);
+            return true;
+        }
+        return false;
+    }
 
     public Direction fuzzynav (MapLocation target) throws GameActionException {
         Direction toTarget = robot.myLoc.directionTo(target);
@@ -112,6 +158,10 @@ public class Navigation {
 
         Direction bestDir = null;
         int bestCost = Integer.MAX_VALUE;
+
+//        if(robot.rc.getID() == 10886){
+//            System.out.println("Current: " + robot.myLoc.toString() + ", Target: " + target.toString());
+//        }
 
         for(int i = moveOptions.length; i-- > 0; ){
             Direction dir = moveOptions[i];
