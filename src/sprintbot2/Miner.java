@@ -10,6 +10,7 @@ public class Miner extends Robot {
     MapLocation mineLocation = null;
     Direction spawnDir = null;
     MapLocation currentTarget = null;
+    int minerSpawnNumber = 0;
 
     int[][] leadMap = new int[5][5];
 
@@ -44,14 +45,14 @@ public class Miner extends Robot {
         comms.scanEnemyArchons(); // Costs 500 bytecode
 
         // Logger.Log("Before filling: " + Clock.getBytecodesLeft());
-        System.out.println("Current location: " + rc.getLocation().toString());
+//        System.out.println("Current location: " + rc.getLocation().toString());
         indicatorString += "C " + rc.getMovementCooldownTurns() + ", " + rc.getActionCooldownTurns() + "; ";
         boolean movedTowardsGold = goToClosestGold();
         if(!movedTowardsGold){
             RobotInfo[] nearbyEnemies = rc.senseNearbyRobots(myType.visionRadiusSquared, opponent); // 120 bytecode
             fillMapsUnrolled2(); // Costs 350 bytecode
             double currHeuristic = getHeursitic(myLoc, nearbyEnemies); // Costs 1200 bytecode
-            System.out.println("Current heuristic value: " + currHeuristic);
+//            System.out.println("Current heuristic value: " + currHeuristic);
             double bestHeuristic = currHeuristic;
             Direction bestDir = null;
             for(int i = 0; i < Util.directions.length; i++){ // If you can move to a better spot, do so
@@ -65,20 +66,36 @@ public class Miner extends Robot {
                     bestHeuristic = newHeuristic;
                     bestDir = dir;
                 }
-                System.out.println("Direction: " + dir.toString() + ", Heuristic value: " + newHeuristic);
+//                System.out.println("Direction: " + dir.toString() + ", Heuristic value: " + newHeuristic);
                 // Logger.Log("Next heuristic: " + Clock.getBytecodesLeft());
             }
             if(bestDir != null){ // If you can move in a better direction, do so
                 rc.move(bestDir);
-                indicatorString += "CH: " + (int)currHeuristic + ",BH: " + (int)bestHeuristic + ", Dir:" + bestDir + "; ";
-                System.out.println("Moving towards best dir: " + bestDir.toString());
+                indicatorString += "CH: " + (int)(currHeuristic * 100) + ",BH: " + (int)(bestHeuristic * 100) + ", Dir: " + bestDir + "; ";
+//                System.out.println("Moving towards best dir: " + bestDir.toString());
             }
             else if(currHeuristic == 0){ // Find nearest mine
                 MapLocation targetLoc = findClosestMine();
                 // Logger.Log("Found closest mine: " + Clock.getBytecodesLeft());
                 if(targetLoc == null){
-                    if(currentTarget == null || myLoc.distanceSquaredTo(currentTarget) <= 4){
-                        currentTarget = nav.getRandomMapLocation();
+                    if(currentTarget == null){
+//                        if(minerSpawnNumber <= 15){
+                            int randomNum = (int)(Math.random() * 16);
+                            randomNum = rc.getID() % 16;
+                            currentTarget = Util.getInitialMinerScoutLocation(randomNum);
+                            System.out.println("Random num: " + randomNum);
+                            System.out.println("Current target: " + currentTarget.toString());
+//                        }
+//                        else{
+//                            currentTarget = nav.getRandomMapLocation();
+//                        }
+                    }
+                    else if(myLoc.distanceSquaredTo(currentTarget) <= 4){
+//                        currentTarget = nav.getRandomMapLocation();
+                        int randomNum = (int)(Math.random() * 16);
+                        currentTarget = Util.getInitialMinerScoutLocation(randomNum);
+                        System.out.println("Random num: " + randomNum);
+                        System.out.println("Current target: " + currentTarget.toString());
                     }
                     targetLoc = currentTarget;
                 }
@@ -135,7 +152,6 @@ public class Miner extends Robot {
         if(!rc.canSenseLocation(center)){
             return -10000;
         }
-        double numTeammates = rc.senseNearbyRobots(center, 1, myTeam).length; // 100 bytecode
         double numEnemies = 0.0;
         for(int i = nearbyEnemies.length; i-- > 0; ){
             RobotInfo info = nearbyEnemies[i];
@@ -148,10 +164,15 @@ public class Miner extends Robot {
         // Logger.Log("XD A " + Clock.getBytecodesLeft());
 //        double leadMineable = numLeadMineable(dx, dy);
         double leadMineable = numLeadMineableUnrolled(dx, dy); // 50 bytecode baby.
+        double numTeammates = 0;
+        if(leadMineable > 0){
+            // Only move away from adjacent teammates if ur busy mining lead
+            numTeammates = rc.senseNearbyRobots(center, 1, myTeam).length; // 100 bytecode
+        }
         // Logger.Log("XD C " + Clock.getBytecodesLeft());
         double cooldown = 10.0 + rc.senseRubble(center);
         // TODO maybe instead of couting enemies in attack radius, count how far away you are from said enemy? And then you could do like 1 / distance so that larger distance = lower heuristic
-        System.out.println("Yeet: " + leadMineable + ", " + numTeammates + ", " + numEnemies + ", " + cooldown);
+//        System.out.println("Yeet: " + leadMineable + ", " + numTeammates + ", " + numEnemies + ", " + cooldown);
         return (leadMineable - numTeammates * 5 - numEnemies * 40) / cooldown; // Larger heuristic is better
     }
 
@@ -262,8 +283,6 @@ public class Miner extends Robot {
         }
         else{ leadVal02 = rc.senseLead(temp); }
         if(leadVal02 == 1){ leadVal02 = 0; } // Save for farming
-
-        System.out.println("B: " + Clock.getBytecodesLeft());
 
         temp = new MapLocation(myLoc.x + -2, myLoc.y + 1);
         if(!rc.canSenseLocation(temp)){

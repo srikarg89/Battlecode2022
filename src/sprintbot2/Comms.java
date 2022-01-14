@@ -11,10 +11,12 @@ public class Comms {
     final int SOLDIER_COUNT_IDX = 14;
     final int SAGE_COUNT_IDX = 15;
     final int BUILDER_COUNT_IDX = 16;
-    final int BIGGEST_THREAT_LEVEL_IDX = 40;
-    final int BIGGEST_THREAT_LOC_IDX = 41;
+    final int BIGGEST_THREAT_LEVEL_IDX = 17;
+    final int BIGGEST_THREAT_LOC_IDX = 18;
     final int THREAT_THRESHOLD = 10;
     final int ARCHON_DEATH_OFFSET = 10000;
+
+    final int LEAD_HOTSPOT_START_IDX = 38; // 63 - 25
 
     // Properties
     RobotController rc;
@@ -57,29 +59,48 @@ public class Comms {
         if(symmetry == 0){
             symmetry = 7;
         }
-//        if(symmetry == 1 || symmetry == 2 || symmetry == 4){ // Already determined symmetry
-//            return;
-//        }
-        int[] binVals = {1, 2, 4};
-        for(int j = 0; j < 3; j++){
-            int reflectionType = j + 1;
-            int binVal = binVals[j];
-            if((symmetry & binVal) != 0){
-                MapLocation[] enemyArchonLocs = Util.reflect(robot.friendlyArchons, reflectionType);
-                for(int i = 0; i < enemyArchonLocs.length; i++){
-                    if(!rc.canSenseLocation(enemyArchonLocs[i])){
-                        continue;
+
+        if(symmetry == 1 || symmetry == 2 || symmetry == 4){ // Already determined symmetry
+            return;
+        }
+
+        int radiusToCheck = 2;
+        MapLocation[] visionLocs = rc.getAllLocationsWithinRadiusSquared(robot.myLoc, radiusToCheck); // 100 bytecode
+        if(robot.prevLoc == null){
+            for(int i = visionLocs.length; i-- > 0; ){
+                MapLocation loc = visionLocs[i];
+                robot.rubbleMap[loc.x][loc.y] = rc.senseRubble(loc) + 1;
+            }
+        }
+        else{
+            for(int i = visionLocs.length; i-- > 0; ){
+                MapLocation loc = visionLocs[i];
+                if(robot.rubbleMap[loc.x][loc.y] != 0){ // Already visited this location
+                    continue;
+                }
+                int rubble = rc.senseRubble(loc) + 1;
+                robot.rubbleMap[loc.x][loc.y] = rubble;
+                if((symmetry & 1) != 0) { // Check if symmetry is followed
+                    int symRubble = robot.rubbleMap[loc.x][robot.mapHeight - loc.y - 1];
+                    if (symRubble != 0 && symRubble != rubble) {
+                        symmetry &= 6;
                     }
-                    if(!Util.checkRobotPresent(enemyArchonLocs[i], RobotType.ARCHON, robot.myTeam.opponent())){
-                        if(!checkEnemyArchonDied(enemyArchonLocs[i])){
-                            symmetry &= (7 ^ binVal);
-                            System.out.println("Updating symmetry! New symmetry is: " + symmetry);
-                            break;
-                        }
+                }
+                if((symmetry & 2) != 0) { // Check if symmetry is followed
+                    int symRubble = robot.rubbleMap[robot.mapWidth - loc.x - 1][loc.y];
+                    if (symRubble != 0 && symRubble != rubble) {
+                        symmetry &= 5;
+                    }
+                }
+                if((symmetry & 4) != 0) { // Check if symmetry is followed
+                    int symRubble = robot.rubbleMap[robot.mapWidth - loc.x - 1][robot.mapHeight - loc.y - 1];
+                    if (symRubble != 0 && symRubble != rubble) {
+                        symmetry &= 3;
                     }
                 }
             }
         }
+
         writeSharedArray(SYMMETRY_IDX, symmetry);
 
     }
@@ -266,6 +287,30 @@ public class Comms {
                 }
             }
         }
+    }
+
+    // Lead hotspot functions
+
+    public MapLocation getBlockToExplore(){
+        return null;
+    }
+
+    public MapLocation getBlockTopLeft(int x, int y){
+        return new MapLocation(robot.comms_block_width * x, robot.comms_block_height * y);
+    }
+
+    public int getBlockWidth(int x){
+        if(x == 4){
+            return rc.getMapWidth() - robot.comms_block_width * 4;
+        }
+        return robot.comms_block_width;
+    }
+
+    public int getBlockHeight(int y){
+        if(y == 4){
+            return rc.getMapHeight() - robot.comms_block_height * 4;
+        }
+        return robot.comms_block_height;
     }
 
 }

@@ -349,4 +349,133 @@ public class Util {
         return damage;
     }
 
+    // NOTE: This only works for
+    public static MapLocation[] getSenseableLocsAfterMoving(Direction dir){
+        MapLocation[] checkLocs = new MapLocation[9];
+        MapLocation myLoc = robot.myLoc;
+        switch(dir){
+            case NORTH:
+                checkLocs[0] = new MapLocation(myLoc.x - 3, myLoc.y + 3);
+                checkLocs[1] = new MapLocation(myLoc.x - 2, myLoc.y + 4);
+                checkLocs[2] = new MapLocation(myLoc.x - 1, myLoc.y + 4);
+                checkLocs[3] = new MapLocation(myLoc.x, myLoc.y + 4);
+                checkLocs[4] = new MapLocation(myLoc.x + 1, myLoc.y + 4);
+                checkLocs[5] = new MapLocation(myLoc.x + 2, myLoc.y + 4);
+                checkLocs[6] = new MapLocation(myLoc.x + 3, myLoc.y + 3);
+                return checkLocs;
+            case SOUTH:
+                checkLocs[0] = new MapLocation(myLoc.x - 3, myLoc.y - 3);
+                checkLocs[1] = new MapLocation(myLoc.x - 2, myLoc.y - 4);
+                checkLocs[2] = new MapLocation(myLoc.x - 1, myLoc.y - 4);
+                checkLocs[3] = new MapLocation(myLoc.x, myLoc.y - 4);
+                checkLocs[4] = new MapLocation(myLoc.x + 1, myLoc.y - 4);
+                checkLocs[5] = new MapLocation(myLoc.x + 2, myLoc.y - 4);
+                checkLocs[6] = new MapLocation(myLoc.x + 3, myLoc.y - 3);
+                return checkLocs;
+            case EAST:
+                checkLocs[0] = new MapLocation(myLoc.x + 3, myLoc.y - 3);
+                checkLocs[1] = new MapLocation(myLoc.x + 4, myLoc.y - 2);
+                checkLocs[2] = new MapLocation(myLoc.x + 4, myLoc.y - 1);
+                checkLocs[3] = new MapLocation(myLoc.x + 4, myLoc.y);
+                checkLocs[4] = new MapLocation(myLoc.x + 4, myLoc.y + 1);
+                checkLocs[5] = new MapLocation(myLoc.x + 4, myLoc.y + 2);
+                checkLocs[6] = new MapLocation(myLoc.x + 3, myLoc.y + 3);
+                return checkLocs;
+            case WEST:
+                checkLocs[0] = new MapLocation(myLoc.x - 3, myLoc.y - 3);
+                checkLocs[1] = new MapLocation(myLoc.x - 4, myLoc.y - 2);
+                checkLocs[2] = new MapLocation(myLoc.x - 4, myLoc.y - 1);
+                checkLocs[3] = new MapLocation(myLoc.x - 4, myLoc.y);
+                checkLocs[4] = new MapLocation(myLoc.x - 4, myLoc.y + 1);
+                checkLocs[5] = new MapLocation(myLoc.x - 4, myLoc.y + 2);
+                checkLocs[6] = new MapLocation(myLoc.x - 3, myLoc.y + 3);
+                return checkLocs;
+            case NORTHEAST:
+                checkLocs[0] = new MapLocation(myLoc.x + 4, myLoc.y - 1);
+                checkLocs[1] = new MapLocation(myLoc.x + 4, myLoc.y);
+                checkLocs[2] = new MapLocation(myLoc.x + 4, myLoc.y + 1);
+                checkLocs[3] = new MapLocation(myLoc.x + 4, myLoc.y + 2);
+                checkLocs[4] = new MapLocation(myLoc.x + 3, myLoc.y + 3);
+                checkLocs[5] = new MapLocation(myLoc.x + 2, myLoc.y + 4);
+                checkLocs[6] = new MapLocation(myLoc.x + 1, myLoc.y + 4);
+                checkLocs[7] = new MapLocation(myLoc.x, myLoc.y + 4);
+                checkLocs[8] = new MapLocation(myLoc.x - 1, myLoc.y + 4);
+                return checkLocs;
+            case NORTHWEST:
+                checkLocs[0] = new MapLocation(myLoc.x - 4, myLoc.y - 1);
+                checkLocs[1] = new MapLocation(myLoc.x - 4, myLoc.y);
+                checkLocs[2] = new MapLocation(myLoc.x - 4, myLoc.y + 1);
+                checkLocs[3] = new MapLocation(myLoc.x - 4, myLoc.y + 2);
+                checkLocs[4] = new MapLocation(myLoc.x - 3, myLoc.y + 3);
+                checkLocs[5] = new MapLocation(myLoc.x - 2, myLoc.y + 4);
+                checkLocs[6] = new MapLocation(myLoc.x - 1, myLoc.y + 4);
+                checkLocs[7] = new MapLocation(myLoc.x, myLoc.y + 4);
+                checkLocs[8] = new MapLocation(myLoc.x + 1, myLoc.y + 4);
+                return checkLocs;
+            case SOUTHEAST:
+                checkLocs[0] = new MapLocation(myLoc.x + 4, myLoc.y + 1);
+                checkLocs[1] = new MapLocation(myLoc.x + 4, myLoc.y);
+                checkLocs[2] = new MapLocation(myLoc.x + 4, myLoc.y - 1);
+                checkLocs[3] = new MapLocation(myLoc.x + 4, myLoc.y - 2);
+                checkLocs[4] = new MapLocation(myLoc.x + 3, myLoc.y - 3);
+                checkLocs[5] = new MapLocation(myLoc.x + 2, myLoc.y - 4);
+                checkLocs[6] = new MapLocation(myLoc.x + 1, myLoc.y - 4);
+                checkLocs[7] = new MapLocation(myLoc.x, myLoc.y - 4);
+                checkLocs[8] = new MapLocation(myLoc.x - 1, myLoc.y - 4);
+                return checkLocs;
+            case SOUTHWEST:
+                checkLocs[0] = new MapLocation(myLoc.x - 4, myLoc.y + 1);
+                checkLocs[1] = new MapLocation(myLoc.x - 4, myLoc.y);
+                checkLocs[2] = new MapLocation(myLoc.x - 4, myLoc.y - 1);
+                checkLocs[3] = new MapLocation(myLoc.x - 4, myLoc.y - 2);
+                checkLocs[4] = new MapLocation(myLoc.x - 3, myLoc.y - 3);
+                checkLocs[5] = new MapLocation(myLoc.x - 2, myLoc.y - 4);
+                checkLocs[6] = new MapLocation(myLoc.x - 1, myLoc.y - 4);
+                checkLocs[7] = new MapLocation(myLoc.x, myLoc.y - 4);
+                checkLocs[8] = new MapLocation(myLoc.x + 1, myLoc.y - 4);
+                return checkLocs;
+        }
+        return checkLocs;
+    }
+
+    public static MapLocation getInitialMinerScoutLocation(int minerNumber) throws GameActionException {
+        int minerVisionRadius = (int)Math.sqrt(RobotType.MINER.visionRadiusSquared);
+        MapLocation myLoc = rc.getLocation();
+        switch(minerNumber){
+            case 0:
+                return new MapLocation(0, 0);
+            case 1:
+                return new MapLocation(robot.mapWidth, robot.mapHeight);
+            case 2:
+                return new MapLocation(0, robot.mapHeight);
+            case 3:
+                return new MapLocation(robot.mapWidth, 0);
+            case 4:
+                return new MapLocation(0, robot.mapHeight / 2);
+            case 5:
+                return new MapLocation(robot.mapWidth / 2, 0);
+            case 6:
+                return new MapLocation(robot.mapWidth / 2, robot.mapHeight);
+            case 7:
+                return new MapLocation(robot.mapWidth, robot.mapHeight / 2);
+            case 8:
+                return new MapLocation(0, robot.mapHeight * 1 / 4);
+            case 9:
+                return new MapLocation(robot.mapWidth * 1 / 4, robot.mapHeight);
+            case 10:
+                return new MapLocation(robot.mapWidth * 3 / 4, 0);
+            case 11:
+                return new MapLocation(robot.mapWidth, robot.mapHeight * 3 / 4);
+            case 12:
+                return new MapLocation(robot.mapWidth * 1 / 4, 0);
+            case 13:
+                return new MapLocation(0, robot.mapHeight * 3 / 4);
+            case 14:
+                return new MapLocation(robot.mapWidth * 3 / 4, robot.mapHeight);
+            case 15:
+                return new MapLocation(robot.mapWidth, robot.mapHeight * 1 / 4);
+        }
+        return robot.nav.getRandomMapLocation();
+    }
+
 }

@@ -34,6 +34,7 @@ public strictfp class RobotPlayer {
                 robot.run();
                 rc.setIndicatorString(robot.indicatorString);
 //                System.out.println("Bytecode left: " + Clock.getBytecodesLeft());
+                robot.prevLoc = rc.getLocation();
                 if(!checkBytecode(robot, rc)){
                     rc.resign();
                 }

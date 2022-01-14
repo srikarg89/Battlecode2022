@@ -5,12 +5,15 @@ import battlecode.common.*;
 public class Robot {
 
     // Constants
+    int comms_block_width = -1;
+    int comms_block_height = -1;
 
     // Robot properties
     RobotController rc;
     Navigation nav;
     Comms comms;
     MapLocation myLoc;
+    MapLocation prevLoc = null;
     Team myTeam;
     Team opponent;
     RobotType myType;
@@ -25,9 +28,9 @@ public class Robot {
     int roundNum = 1;
     String indicatorString = "";
     boolean mightDie = false;
+    int[][] rubbleMap;
 
     public Robot(RobotController rc) throws GameActionException {
-        nearby = rc.senseNearbyRobots();
         myLoc = rc.getLocation();
         this.rc = rc;
         Util.rc = rc;
@@ -41,6 +44,10 @@ public class Robot {
         age = 0;
         mapWidth = rc.getMapWidth();
         mapHeight = rc.getMapHeight();
+        comms_block_width = (int)Math.ceil((double)mapWidth / 5.0);
+        comms_block_height = (int)Math.ceil((double)mapHeight / 5.0);
+        rubbleMap = new int[mapWidth][mapHeight];
+        nearby = rc.senseNearbyRobots();
         nav = new Navigation(rc, this);
         comms = new Comms(rc, this);
         if(myType != RobotType.ARCHON){
@@ -50,6 +57,7 @@ public class Robot {
 
     public void run() throws GameActionException {
         Logger.Log("My Location: " + rc.getLocation());
+        myLoc = rc.getLocation();
         roundNum = rc.getRoundNum();
         nearby = rc.senseNearbyRobots();
         nearbyFriendlies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam);
@@ -63,8 +71,8 @@ public class Robot {
             comms.determineSymmetry();
         }
         comms.scanEnemyArchons();
+//        System.out.println("Time left after yeeting everything: " + Clock.getBytecodesLeft());
         age++;
-        myLoc = rc.getLocation();
     }
 
     public void checkPossibleDeath() throws GameActionException {
