@@ -73,6 +73,7 @@ public class Miner extends Robot {
         else{
             System.out.println("Starting bytecode: " + Clock.getBytecodesLeft());
             indicatorString += "BFSNEW " + target.toString();
+            nav.update();
             nav.goToBFS(target);
             System.out.println("Ending bytecode: " + Clock.getBytecodesLeft());
         }

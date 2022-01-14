@@ -30,6 +30,13 @@ public class Navigation {
         visited = new HashSet<Integer>();
     }
 
+    public void update() throws GameActionException {
+        if(!robot.bfs.vars_are_reset){
+            // Use extra turn to reset variables
+            robot.bfs.resetVars();
+        }
+    }
+
     public MapLocation getRandomMapLocation() throws GameActionException {
         int x = (int)(Math.random() * robot.mapWidth);
         int y = (int)(Math.random() * robot.mapHeight);

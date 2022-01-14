@@ -6,6 +6,15 @@ PACKAGE_NAME = "sprintbot"
 start_loc = (5, 4)  # you may need to increase these vals if the RADIUS_SQUARED is increased from 20
 THRESHOLD_KEEP_ALL_DIRECTIONS = 8
 
+DIR_DICT = {(-1, 1): "NORTHWEST",
+            (0, 1): "NORTH",
+            (1, 1): "NORTHEAST",
+            (1, 0): "EAST",
+            (1, -1): "SOUTHEAST",
+            (0, -1): "SOUTH",
+            (-1, -1): "SOUTHWEST",
+            (-1, 0): "WEST"}
+
 def get_neighbor_locs(loc, order=None):
     neighbors = []
     dirs = [(-1, -1), (-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1)]
@@ -64,39 +73,8 @@ def valid_point(start_loc, point, target_dir):
 
     return True
 
-def clockwise(dir):
-    if dir == [0, 1]:
-        return [1, 1]
-    if dir == [1, 1]:
-        return [1, 0]
-    if dir == [1, 0]:
-        return [1, -1]
-    if dir == [1, -1]:
-        return [0, -1]
-    if dir == [0, -1]:
-        return [-1, -1]
-    if dir == [-1, -1]:
-        return [-1, 0]
-    if dir == [-1, 0]:
-        return [-1, 1]
-    if dir == [-1, 1]:
-        return [0, 1]
-
-def counter_clockwise(dir):
-    for i in range(7):
-        dir = clockwise(dir)
-    return dir
-
 
 def get_dirs(target_dir):
-    # return [target_dir,
-    #         clockwise(target_dir),
-    #         counter_clockwise(target_dir),
-    #         clockwise(clockwise(target_dir)),
-    #         counter_clockwise(counter_clockwise(target_dir)),
-    #         clockwise(clockwise(clockwise(target_dir))),
-    #         counter_clockwise(counter_clockwise(counter_clockwise(target_dir))),
-    #         clockwise(clockwise(clockwise(clockwise(target_dir))))]
     dirs = [(-1, 0), (-1, -1), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1)]
     return sorted(dirs, key=lambda d: distSquared(d, target_dir))
 
@@ -111,8 +89,7 @@ def get_order(target_dir):
             else:
                 break
 
-
-        # order in which we will conduct updates to heuristic
+    # order in which we will conduct updates to heuristic
     order = []
     diff = []
     for dx, dy in move_arr:
@@ -130,28 +107,8 @@ def get_order(target_dir):
     return order, diff
 
 
-def gen_code(f, methodname, target_dir):
-    order, diff = get_order(target_dir)
-
-    # dir_dict = {(-1, -1): "NORTHWEST",
-    #             (-1, 0): "NORTH",
-    #             (-1, 1): "NORTHEAST",
-    #             (0, 1): "EAST",
-    #             (1, 1): "SOUTHEAST",
-    #             (1, 0): "SOUTH",
-    #             (1, -1): "SOUTHWEST",
-    #             (0, -1): "WEST"}
-
-    dir_dict = {(-1, 1): "NORTHWEST",
-                (0, 1): "NORTH",
-                (1, 1): "NORTHEAST",
-                (1, 0): "EAST",
-                (1, -1): "SOUTHEAST",
-                (0, -1): "SOUTH",
-                (-1, -1): "SOUTHWEST",
-                (-1, 0): "WEST"}
-
-    opp_dir_dict = {(x, y): dir_dict[(-1*x, -1*y)] for (x, y) in dir_dict.keys()}
+def get_direction_arr(target_dir, order):
+    opp_dir_dict = {(x, y): DIR_DICT[(-1*x, -1*y)] for (x, y) in DIR_DICT.keys()}
 
     # generating directions to create locations
     direction_arr = [(start_loc, None)]
@@ -163,6 +120,11 @@ def gen_code(f, methodname, target_dir):
             if prev_loc in order[0:i]:
                 direction_arr.append((order[i], prev_loc, opp_dir_dict[dir]))
 
+    return direction_arr
+
+
+def gen_code(f, methodname, target_dir):
+    order, diff = get_order(target_dir)
 
     # generating diff_dict for try_catch code
     diff_dict = {x: [] for x in set([i for (i, j) in diff])}
@@ -175,28 +137,9 @@ def gen_code(f, methodname, target_dir):
     ######################################################################################################
     # CODE GENERATION
 
-    # section 2
+    # section 3
     f.write("Direction " + methodname + "(MapLocation target) throws GameActionException{\n")
     f.write("System.out.println(\"Starting BFS Method: \" + Clock.getBytecodesLeft());\n")
-
-    f.write("l{}{} = robot.myLoc;\n".format(start_loc[0], start_loc[1]))
-    f.write("v{}{} = 0;\n\n".format(start_loc[0], start_loc[1]))
-
-    var_set = set()
-    for d in direction_arr[1:]:
-        curr_x, curr_y = d[0]
-        prev_x, prev_y = d[1]
-        dir = d[2]
-        if (curr_x, curr_y) in var_set:
-            continue
-        var_set.add((curr_x, curr_y))
-        f.write("l{}{} = l{}{}.add(Direction.{});\n".format(curr_x, curr_y, prev_x, prev_y, dir))
-        f.write("v{}{} = 100000000;\n".format(curr_x, curr_y, prev_x, prev_y, dir))
-        f.write("d{}{} = null;\n\n".format(curr_x, curr_y))
-
-
-    # section 3
-    f.write("System.out.println(\"Initialized vars: \" + Clock.getBytecodesLeft());\n")
     f.write("try{ ")
     f.write("double sum;")
     for i in range(1, len(order)):
@@ -222,7 +165,7 @@ def gen_code(f, methodname, target_dir):
 
                 if (n_x, n_y) == start_loc:
                     x_incr, y_incr = x-n_x, y-n_y
-                    direction = dir_dict[(x_incr, y_incr)]
+                    direction = DIR_DICT[(x_incr, y_incr)]
                     f.write("d{}{} = Direction.{};\n".format(x, y, direction))
                 else:
                     f.write("d{}{} = d{}{};\n".format(x, y, n_x, n_y))
@@ -316,27 +259,43 @@ extra_code_commented = """
 extra_code = """
     public Direction getBestDir(MapLocation target) throws GameActionException {
         Direction targetDir = robot.myLoc.directionTo(target);
+        if(!this.vars_are_reset){
+            resetVars();
+        }
+        System.out.println("Running getBestDir: " + Clock.getBytecodesLeft());
+        Direction output = null;
         switch(targetDir){
             case NORTH:
-                return runBFSNorth(target);
+                output = runBFSNorth(target);
+                break;
             case SOUTH:
-                return runBFSSouth(target);
+                output = runBFSSouth(target);
+                break;
             case EAST:
-                return runBFSEast(target);
+                output = runBFSEast(target);
+                break;
             case WEST:
-                return runBFSWest(target);
+                output = runBFSWest(target);
+                break;
             case NORTHEAST:
-                return runBFSNortheast(target);
+                output = runBFSNortheast(target);
+                break;
             case NORTHWEST:
-                return runBFSNorthwest(target);
+                output = runBFSNorthwest(target);
+                break;
             case SOUTHEAST:
-                return runBFSSoutheast(target);
+                output = runBFSSoutheast(target);
+                break;
             case SOUTHWEST:
-                return runBFSSouthwest(target);
+                output = runBFSSouthwest(target);
+                break;
         }
+        this.vars_are_reset = false;
+        return output;
+
 //        return runBFS(target);
-        System.out.println("ERROR DIRECTION UNKNOWN");
-        return null;
+//        System.out.println("ERROR DIRECTION UNKNOWN");
+//        return null;
     }
 """
 
@@ -346,9 +305,10 @@ f.write("package {};\n".format(PACKAGE_NAME))
 f.write("import battlecode.common.*;\n")
 f.write("public class {}{{\n".format(CLASS_NAME))
 f.write("RobotController rc;\nRobot robot;\n")
+f.write("boolean vars_are_reset = false;\n")
 
 f.write("{}(RobotController rc, Robot robot){{\n".format(CLASS_NAME))
-f.write("this.rc = rc;\nthis.robot=robot;\n}\n")
+f.write("this.rc = rc;\nthis.robot=robot;\nthis.vars_are_reset=false;\n}\n")
 
 # section 1
 full_order, _ = get_order([0, 0])
@@ -358,6 +318,29 @@ for x, y in full_order:
     f.write("static Direction d{}{};\n".format(x, y))
     f.write("static double p{}{};\n".format(x, y))
     f.write("\n"*2)
+
+# section 2
+direction_arr = get_direction_arr([0, 0], full_order)
+f.write("public void resetVars() throws GameActionException{\n")
+
+f.write("l{}{} = robot.myLoc;\n".format(start_loc[0], start_loc[1]))
+f.write("v{}{} = 0;\n\n".format(start_loc[0], start_loc[1]))
+
+var_set = set()
+for d in direction_arr[1:]:
+    curr_x, curr_y = d[0]
+    prev_x, prev_y = d[1]
+    dir = d[2]
+    if (curr_x, curr_y) in var_set:
+        continue
+    var_set.add((curr_x, curr_y))
+    f.write("l{}{} = l{}{}.add(Direction.{});\n".format(curr_x, curr_y, prev_x, prev_y, dir))
+    f.write("v{}{} = 100000000;\n".format(curr_x, curr_y, prev_x, prev_y, dir))
+    f.write("d{}{} = null;\n\n".format(curr_x, curr_y))
+
+f.write("this.vars_are_reset = true;\n")
+f.write("System.out.println(\"Finished Initializing Variables: \" + Clock.getBytecodesLeft());\n")
+f.write("}\n\n")
 
 
 gen_code(f, "runBFSNorth", [0, 1])
