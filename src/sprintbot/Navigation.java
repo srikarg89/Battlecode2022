@@ -19,6 +19,7 @@ public class Navigation {
     // Used in bugnav
     MapLocation[] lastVisited = new MapLocation[10];
     boolean goingLeft = true;
+    int turnsToRunFuzzy = 5;
 
     public Navigation(RobotController rc, Robot robot){
         this.rc = rc;
@@ -48,6 +49,22 @@ public class Navigation {
     }
 
     public boolean goToBFS(MapLocation target) throws GameActionException {
+        boolean seen = false;
+        for(int j = 0; j < lastVisited.length; j++){
+            if(lastVisited[j] != null && lastVisited[j].equals(rc.getLocation())){ // Avoid the last 5 spots i alr went to (to avoid cycles)
+                seen = true;
+            }
+        }
+        if(seen){
+            turnsToRunFuzzy = 5;
+        }
+        if(turnsToRunFuzzy > 0){
+            if(goTo(target)){
+                turnsToRunFuzzy--;
+                return true;
+            }
+            return false;
+        }
         if (robot.myLoc.distanceSquaredTo(target) <= minDistToSatisfy) {
             return true;
         }
@@ -58,15 +75,19 @@ public class Navigation {
         if(currentTarget != target){
             // Reset pathfinding vars
             currentTarget = target;
-            visited.clear();
+            lastVisited = new MapLocation[10];
         }
         Direction toGo = robot.bfs.getBestDir(target);
         if (toGo == null) {
             return false;
         }
         System.out.println("Going in direction: " + toGo.toString());
+        MapLocation prevLoc = rc.getLocation();
         if (Util.tryMove(toGo)) {
-            goTo(target);
+            for(int j = 0; j < lastVisited.length - 1; j++){
+                lastVisited[j] = lastVisited[j + 1];
+            }
+            lastVisited[lastVisited.length - 1] = prevLoc;
             return true;
         }
         return false;
@@ -83,7 +104,6 @@ public class Navigation {
         if(currentTarget != target){
             // Reset pathfinding vars
             currentTarget = target;
-            visited.clear();
         }
         Direction toGo = fuzzynav(target);
         if (toGo == null) {
