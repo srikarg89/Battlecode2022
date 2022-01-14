@@ -421,294 +421,291 @@ public class BFS20{
     static double p78;
 
 
-    Direction getBestDir(MapLocation target) throws GameActionException{
-
+    Direction runBFS(MapLocation target) throws GameActionException{
         System.out.println("Starting BFS Method: " + Clock.getBytecodesLeft());
-
         l54 = robot.myLoc;
         v54 = 0;
 
-        l44 = l54.add(Direction.NORTH);
+        l44 = l54.add(Direction.WEST);
         v44 = 100000000;
         d44 = null;
 
-        l64 = l54.add(Direction.SOUTH);
+        l64 = l54.add(Direction.EAST);
         v64 = 100000000;
         d64 = null;
 
-        l53 = l44.add(Direction.SOUTHWEST);
+        l53 = l44.add(Direction.SOUTHEAST);
         v53 = 100000000;
         d53 = null;
 
-        l55 = l44.add(Direction.SOUTHEAST);
+        l55 = l44.add(Direction.NORTHEAST);
         v55 = 100000000;
         d55 = null;
 
-        l43 = l44.add(Direction.WEST);
+        l43 = l44.add(Direction.SOUTH);
         v43 = 100000000;
         d43 = null;
 
-        l45 = l55.add(Direction.NORTH);
+        l45 = l55.add(Direction.WEST);
         v45 = 100000000;
         d45 = null;
 
-        l63 = l53.add(Direction.SOUTH);
+        l63 = l53.add(Direction.EAST);
         v63 = 100000000;
         d63 = null;
 
-        l65 = l54.add(Direction.SOUTHEAST);
+        l65 = l54.add(Direction.NORTHEAST);
         v65 = 100000000;
         d65 = null;
 
-        l34 = l45.add(Direction.NORTHWEST);
+        l34 = l45.add(Direction.SOUTHWEST);
         v34 = 100000000;
         d34 = null;
 
-        l74 = l63.add(Direction.SOUTHEAST);
+        l74 = l63.add(Direction.NORTHEAST);
         v74 = 100000000;
         d74 = null;
 
-        l52 = l43.add(Direction.SOUTHWEST);
+        l52 = l43.add(Direction.SOUTHEAST);
         v52 = 100000000;
         d52 = null;
 
-        l56 = l45.add(Direction.SOUTHEAST);
+        l56 = l45.add(Direction.NORTHEAST);
         v56 = 100000000;
         d56 = null;
 
-        l33 = l34.add(Direction.WEST);
+        l33 = l34.add(Direction.SOUTH);
         v33 = 100000000;
         d33 = null;
 
-        l35 = l45.add(Direction.NORTH);
+        l35 = l45.add(Direction.WEST);
         v35 = 100000000;
         d35 = null;
 
-        l73 = l63.add(Direction.SOUTH);
+        l73 = l63.add(Direction.EAST);
         v73 = 100000000;
         d73 = null;
 
-        l75 = l64.add(Direction.SOUTHEAST);
+        l75 = l64.add(Direction.NORTHEAST);
         v75 = 100000000;
         d75 = null;
 
-        l42 = l33.add(Direction.SOUTHWEST);
+        l42 = l33.add(Direction.SOUTHEAST);
         v42 = 100000000;
         d42 = null;
 
-        l46 = l35.add(Direction.SOUTHEAST);
+        l46 = l35.add(Direction.NORTHEAST);
         v46 = 100000000;
         d46 = null;
 
-        l62 = l52.add(Direction.SOUTH);
+        l62 = l52.add(Direction.EAST);
         v62 = 100000000;
         d62 = null;
 
-        l66 = l55.add(Direction.SOUTHEAST);
+        l66 = l55.add(Direction.NORTHEAST);
         v66 = 100000000;
         d66 = null;
 
-        l32 = l33.add(Direction.WEST);
+        l32 = l33.add(Direction.SOUTH);
         v32 = 100000000;
         d32 = null;
 
-        l36 = l46.add(Direction.NORTH);
+        l36 = l46.add(Direction.WEST);
         v36 = 100000000;
         d36 = null;
 
-        l72 = l62.add(Direction.SOUTH);
+        l72 = l62.add(Direction.EAST);
         v72 = 100000000;
         d72 = null;
 
-        l76 = l65.add(Direction.SOUTHEAST);
+        l76 = l65.add(Direction.NORTHEAST);
         v76 = 100000000;
         d76 = null;
 
-        l24 = l35.add(Direction.NORTHWEST);
+        l24 = l35.add(Direction.SOUTHWEST);
         v24 = 100000000;
         d24 = null;
 
-        l84 = l73.add(Direction.SOUTHEAST);
+        l84 = l73.add(Direction.NORTHEAST);
         v84 = 100000000;
         d84 = null;
 
-        l51 = l42.add(Direction.SOUTHWEST);
+        l51 = l42.add(Direction.SOUTHEAST);
         v51 = 100000000;
         d51 = null;
 
-        l57 = l46.add(Direction.SOUTHEAST);
+        l57 = l46.add(Direction.NORTHEAST);
         v57 = 100000000;
         d57 = null;
 
-        l23 = l24.add(Direction.WEST);
+        l23 = l24.add(Direction.SOUTH);
         v23 = 100000000;
         d23 = null;
 
-        l25 = l36.add(Direction.NORTHWEST);
+        l25 = l36.add(Direction.SOUTHWEST);
         v25 = 100000000;
         d25 = null;
 
-        l83 = l72.add(Direction.SOUTHEAST);
+        l83 = l72.add(Direction.NORTHEAST);
         v83 = 100000000;
         d83 = null;
 
-        l85 = l74.add(Direction.SOUTHEAST);
+        l85 = l74.add(Direction.NORTHEAST);
         v85 = 100000000;
         d85 = null;
 
-        l41 = l32.add(Direction.SOUTHWEST);
+        l41 = l32.add(Direction.SOUTHEAST);
         v41 = 100000000;
         d41 = null;
 
-        l47 = l36.add(Direction.SOUTHEAST);
+        l47 = l36.add(Direction.NORTHEAST);
         v47 = 100000000;
         d47 = null;
 
-        l61 = l51.add(Direction.SOUTH);
+        l61 = l51.add(Direction.EAST);
         v61 = 100000000;
         d61 = null;
 
-        l67 = l56.add(Direction.SOUTHEAST);
+        l67 = l56.add(Direction.NORTHEAST);
         v67 = 100000000;
         d67 = null;
 
-        l22 = l23.add(Direction.WEST);
+        l22 = l23.add(Direction.SOUTH);
         v22 = 100000000;
         d22 = null;
 
-        l26 = l36.add(Direction.NORTH);
+        l26 = l36.add(Direction.WEST);
         v26 = 100000000;
         d26 = null;
 
-        l82 = l72.add(Direction.SOUTH);
+        l82 = l72.add(Direction.EAST);
         v82 = 100000000;
         d82 = null;
 
-        l86 = l75.add(Direction.SOUTHEAST);
+        l86 = l75.add(Direction.NORTHEAST);
         v86 = 100000000;
         d86 = null;
 
-        l31 = l22.add(Direction.SOUTHWEST);
+        l31 = l22.add(Direction.SOUTHEAST);
         v31 = 100000000;
         d31 = null;
 
-        l37 = l26.add(Direction.SOUTHEAST);
+        l37 = l26.add(Direction.NORTHEAST);
         v37 = 100000000;
         d37 = null;
 
-        l71 = l61.add(Direction.SOUTH);
+        l71 = l61.add(Direction.EAST);
         v71 = 100000000;
         d71 = null;
 
-        l77 = l66.add(Direction.SOUTHEAST);
+        l77 = l66.add(Direction.NORTHEAST);
         v77 = 100000000;
         d77 = null;
 
-        l21 = l22.add(Direction.WEST);
+        l21 = l22.add(Direction.SOUTH);
         v21 = 100000000;
         d21 = null;
 
-        l27 = l37.add(Direction.NORTH);
+        l27 = l37.add(Direction.WEST);
         v27 = 100000000;
         d27 = null;
 
-        l81 = l71.add(Direction.SOUTH);
+        l81 = l71.add(Direction.EAST);
         v81 = 100000000;
         d81 = null;
 
-        l87 = l76.add(Direction.SOUTHEAST);
+        l87 = l76.add(Direction.NORTHEAST);
         v87 = 100000000;
         d87 = null;
 
-        l14 = l25.add(Direction.NORTHWEST);
+        l14 = l25.add(Direction.SOUTHWEST);
         v14 = 100000000;
         d14 = null;
 
-        l94 = l83.add(Direction.SOUTHEAST);
+        l94 = l83.add(Direction.NORTHEAST);
         v94 = 100000000;
         d94 = null;
 
-        l50 = l41.add(Direction.SOUTHWEST);
+        l50 = l41.add(Direction.SOUTHEAST);
         v50 = 100000000;
         d50 = null;
 
-        l58 = l47.add(Direction.SOUTHEAST);
+        l58 = l47.add(Direction.NORTHEAST);
         v58 = 100000000;
         d58 = null;
 
-        l13 = l14.add(Direction.WEST);
+        l13 = l14.add(Direction.SOUTH);
         v13 = 100000000;
         d13 = null;
 
-        l15 = l26.add(Direction.NORTHWEST);
+        l15 = l26.add(Direction.SOUTHWEST);
         v15 = 100000000;
         d15 = null;
 
-        l93 = l82.add(Direction.SOUTHEAST);
+        l93 = l82.add(Direction.NORTHEAST);
         v93 = 100000000;
         d93 = null;
 
-        l95 = l84.add(Direction.SOUTHEAST);
+        l95 = l84.add(Direction.NORTHEAST);
         v95 = 100000000;
         d95 = null;
 
-        l40 = l31.add(Direction.SOUTHWEST);
+        l40 = l31.add(Direction.SOUTHEAST);
         v40 = 100000000;
         d40 = null;
 
-        l48 = l37.add(Direction.SOUTHEAST);
+        l48 = l37.add(Direction.NORTHEAST);
         v48 = 100000000;
         d48 = null;
 
-        l60 = l50.add(Direction.SOUTH);
+        l60 = l50.add(Direction.EAST);
         v60 = 100000000;
         d60 = null;
 
-        l68 = l57.add(Direction.SOUTHEAST);
+        l68 = l57.add(Direction.NORTHEAST);
         v68 = 100000000;
         d68 = null;
 
-        l12 = l13.add(Direction.WEST);
+        l12 = l13.add(Direction.SOUTH);
         v12 = 100000000;
         d12 = null;
 
-        l16 = l27.add(Direction.NORTHWEST);
+        l16 = l27.add(Direction.SOUTHWEST);
         v16 = 100000000;
         d16 = null;
 
-        l92 = l81.add(Direction.SOUTHEAST);
+        l92 = l81.add(Direction.NORTHEAST);
         v92 = 100000000;
         d92 = null;
 
-        l96 = l85.add(Direction.SOUTHEAST);
+        l96 = l85.add(Direction.NORTHEAST);
         v96 = 100000000;
         d96 = null;
 
-        l30 = l21.add(Direction.SOUTHWEST);
+        l30 = l21.add(Direction.SOUTHEAST);
         v30 = 100000000;
         d30 = null;
 
-        l38 = l27.add(Direction.SOUTHEAST);
+        l38 = l27.add(Direction.NORTHEAST);
         v38 = 100000000;
         d38 = null;
 
-        l70 = l60.add(Direction.SOUTH);
+        l70 = l60.add(Direction.EAST);
         v70 = 100000000;
         d70 = null;
 
-        l78 = l67.add(Direction.SOUTHEAST);
+        l78 = l67.add(Direction.NORTHEAST);
         v78 = 100000000;
         d78 = null;
 
         System.out.println("Initialized vars: " + Clock.getBytecodesLeft());
-
         try{ double sum;if(rc.onTheMap(l44)){
             if(!rc.isLocationOccupied(l44)){
                 p44 = 20*(rc.senseRubble(l44)/10 + 1);
                 sum = v54 + p44;
                 if(v44 > sum){
                     v44 = sum;
-                    d44 = Direction.NORTH;
+                    d44 = Direction.WEST;
                 }
             }
         }
@@ -718,7 +715,7 @@ public class BFS20{
                     sum = v54 + p64;
                     if(v64 > sum){
                         v64 = sum;
-                        d64 = Direction.SOUTH;
+                        d64 = Direction.EAST;
                     }
                 }
             }
@@ -733,7 +730,7 @@ public class BFS20{
                     sum = v54 + p53;
                     if(v53 > sum){
                         v53 = sum;
-                        d53 = Direction.WEST;
+                        d53 = Direction.SOUTH;
                     }
                     sum = v64 + p53;
                     if(v53 > sum){
@@ -758,7 +755,7 @@ public class BFS20{
                     sum = v54 + p55;
                     if(v55 > sum){
                         v55 = sum;
-                        d55 = Direction.EAST;
+                        d55 = Direction.NORTH;
                     }
                 }
             }
@@ -773,7 +770,7 @@ public class BFS20{
                     sum = v54 + p43;
                     if(v43 > sum){
                         v43 = sum;
-                        d43 = Direction.NORTHWEST;
+                        d43 = Direction.SOUTHWEST;
                     }
                     sum = v53 + p43;
                     if(v43 > sum){
@@ -793,7 +790,7 @@ public class BFS20{
                     sum = v54 + p45;
                     if(v45 > sum){
                         v45 = sum;
-                        d45 = Direction.NORTHEAST;
+                        d45 = Direction.NORTHWEST;
                     }
                     sum = v44 + p45;
                     if(v45 > sum){
@@ -813,7 +810,7 @@ public class BFS20{
                     sum = v54 + p63;
                     if(v63 > sum){
                         v63 = sum;
-                        d63 = Direction.SOUTHWEST;
+                        d63 = Direction.SOUTHEAST;
                     }
                     sum = v64 + p63;
                     if(v63 > sum){
@@ -828,7 +825,7 @@ public class BFS20{
                     sum = v54 + p65;
                     if(v65 > sum){
                         v65 = sum;
-                        d65 = Direction.SOUTHEAST;
+                        d65 = Direction.NORTHEAST;
                     }
                     sum = v55 + p65;
                     if(v65 > sum){
@@ -843,1250 +840,1368 @@ public class BFS20{
                 }
             }
             if(rc.onTheMap(l34)){
-                p34 = 20*(rc.senseRubble(l34)/10 + 1);
-                sum = v45 + p34;
-                if(v34 > sum){
-                    v34 = sum;
-                    d34 = d45;
-                }
-                sum = v44 + p34;
-                if(v34 > sum){
-                    v34 = sum;
-                    d34 = d44;
-                }
-                sum = v43 + p34;
-                if(v34 > sum){
-                    v34 = sum;
-                    d34 = d43;
+                if(!rc.isLocationOccupied(l34)){
+                    p34 = 20*(rc.senseRubble(l34)/10 + 1);
+                    sum = v45 + p34;
+                    if(v34 > sum){
+                        v34 = sum;
+                        d34 = d45;
+                    }
+                    sum = v44 + p34;
+                    if(v34 > sum){
+                        v34 = sum;
+                        d34 = d44;
+                    }
+                    sum = v43 + p34;
+                    if(v34 > sum){
+                        v34 = sum;
+                        d34 = d43;
+                    }
                 }
             }
             if(rc.onTheMap(l74)){
-                p74 = 20*(rc.senseRubble(l74)/10 + 1);
-                sum = v63 + p74;
-                if(v74 > sum){
-                    v74 = sum;
-                    d74 = d63;
-                }
-                sum = v64 + p74;
-                if(v74 > sum){
-                    v74 = sum;
-                    d74 = d64;
-                }
-                sum = v65 + p74;
-                if(v74 > sum){
-                    v74 = sum;
-                    d74 = d65;
+                if(!rc.isLocationOccupied(l74)){
+                    p74 = 20*(rc.senseRubble(l74)/10 + 1);
+                    sum = v63 + p74;
+                    if(v74 > sum){
+                        v74 = sum;
+                        d74 = d63;
+                    }
+                    sum = v64 + p74;
+                    if(v74 > sum){
+                        v74 = sum;
+                        d74 = d64;
+                    }
+                    sum = v65 + p74;
+                    if(v74 > sum){
+                        v74 = sum;
+                        d74 = d65;
+                    }
                 }
             }
             if(rc.onTheMap(l52)){
-                p52 = 20*(rc.senseRubble(l52)/10 + 1);
-                sum = v43 + p52;
-                if(v52 > sum){
-                    v52 = sum;
-                    d52 = d43;
-                }
-                sum = v53 + p52;
-                if(v52 > sum){
-                    v52 = sum;
-                    d52 = d53;
-                }
-                sum = v63 + p52;
-                if(v52 > sum){
-                    v52 = sum;
-                    d52 = d63;
+                if(!rc.isLocationOccupied(l52)){
+                    p52 = 20*(rc.senseRubble(l52)/10 + 1);
+                    sum = v43 + p52;
+                    if(v52 > sum){
+                        v52 = sum;
+                        d52 = d43;
+                    }
+                    sum = v53 + p52;
+                    if(v52 > sum){
+                        v52 = sum;
+                        d52 = d53;
+                    }
+                    sum = v63 + p52;
+                    if(v52 > sum){
+                        v52 = sum;
+                        d52 = d63;
+                    }
                 }
             }
             if(rc.onTheMap(l56)){
-                p56 = 20*(rc.senseRubble(l56)/10 + 1);
-                sum = v45 + p56;
-                if(v56 > sum){
-                    v56 = sum;
-                    d56 = d45;
-                }
-                sum = v65 + p56;
-                if(v56 > sum){
-                    v56 = sum;
-                    d56 = d65;
-                }
-                sum = v55 + p56;
-                if(v56 > sum){
-                    v56 = sum;
-                    d56 = d55;
+                if(!rc.isLocationOccupied(l56)){
+                    p56 = 20*(rc.senseRubble(l56)/10 + 1);
+                    sum = v45 + p56;
+                    if(v56 > sum){
+                        v56 = sum;
+                        d56 = d45;
+                    }
+                    sum = v65 + p56;
+                    if(v56 > sum){
+                        v56 = sum;
+                        d56 = d65;
+                    }
+                    sum = v55 + p56;
+                    if(v56 > sum){
+                        v56 = sum;
+                        d56 = d55;
+                    }
                 }
             }
             if(rc.onTheMap(l33)){
-                p33 = 20*(rc.senseRubble(l33)/10 + 1);
-                sum = v34 + p33;
-                if(v33 > sum){
-                    v33 = sum;
-                    d33 = d34;
-                }
-                sum = v44 + p33;
-                if(v33 > sum){
-                    v33 = sum;
-                    d33 = d44;
-                }
-                sum = v43 + p33;
-                if(v33 > sum){
-                    v33 = sum;
-                    d33 = d43;
+                if(!rc.isLocationOccupied(l33)){
+                    p33 = 20*(rc.senseRubble(l33)/10 + 1);
+                    sum = v34 + p33;
+                    if(v33 > sum){
+                        v33 = sum;
+                        d33 = d34;
+                    }
+                    sum = v44 + p33;
+                    if(v33 > sum){
+                        v33 = sum;
+                        d33 = d44;
+                    }
+                    sum = v43 + p33;
+                    if(v33 > sum){
+                        v33 = sum;
+                        d33 = d43;
+                    }
                 }
             }
             if(rc.onTheMap(l35)){
-                p35 = 20*(rc.senseRubble(l35)/10 + 1);
-                sum = v45 + p35;
-                if(v35 > sum){
-                    v35 = sum;
-                    d35 = d45;
-                }
-                sum = v44 + p35;
-                if(v35 > sum){
-                    v35 = sum;
-                    d35 = d44;
-                }
-                sum = v34 + p35;
-                if(v35 > sum){
-                    v35 = sum;
-                    d35 = d34;
+                if(!rc.isLocationOccupied(l35)){
+                    p35 = 20*(rc.senseRubble(l35)/10 + 1);
+                    sum = v45 + p35;
+                    if(v35 > sum){
+                        v35 = sum;
+                        d35 = d45;
+                    }
+                    sum = v44 + p35;
+                    if(v35 > sum){
+                        v35 = sum;
+                        d35 = d44;
+                    }
+                    sum = v34 + p35;
+                    if(v35 > sum){
+                        v35 = sum;
+                        d35 = d34;
+                    }
                 }
             }
             if(rc.onTheMap(l73)){
-                p73 = 20*(rc.senseRubble(l73)/10 + 1);
-                sum = v63 + p73;
-                if(v73 > sum){
-                    v73 = sum;
-                    d73 = d63;
-                }
-                sum = v64 + p73;
-                if(v73 > sum){
-                    v73 = sum;
-                    d73 = d64;
-                }
-                sum = v74 + p73;
-                if(v73 > sum){
-                    v73 = sum;
-                    d73 = d74;
+                if(!rc.isLocationOccupied(l73)){
+                    p73 = 20*(rc.senseRubble(l73)/10 + 1);
+                    sum = v63 + p73;
+                    if(v73 > sum){
+                        v73 = sum;
+                        d73 = d63;
+                    }
+                    sum = v64 + p73;
+                    if(v73 > sum){
+                        v73 = sum;
+                        d73 = d64;
+                    }
+                    sum = v74 + p73;
+                    if(v73 > sum){
+                        v73 = sum;
+                        d73 = d74;
+                    }
                 }
             }
             if(rc.onTheMap(l75)){
-                p75 = 20*(rc.senseRubble(l75)/10 + 1);
-                sum = v64 + p75;
-                if(v75 > sum){
-                    v75 = sum;
-                    d75 = d64;
-                }
-                sum = v65 + p75;
-                if(v75 > sum){
-                    v75 = sum;
-                    d75 = d65;
-                }
-                sum = v74 + p75;
-                if(v75 > sum){
-                    v75 = sum;
-                    d75 = d74;
+                if(!rc.isLocationOccupied(l75)){
+                    p75 = 20*(rc.senseRubble(l75)/10 + 1);
+                    sum = v64 + p75;
+                    if(v75 > sum){
+                        v75 = sum;
+                        d75 = d64;
+                    }
+                    sum = v65 + p75;
+                    if(v75 > sum){
+                        v75 = sum;
+                        d75 = d65;
+                    }
+                    sum = v74 + p75;
+                    if(v75 > sum){
+                        v75 = sum;
+                        d75 = d74;
+                    }
                 }
             }
             if(rc.onTheMap(l42)){
-                p42 = 20*(rc.senseRubble(l42)/10 + 1);
-                sum = v33 + p42;
-                if(v42 > sum){
-                    v42 = sum;
-                    d42 = d33;
-                }
-                sum = v43 + p42;
-                if(v42 > sum){
-                    v42 = sum;
-                    d42 = d43;
-                }
-                sum = v53 + p42;
-                if(v42 > sum){
-                    v42 = sum;
-                    d42 = d53;
-                }
-                sum = v52 + p42;
-                if(v42 > sum){
-                    v42 = sum;
-                    d42 = d52;
+                if(!rc.isLocationOccupied(l42)){
+                    p42 = 20*(rc.senseRubble(l42)/10 + 1);
+                    sum = v33 + p42;
+                    if(v42 > sum){
+                        v42 = sum;
+                        d42 = d33;
+                    }
+                    sum = v43 + p42;
+                    if(v42 > sum){
+                        v42 = sum;
+                        d42 = d43;
+                    }
+                    sum = v53 + p42;
+                    if(v42 > sum){
+                        v42 = sum;
+                        d42 = d53;
+                    }
+                    sum = v52 + p42;
+                    if(v42 > sum){
+                        v42 = sum;
+                        d42 = d52;
+                    }
                 }
             }
             if(rc.onTheMap(l46)){
-                p46 = 20*(rc.senseRubble(l46)/10 + 1);
-                sum = v35 + p46;
-                if(v46 > sum){
-                    v46 = sum;
-                    d46 = d35;
-                }
-                sum = v56 + p46;
-                if(v46 > sum){
-                    v46 = sum;
-                    d46 = d56;
-                }
-                sum = v55 + p46;
-                if(v46 > sum){
-                    v46 = sum;
-                    d46 = d55;
-                }
-                sum = v45 + p46;
-                if(v46 > sum){
-                    v46 = sum;
-                    d46 = d45;
+                if(!rc.isLocationOccupied(l46)){
+                    p46 = 20*(rc.senseRubble(l46)/10 + 1);
+                    sum = v35 + p46;
+                    if(v46 > sum){
+                        v46 = sum;
+                        d46 = d35;
+                    }
+                    sum = v56 + p46;
+                    if(v46 > sum){
+                        v46 = sum;
+                        d46 = d56;
+                    }
+                    sum = v55 + p46;
+                    if(v46 > sum){
+                        v46 = sum;
+                        d46 = d55;
+                    }
+                    sum = v45 + p46;
+                    if(v46 > sum){
+                        v46 = sum;
+                        d46 = d45;
+                    }
                 }
             }
             if(rc.onTheMap(l62)){
-                p62 = 20*(rc.senseRubble(l62)/10 + 1);
-                sum = v52 + p62;
-                if(v62 > sum){
-                    v62 = sum;
-                    d62 = d52;
-                }
-                sum = v53 + p62;
-                if(v62 > sum){
-                    v62 = sum;
-                    d62 = d53;
-                }
-                sum = v63 + p62;
-                if(v62 > sum){
-                    v62 = sum;
-                    d62 = d63;
-                }
-                sum = v73 + p62;
-                if(v62 > sum){
-                    v62 = sum;
-                    d62 = d73;
+                if(!rc.isLocationOccupied(l62)){
+                    p62 = 20*(rc.senseRubble(l62)/10 + 1);
+                    sum = v52 + p62;
+                    if(v62 > sum){
+                        v62 = sum;
+                        d62 = d52;
+                    }
+                    sum = v53 + p62;
+                    if(v62 > sum){
+                        v62 = sum;
+                        d62 = d53;
+                    }
+                    sum = v63 + p62;
+                    if(v62 > sum){
+                        v62 = sum;
+                        d62 = d63;
+                    }
+                    sum = v73 + p62;
+                    if(v62 > sum){
+                        v62 = sum;
+                        d62 = d73;
+                    }
                 }
             }
             if(rc.onTheMap(l66)){
-                p66 = 20*(rc.senseRubble(l66)/10 + 1);
-                sum = v55 + p66;
-                if(v66 > sum){
-                    v66 = sum;
-                    d66 = d55;
-                }
-                sum = v56 + p66;
-                if(v66 > sum){
-                    v66 = sum;
-                    d66 = d56;
-                }
-                sum = v75 + p66;
-                if(v66 > sum){
-                    v66 = sum;
-                    d66 = d75;
-                }
-                sum = v65 + p66;
-                if(v66 > sum){
-                    v66 = sum;
-                    d66 = d65;
+                if(!rc.isLocationOccupied(l66)){
+                    p66 = 20*(rc.senseRubble(l66)/10 + 1);
+                    sum = v55 + p66;
+                    if(v66 > sum){
+                        v66 = sum;
+                        d66 = d55;
+                    }
+                    sum = v56 + p66;
+                    if(v66 > sum){
+                        v66 = sum;
+                        d66 = d56;
+                    }
+                    sum = v75 + p66;
+                    if(v66 > sum){
+                        v66 = sum;
+                        d66 = d75;
+                    }
+                    sum = v65 + p66;
+                    if(v66 > sum){
+                        v66 = sum;
+                        d66 = d65;
+                    }
                 }
             }
             if(rc.onTheMap(l32)){
-                p32 = 20*(rc.senseRubble(l32)/10 + 1);
-                sum = v33 + p32;
-                if(v32 > sum){
-                    v32 = sum;
-                    d32 = d33;
-                }
-                sum = v43 + p32;
-                if(v32 > sum){
-                    v32 = sum;
-                    d32 = d43;
-                }
-                sum = v42 + p32;
-                if(v32 > sum){
-                    v32 = sum;
-                    d32 = d42;
+                if(!rc.isLocationOccupied(l32)){
+                    p32 = 20*(rc.senseRubble(l32)/10 + 1);
+                    sum = v33 + p32;
+                    if(v32 > sum){
+                        v32 = sum;
+                        d32 = d33;
+                    }
+                    sum = v43 + p32;
+                    if(v32 > sum){
+                        v32 = sum;
+                        d32 = d43;
+                    }
+                    sum = v42 + p32;
+                    if(v32 > sum){
+                        v32 = sum;
+                        d32 = d42;
+                    }
                 }
             }
             if(rc.onTheMap(l36)){
-                p36 = 20*(rc.senseRubble(l36)/10 + 1);
-                sum = v46 + p36;
-                if(v36 > sum){
-                    v36 = sum;
-                    d36 = d46;
-                }
-                sum = v45 + p36;
-                if(v36 > sum){
-                    v36 = sum;
-                    d36 = d45;
-                }
-                sum = v35 + p36;
-                if(v36 > sum){
-                    v36 = sum;
-                    d36 = d35;
+                if(!rc.isLocationOccupied(l36)){
+                    p36 = 20*(rc.senseRubble(l36)/10 + 1);
+                    sum = v46 + p36;
+                    if(v36 > sum){
+                        v36 = sum;
+                        d36 = d46;
+                    }
+                    sum = v45 + p36;
+                    if(v36 > sum){
+                        v36 = sum;
+                        d36 = d45;
+                    }
+                    sum = v35 + p36;
+                    if(v36 > sum){
+                        v36 = sum;
+                        d36 = d35;
+                    }
                 }
             }
             if(rc.onTheMap(l72)){
-                p72 = 20*(rc.senseRubble(l72)/10 + 1);
-                sum = v62 + p72;
-                if(v72 > sum){
-                    v72 = sum;
-                    d72 = d62;
-                }
-                sum = v63 + p72;
-                if(v72 > sum){
-                    v72 = sum;
-                    d72 = d63;
-                }
-                sum = v73 + p72;
-                if(v72 > sum){
-                    v72 = sum;
-                    d72 = d73;
+                if(!rc.isLocationOccupied(l72)){
+                    p72 = 20*(rc.senseRubble(l72)/10 + 1);
+                    sum = v62 + p72;
+                    if(v72 > sum){
+                        v72 = sum;
+                        d72 = d62;
+                    }
+                    sum = v63 + p72;
+                    if(v72 > sum){
+                        v72 = sum;
+                        d72 = d63;
+                    }
+                    sum = v73 + p72;
+                    if(v72 > sum){
+                        v72 = sum;
+                        d72 = d73;
+                    }
                 }
             }
             if(rc.onTheMap(l76)){
-                p76 = 20*(rc.senseRubble(l76)/10 + 1);
-                sum = v65 + p76;
-                if(v76 > sum){
-                    v76 = sum;
-                    d76 = d65;
-                }
-                sum = v66 + p76;
-                if(v76 > sum){
-                    v76 = sum;
-                    d76 = d66;
-                }
-                sum = v75 + p76;
-                if(v76 > sum){
-                    v76 = sum;
-                    d76 = d75;
+                if(!rc.isLocationOccupied(l76)){
+                    p76 = 20*(rc.senseRubble(l76)/10 + 1);
+                    sum = v65 + p76;
+                    if(v76 > sum){
+                        v76 = sum;
+                        d76 = d65;
+                    }
+                    sum = v66 + p76;
+                    if(v76 > sum){
+                        v76 = sum;
+                        d76 = d66;
+                    }
+                    sum = v75 + p76;
+                    if(v76 > sum){
+                        v76 = sum;
+                        d76 = d75;
+                    }
                 }
             }
             if(rc.onTheMap(l24)){
-                p24 = 20*(rc.senseRubble(l24)/10 + 1);
-                sum = v35 + p24;
-                if(v24 > sum){
-                    v24 = sum;
-                    d24 = d35;
-                }
-                sum = v34 + p24;
-                if(v24 > sum){
-                    v24 = sum;
-                    d24 = d34;
-                }
-                sum = v33 + p24;
-                if(v24 > sum){
-                    v24 = sum;
-                    d24 = d33;
+                if(!rc.isLocationOccupied(l24)){
+                    p24 = 20*(rc.senseRubble(l24)/10 + 1);
+                    sum = v35 + p24;
+                    if(v24 > sum){
+                        v24 = sum;
+                        d24 = d35;
+                    }
+                    sum = v34 + p24;
+                    if(v24 > sum){
+                        v24 = sum;
+                        d24 = d34;
+                    }
+                    sum = v33 + p24;
+                    if(v24 > sum){
+                        v24 = sum;
+                        d24 = d33;
+                    }
                 }
             }
             if(rc.onTheMap(l84)){
-                p84 = 20*(rc.senseRubble(l84)/10 + 1);
-                sum = v73 + p84;
-                if(v84 > sum){
-                    v84 = sum;
-                    d84 = d73;
-                }
-                sum = v74 + p84;
-                if(v84 > sum){
-                    v84 = sum;
-                    d84 = d74;
-                }
-                sum = v75 + p84;
-                if(v84 > sum){
-                    v84 = sum;
-                    d84 = d75;
+                if(!rc.isLocationOccupied(l84)){
+                    p84 = 20*(rc.senseRubble(l84)/10 + 1);
+                    sum = v73 + p84;
+                    if(v84 > sum){
+                        v84 = sum;
+                        d84 = d73;
+                    }
+                    sum = v74 + p84;
+                    if(v84 > sum){
+                        v84 = sum;
+                        d84 = d74;
+                    }
+                    sum = v75 + p84;
+                    if(v84 > sum){
+                        v84 = sum;
+                        d84 = d75;
+                    }
                 }
             }
             if(rc.onTheMap(l51)){
-                p51 = 20*(rc.senseRubble(l51)/10 + 1);
-                sum = v42 + p51;
-                if(v51 > sum){
-                    v51 = sum;
-                    d51 = d42;
-                }
-                sum = v52 + p51;
-                if(v51 > sum){
-                    v51 = sum;
-                    d51 = d52;
-                }
-                sum = v62 + p51;
-                if(v51 > sum){
-                    v51 = sum;
-                    d51 = d62;
+                if(!rc.isLocationOccupied(l51)){
+                    p51 = 20*(rc.senseRubble(l51)/10 + 1);
+                    sum = v42 + p51;
+                    if(v51 > sum){
+                        v51 = sum;
+                        d51 = d42;
+                    }
+                    sum = v52 + p51;
+                    if(v51 > sum){
+                        v51 = sum;
+                        d51 = d52;
+                    }
+                    sum = v62 + p51;
+                    if(v51 > sum){
+                        v51 = sum;
+                        d51 = d62;
+                    }
                 }
             }
             if(rc.onTheMap(l57)){
-                p57 = 20*(rc.senseRubble(l57)/10 + 1);
-                sum = v46 + p57;
-                if(v57 > sum){
-                    v57 = sum;
-                    d57 = d46;
-                }
-                sum = v66 + p57;
-                if(v57 > sum){
-                    v57 = sum;
-                    d57 = d66;
-                }
-                sum = v56 + p57;
-                if(v57 > sum){
-                    v57 = sum;
-                    d57 = d56;
+                if(!rc.isLocationOccupied(l57)){
+                    p57 = 20*(rc.senseRubble(l57)/10 + 1);
+                    sum = v46 + p57;
+                    if(v57 > sum){
+                        v57 = sum;
+                        d57 = d46;
+                    }
+                    sum = v66 + p57;
+                    if(v57 > sum){
+                        v57 = sum;
+                        d57 = d66;
+                    }
+                    sum = v56 + p57;
+                    if(v57 > sum){
+                        v57 = sum;
+                        d57 = d56;
+                    }
                 }
             }
             if(rc.onTheMap(l23)){
-                p23 = 20*(rc.senseRubble(l23)/10 + 1);
-                sum = v24 + p23;
-                if(v23 > sum){
-                    v23 = sum;
-                    d23 = d24;
-                }
-                sum = v34 + p23;
-                if(v23 > sum){
-                    v23 = sum;
-                    d23 = d34;
-                }
-                sum = v33 + p23;
-                if(v23 > sum){
-                    v23 = sum;
-                    d23 = d33;
-                }
-                sum = v32 + p23;
-                if(v23 > sum){
-                    v23 = sum;
-                    d23 = d32;
+                if(!rc.isLocationOccupied(l23)){
+                    p23 = 20*(rc.senseRubble(l23)/10 + 1);
+                    sum = v24 + p23;
+                    if(v23 > sum){
+                        v23 = sum;
+                        d23 = d24;
+                    }
+                    sum = v34 + p23;
+                    if(v23 > sum){
+                        v23 = sum;
+                        d23 = d34;
+                    }
+                    sum = v33 + p23;
+                    if(v23 > sum){
+                        v23 = sum;
+                        d23 = d33;
+                    }
+                    sum = v32 + p23;
+                    if(v23 > sum){
+                        v23 = sum;
+                        d23 = d32;
+                    }
                 }
             }
             if(rc.onTheMap(l25)){
-                p25 = 20*(rc.senseRubble(l25)/10 + 1);
-                sum = v36 + p25;
-                if(v25 > sum){
-                    v25 = sum;
-                    d25 = d36;
-                }
-                sum = v35 + p25;
-                if(v25 > sum){
-                    v25 = sum;
-                    d25 = d35;
-                }
-                sum = v34 + p25;
-                if(v25 > sum){
-                    v25 = sum;
-                    d25 = d34;
-                }
-                sum = v24 + p25;
-                if(v25 > sum){
-                    v25 = sum;
-                    d25 = d24;
+                if(!rc.isLocationOccupied(l25)){
+                    p25 = 20*(rc.senseRubble(l25)/10 + 1);
+                    sum = v36 + p25;
+                    if(v25 > sum){
+                        v25 = sum;
+                        d25 = d36;
+                    }
+                    sum = v35 + p25;
+                    if(v25 > sum){
+                        v25 = sum;
+                        d25 = d35;
+                    }
+                    sum = v34 + p25;
+                    if(v25 > sum){
+                        v25 = sum;
+                        d25 = d34;
+                    }
+                    sum = v24 + p25;
+                    if(v25 > sum){
+                        v25 = sum;
+                        d25 = d24;
+                    }
                 }
             }
             if(rc.onTheMap(l83)){
-                p83 = 20*(rc.senseRubble(l83)/10 + 1);
-                sum = v72 + p83;
-                if(v83 > sum){
-                    v83 = sum;
-                    d83 = d72;
-                }
-                sum = v73 + p83;
-                if(v83 > sum){
-                    v83 = sum;
-                    d83 = d73;
-                }
-                sum = v74 + p83;
-                if(v83 > sum){
-                    v83 = sum;
-                    d83 = d74;
-                }
-                sum = v84 + p83;
-                if(v83 > sum){
-                    v83 = sum;
-                    d83 = d84;
+                if(!rc.isLocationOccupied(l83)){
+                    p83 = 20*(rc.senseRubble(l83)/10 + 1);
+                    sum = v72 + p83;
+                    if(v83 > sum){
+                        v83 = sum;
+                        d83 = d72;
+                    }
+                    sum = v73 + p83;
+                    if(v83 > sum){
+                        v83 = sum;
+                        d83 = d73;
+                    }
+                    sum = v74 + p83;
+                    if(v83 > sum){
+                        v83 = sum;
+                        d83 = d74;
+                    }
+                    sum = v84 + p83;
+                    if(v83 > sum){
+                        v83 = sum;
+                        d83 = d84;
+                    }
                 }
             }
             if(rc.onTheMap(l85)){
-                p85 = 20*(rc.senseRubble(l85)/10 + 1);
-                sum = v74 + p85;
-                if(v85 > sum){
-                    v85 = sum;
-                    d85 = d74;
-                }
-                sum = v75 + p85;
-                if(v85 > sum){
-                    v85 = sum;
-                    d85 = d75;
-                }
-                sum = v76 + p85;
-                if(v85 > sum){
-                    v85 = sum;
-                    d85 = d76;
-                }
-                sum = v84 + p85;
-                if(v85 > sum){
-                    v85 = sum;
-                    d85 = d84;
+                if(!rc.isLocationOccupied(l85)){
+                    p85 = 20*(rc.senseRubble(l85)/10 + 1);
+                    sum = v74 + p85;
+                    if(v85 > sum){
+                        v85 = sum;
+                        d85 = d74;
+                    }
+                    sum = v75 + p85;
+                    if(v85 > sum){
+                        v85 = sum;
+                        d85 = d75;
+                    }
+                    sum = v76 + p85;
+                    if(v85 > sum){
+                        v85 = sum;
+                        d85 = d76;
+                    }
+                    sum = v84 + p85;
+                    if(v85 > sum){
+                        v85 = sum;
+                        d85 = d84;
+                    }
                 }
             }
             if(rc.onTheMap(l41)){
-                p41 = 20*(rc.senseRubble(l41)/10 + 1);
-                sum = v32 + p41;
-                if(v41 > sum){
-                    v41 = sum;
-                    d41 = d32;
-                }
-                sum = v42 + p41;
-                if(v41 > sum){
-                    v41 = sum;
-                    d41 = d42;
-                }
-                sum = v52 + p41;
-                if(v41 > sum){
-                    v41 = sum;
-                    d41 = d52;
-                }
-                sum = v51 + p41;
-                if(v41 > sum){
-                    v41 = sum;
-                    d41 = d51;
+                if(!rc.isLocationOccupied(l41)){
+                    p41 = 20*(rc.senseRubble(l41)/10 + 1);
+                    sum = v32 + p41;
+                    if(v41 > sum){
+                        v41 = sum;
+                        d41 = d32;
+                    }
+                    sum = v42 + p41;
+                    if(v41 > sum){
+                        v41 = sum;
+                        d41 = d42;
+                    }
+                    sum = v52 + p41;
+                    if(v41 > sum){
+                        v41 = sum;
+                        d41 = d52;
+                    }
+                    sum = v51 + p41;
+                    if(v41 > sum){
+                        v41 = sum;
+                        d41 = d51;
+                    }
                 }
             }
             if(rc.onTheMap(l47)){
-                p47 = 20*(rc.senseRubble(l47)/10 + 1);
-                sum = v36 + p47;
-                if(v47 > sum){
-                    v47 = sum;
-                    d47 = d36;
-                }
-                sum = v57 + p47;
-                if(v47 > sum){
-                    v47 = sum;
-                    d47 = d57;
-                }
-                sum = v56 + p47;
-                if(v47 > sum){
-                    v47 = sum;
-                    d47 = d56;
-                }
-                sum = v46 + p47;
-                if(v47 > sum){
-                    v47 = sum;
-                    d47 = d46;
+                if(!rc.isLocationOccupied(l47)){
+                    p47 = 20*(rc.senseRubble(l47)/10 + 1);
+                    sum = v36 + p47;
+                    if(v47 > sum){
+                        v47 = sum;
+                        d47 = d36;
+                    }
+                    sum = v57 + p47;
+                    if(v47 > sum){
+                        v47 = sum;
+                        d47 = d57;
+                    }
+                    sum = v56 + p47;
+                    if(v47 > sum){
+                        v47 = sum;
+                        d47 = d56;
+                    }
+                    sum = v46 + p47;
+                    if(v47 > sum){
+                        v47 = sum;
+                        d47 = d46;
+                    }
                 }
             }
             if(rc.onTheMap(l61)){
-                p61 = 20*(rc.senseRubble(l61)/10 + 1);
-                sum = v51 + p61;
-                if(v61 > sum){
-                    v61 = sum;
-                    d61 = d51;
-                }
-                sum = v52 + p61;
-                if(v61 > sum){
-                    v61 = sum;
-                    d61 = d52;
-                }
-                sum = v62 + p61;
-                if(v61 > sum){
-                    v61 = sum;
-                    d61 = d62;
-                }
-                sum = v72 + p61;
-                if(v61 > sum){
-                    v61 = sum;
-                    d61 = d72;
+                if(!rc.isLocationOccupied(l61)){
+                    p61 = 20*(rc.senseRubble(l61)/10 + 1);
+                    sum = v51 + p61;
+                    if(v61 > sum){
+                        v61 = sum;
+                        d61 = d51;
+                    }
+                    sum = v52 + p61;
+                    if(v61 > sum){
+                        v61 = sum;
+                        d61 = d52;
+                    }
+                    sum = v62 + p61;
+                    if(v61 > sum){
+                        v61 = sum;
+                        d61 = d62;
+                    }
+                    sum = v72 + p61;
+                    if(v61 > sum){
+                        v61 = sum;
+                        d61 = d72;
+                    }
                 }
             }
             if(rc.onTheMap(l67)){
-                p67 = 20*(rc.senseRubble(l67)/10 + 1);
-                sum = v56 + p67;
-                if(v67 > sum){
-                    v67 = sum;
-                    d67 = d56;
-                }
-                sum = v57 + p67;
-                if(v67 > sum){
-                    v67 = sum;
-                    d67 = d57;
-                }
-                sum = v76 + p67;
-                if(v67 > sum){
-                    v67 = sum;
-                    d67 = d76;
-                }
-                sum = v66 + p67;
-                if(v67 > sum){
-                    v67 = sum;
-                    d67 = d66;
+                if(!rc.isLocationOccupied(l67)){
+                    p67 = 20*(rc.senseRubble(l67)/10 + 1);
+                    sum = v56 + p67;
+                    if(v67 > sum){
+                        v67 = sum;
+                        d67 = d56;
+                    }
+                    sum = v57 + p67;
+                    if(v67 > sum){
+                        v67 = sum;
+                        d67 = d57;
+                    }
+                    sum = v76 + p67;
+                    if(v67 > sum){
+                        v67 = sum;
+                        d67 = d76;
+                    }
+                    sum = v66 + p67;
+                    if(v67 > sum){
+                        v67 = sum;
+                        d67 = d66;
+                    }
                 }
             }
             if(rc.onTheMap(l22)){
-                p22 = 20*(rc.senseRubble(l22)/10 + 1);
-                sum = v23 + p22;
-                if(v22 > sum){
-                    v22 = sum;
-                    d22 = d23;
-                }
-                sum = v33 + p22;
-                if(v22 > sum){
-                    v22 = sum;
-                    d22 = d33;
-                }
-                sum = v32 + p22;
-                if(v22 > sum){
-                    v22 = sum;
-                    d22 = d32;
+                if(!rc.isLocationOccupied(l22)){
+                    p22 = 20*(rc.senseRubble(l22)/10 + 1);
+                    sum = v23 + p22;
+                    if(v22 > sum){
+                        v22 = sum;
+                        d22 = d23;
+                    }
+                    sum = v33 + p22;
+                    if(v22 > sum){
+                        v22 = sum;
+                        d22 = d33;
+                    }
+                    sum = v32 + p22;
+                    if(v22 > sum){
+                        v22 = sum;
+                        d22 = d32;
+                    }
                 }
             }
             if(rc.onTheMap(l26)){
-                p26 = 20*(rc.senseRubble(l26)/10 + 1);
-                sum = v36 + p26;
-                if(v26 > sum){
-                    v26 = sum;
-                    d26 = d36;
-                }
-                sum = v35 + p26;
-                if(v26 > sum){
-                    v26 = sum;
-                    d26 = d35;
-                }
-                sum = v25 + p26;
-                if(v26 > sum){
-                    v26 = sum;
-                    d26 = d25;
+                if(!rc.isLocationOccupied(l26)){
+                    p26 = 20*(rc.senseRubble(l26)/10 + 1);
+                    sum = v36 + p26;
+                    if(v26 > sum){
+                        v26 = sum;
+                        d26 = d36;
+                    }
+                    sum = v35 + p26;
+                    if(v26 > sum){
+                        v26 = sum;
+                        d26 = d35;
+                    }
+                    sum = v25 + p26;
+                    if(v26 > sum){
+                        v26 = sum;
+                        d26 = d25;
+                    }
                 }
             }
             if(rc.onTheMap(l82)){
-                p82 = 20*(rc.senseRubble(l82)/10 + 1);
-                sum = v72 + p82;
-                if(v82 > sum){
-                    v82 = sum;
-                    d82 = d72;
-                }
-                sum = v73 + p82;
-                if(v82 > sum){
-                    v82 = sum;
-                    d82 = d73;
-                }
-                sum = v83 + p82;
-                if(v82 > sum){
-                    v82 = sum;
-                    d82 = d83;
+                if(!rc.isLocationOccupied(l82)){
+                    p82 = 20*(rc.senseRubble(l82)/10 + 1);
+                    sum = v72 + p82;
+                    if(v82 > sum){
+                        v82 = sum;
+                        d82 = d72;
+                    }
+                    sum = v73 + p82;
+                    if(v82 > sum){
+                        v82 = sum;
+                        d82 = d73;
+                    }
+                    sum = v83 + p82;
+                    if(v82 > sum){
+                        v82 = sum;
+                        d82 = d83;
+                    }
                 }
             }
             if(rc.onTheMap(l86)){
-                p86 = 20*(rc.senseRubble(l86)/10 + 1);
-                sum = v75 + p86;
-                if(v86 > sum){
-                    v86 = sum;
-                    d86 = d75;
-                }
-                sum = v76 + p86;
-                if(v86 > sum){
-                    v86 = sum;
-                    d86 = d76;
-                }
-                sum = v85 + p86;
-                if(v86 > sum){
-                    v86 = sum;
-                    d86 = d85;
+                if(!rc.isLocationOccupied(l86)){
+                    p86 = 20*(rc.senseRubble(l86)/10 + 1);
+                    sum = v75 + p86;
+                    if(v86 > sum){
+                        v86 = sum;
+                        d86 = d75;
+                    }
+                    sum = v76 + p86;
+                    if(v86 > sum){
+                        v86 = sum;
+                        d86 = d76;
+                    }
+                    sum = v85 + p86;
+                    if(v86 > sum){
+                        v86 = sum;
+                        d86 = d85;
+                    }
                 }
             }
             if(rc.onTheMap(l31)){
-                p31 = 20*(rc.senseRubble(l31)/10 + 1);
-                sum = v22 + p31;
-                if(v31 > sum){
-                    v31 = sum;
-                    d31 = d22;
-                }
-                sum = v32 + p31;
-                if(v31 > sum){
-                    v31 = sum;
-                    d31 = d32;
-                }
-                sum = v42 + p31;
-                if(v31 > sum){
-                    v31 = sum;
-                    d31 = d42;
-                }
-                sum = v41 + p31;
-                if(v31 > sum){
-                    v31 = sum;
-                    d31 = d41;
+                if(!rc.isLocationOccupied(l31)){
+                    p31 = 20*(rc.senseRubble(l31)/10 + 1);
+                    sum = v22 + p31;
+                    if(v31 > sum){
+                        v31 = sum;
+                        d31 = d22;
+                    }
+                    sum = v32 + p31;
+                    if(v31 > sum){
+                        v31 = sum;
+                        d31 = d32;
+                    }
+                    sum = v42 + p31;
+                    if(v31 > sum){
+                        v31 = sum;
+                        d31 = d42;
+                    }
+                    sum = v41 + p31;
+                    if(v31 > sum){
+                        v31 = sum;
+                        d31 = d41;
+                    }
                 }
             }
             if(rc.onTheMap(l37)){
-                p37 = 20*(rc.senseRubble(l37)/10 + 1);
-                sum = v26 + p37;
-                if(v37 > sum){
-                    v37 = sum;
-                    d37 = d26;
-                }
-                sum = v47 + p37;
-                if(v37 > sum){
-                    v37 = sum;
-                    d37 = d47;
-                }
-                sum = v46 + p37;
-                if(v37 > sum){
-                    v37 = sum;
-                    d37 = d46;
-                }
-                sum = v36 + p37;
-                if(v37 > sum){
-                    v37 = sum;
-                    d37 = d36;
+                if(!rc.isLocationOccupied(l37)){
+                    p37 = 20*(rc.senseRubble(l37)/10 + 1);
+                    sum = v26 + p37;
+                    if(v37 > sum){
+                        v37 = sum;
+                        d37 = d26;
+                    }
+                    sum = v47 + p37;
+                    if(v37 > sum){
+                        v37 = sum;
+                        d37 = d47;
+                    }
+                    sum = v46 + p37;
+                    if(v37 > sum){
+                        v37 = sum;
+                        d37 = d46;
+                    }
+                    sum = v36 + p37;
+                    if(v37 > sum){
+                        v37 = sum;
+                        d37 = d36;
+                    }
                 }
             }
             if(rc.onTheMap(l71)){
-                p71 = 20*(rc.senseRubble(l71)/10 + 1);
-                sum = v61 + p71;
-                if(v71 > sum){
-                    v71 = sum;
-                    d71 = d61;
-                }
-                sum = v62 + p71;
-                if(v71 > sum){
-                    v71 = sum;
-                    d71 = d62;
-                }
-                sum = v72 + p71;
-                if(v71 > sum){
-                    v71 = sum;
-                    d71 = d72;
-                }
-                sum = v82 + p71;
-                if(v71 > sum){
-                    v71 = sum;
-                    d71 = d82;
+                if(!rc.isLocationOccupied(l71)){
+                    p71 = 20*(rc.senseRubble(l71)/10 + 1);
+                    sum = v61 + p71;
+                    if(v71 > sum){
+                        v71 = sum;
+                        d71 = d61;
+                    }
+                    sum = v62 + p71;
+                    if(v71 > sum){
+                        v71 = sum;
+                        d71 = d62;
+                    }
+                    sum = v72 + p71;
+                    if(v71 > sum){
+                        v71 = sum;
+                        d71 = d72;
+                    }
+                    sum = v82 + p71;
+                    if(v71 > sum){
+                        v71 = sum;
+                        d71 = d82;
+                    }
                 }
             }
             if(rc.onTheMap(l77)){
-                p77 = 20*(rc.senseRubble(l77)/10 + 1);
-                sum = v66 + p77;
-                if(v77 > sum){
-                    v77 = sum;
-                    d77 = d66;
-                }
-                sum = v67 + p77;
-                if(v77 > sum){
-                    v77 = sum;
-                    d77 = d67;
-                }
-                sum = v86 + p77;
-                if(v77 > sum){
-                    v77 = sum;
-                    d77 = d86;
-                }
-                sum = v76 + p77;
-                if(v77 > sum){
-                    v77 = sum;
-                    d77 = d76;
+                if(!rc.isLocationOccupied(l77)){
+                    p77 = 20*(rc.senseRubble(l77)/10 + 1);
+                    sum = v66 + p77;
+                    if(v77 > sum){
+                        v77 = sum;
+                        d77 = d66;
+                    }
+                    sum = v67 + p77;
+                    if(v77 > sum){
+                        v77 = sum;
+                        d77 = d67;
+                    }
+                    sum = v86 + p77;
+                    if(v77 > sum){
+                        v77 = sum;
+                        d77 = d86;
+                    }
+                    sum = v76 + p77;
+                    if(v77 > sum){
+                        v77 = sum;
+                        d77 = d76;
+                    }
                 }
             }
             if(rc.onTheMap(l21)){
-                p21 = 20*(rc.senseRubble(l21)/10 + 1);
-                sum = v22 + p21;
-                if(v21 > sum){
-                    v21 = sum;
-                    d21 = d22;
-                }
-                sum = v32 + p21;
-                if(v21 > sum){
-                    v21 = sum;
-                    d21 = d32;
-                }
-                sum = v31 + p21;
-                if(v21 > sum){
-                    v21 = sum;
-                    d21 = d31;
+                if(!rc.isLocationOccupied(l21)){
+                    p21 = 20*(rc.senseRubble(l21)/10 + 1);
+                    sum = v22 + p21;
+                    if(v21 > sum){
+                        v21 = sum;
+                        d21 = d22;
+                    }
+                    sum = v32 + p21;
+                    if(v21 > sum){
+                        v21 = sum;
+                        d21 = d32;
+                    }
+                    sum = v31 + p21;
+                    if(v21 > sum){
+                        v21 = sum;
+                        d21 = d31;
+                    }
                 }
             }
             if(rc.onTheMap(l27)){
-                p27 = 20*(rc.senseRubble(l27)/10 + 1);
-                sum = v37 + p27;
-                if(v27 > sum){
-                    v27 = sum;
-                    d27 = d37;
-                }
-                sum = v36 + p27;
-                if(v27 > sum){
-                    v27 = sum;
-                    d27 = d36;
-                }
-                sum = v26 + p27;
-                if(v27 > sum){
-                    v27 = sum;
-                    d27 = d26;
+                if(!rc.isLocationOccupied(l27)){
+                    p27 = 20*(rc.senseRubble(l27)/10 + 1);
+                    sum = v37 + p27;
+                    if(v27 > sum){
+                        v27 = sum;
+                        d27 = d37;
+                    }
+                    sum = v36 + p27;
+                    if(v27 > sum){
+                        v27 = sum;
+                        d27 = d36;
+                    }
+                    sum = v26 + p27;
+                    if(v27 > sum){
+                        v27 = sum;
+                        d27 = d26;
+                    }
                 }
             }
             if(rc.onTheMap(l81)){
-                p81 = 20*(rc.senseRubble(l81)/10 + 1);
-                sum = v71 + p81;
-                if(v81 > sum){
-                    v81 = sum;
-                    d81 = d71;
-                }
-                sum = v72 + p81;
-                if(v81 > sum){
-                    v81 = sum;
-                    d81 = d72;
-                }
-                sum = v82 + p81;
-                if(v81 > sum){
-                    v81 = sum;
-                    d81 = d82;
+                if(!rc.isLocationOccupied(l81)){
+                    p81 = 20*(rc.senseRubble(l81)/10 + 1);
+                    sum = v71 + p81;
+                    if(v81 > sum){
+                        v81 = sum;
+                        d81 = d71;
+                    }
+                    sum = v72 + p81;
+                    if(v81 > sum){
+                        v81 = sum;
+                        d81 = d72;
+                    }
+                    sum = v82 + p81;
+                    if(v81 > sum){
+                        v81 = sum;
+                        d81 = d82;
+                    }
                 }
             }
             if(rc.onTheMap(l87)){
-                p87 = 20*(rc.senseRubble(l87)/10 + 1);
-                sum = v76 + p87;
-                if(v87 > sum){
-                    v87 = sum;
-                    d87 = d76;
-                }
-                sum = v77 + p87;
-                if(v87 > sum){
-                    v87 = sum;
-                    d87 = d77;
-                }
-                sum = v86 + p87;
-                if(v87 > sum){
-                    v87 = sum;
-                    d87 = d86;
+                if(!rc.isLocationOccupied(l87)){
+                    p87 = 20*(rc.senseRubble(l87)/10 + 1);
+                    sum = v76 + p87;
+                    if(v87 > sum){
+                        v87 = sum;
+                        d87 = d76;
+                    }
+                    sum = v77 + p87;
+                    if(v87 > sum){
+                        v87 = sum;
+                        d87 = d77;
+                    }
+                    sum = v86 + p87;
+                    if(v87 > sum){
+                        v87 = sum;
+                        d87 = d86;
+                    }
                 }
             }
             if(rc.onTheMap(l14)){
-                p14 = 20*(rc.senseRubble(l14)/10 + 1);
-                sum = v25 + p14;
-                if(v14 > sum){
-                    v14 = sum;
-                    d14 = d25;
-                }
-                sum = v24 + p14;
-                if(v14 > sum){
-                    v14 = sum;
-                    d14 = d24;
-                }
-                sum = v23 + p14;
-                if(v14 > sum){
-                    v14 = sum;
-                    d14 = d23;
+                if(!rc.isLocationOccupied(l14)){
+                    p14 = 20*(rc.senseRubble(l14)/10 + 1);
+                    sum = v25 + p14;
+                    if(v14 > sum){
+                        v14 = sum;
+                        d14 = d25;
+                    }
+                    sum = v24 + p14;
+                    if(v14 > sum){
+                        v14 = sum;
+                        d14 = d24;
+                    }
+                    sum = v23 + p14;
+                    if(v14 > sum){
+                        v14 = sum;
+                        d14 = d23;
+                    }
                 }
             }
             if(rc.onTheMap(l94)){
-                p94 = 20*(rc.senseRubble(l94)/10 + 1);
-                sum = v83 + p94;
-                if(v94 > sum){
-                    v94 = sum;
-                    d94 = d83;
-                }
-                sum = v84 + p94;
-                if(v94 > sum){
-                    v94 = sum;
-                    d94 = d84;
-                }
-                sum = v85 + p94;
-                if(v94 > sum){
-                    v94 = sum;
-                    d94 = d85;
+                if(!rc.isLocationOccupied(l94)){
+                    p94 = 20*(rc.senseRubble(l94)/10 + 1);
+                    sum = v83 + p94;
+                    if(v94 > sum){
+                        v94 = sum;
+                        d94 = d83;
+                    }
+                    sum = v84 + p94;
+                    if(v94 > sum){
+                        v94 = sum;
+                        d94 = d84;
+                    }
+                    sum = v85 + p94;
+                    if(v94 > sum){
+                        v94 = sum;
+                        d94 = d85;
+                    }
                 }
             }
             if(rc.onTheMap(l50)){
-                p50 = 20*(rc.senseRubble(l50)/10 + 1);
-                sum = v41 + p50;
-                if(v50 > sum){
-                    v50 = sum;
-                    d50 = d41;
-                }
-                sum = v51 + p50;
-                if(v50 > sum){
-                    v50 = sum;
-                    d50 = d51;
-                }
-                sum = v61 + p50;
-                if(v50 > sum){
-                    v50 = sum;
-                    d50 = d61;
+                if(!rc.isLocationOccupied(l50)){
+                    p50 = 20*(rc.senseRubble(l50)/10 + 1);
+                    sum = v41 + p50;
+                    if(v50 > sum){
+                        v50 = sum;
+                        d50 = d41;
+                    }
+                    sum = v51 + p50;
+                    if(v50 > sum){
+                        v50 = sum;
+                        d50 = d51;
+                    }
+                    sum = v61 + p50;
+                    if(v50 > sum){
+                        v50 = sum;
+                        d50 = d61;
+                    }
                 }
             }
             if(rc.onTheMap(l58)){
-                p58 = 20*(rc.senseRubble(l58)/10 + 1);
-                sum = v47 + p58;
-                if(v58 > sum){
-                    v58 = sum;
-                    d58 = d47;
-                }
-                sum = v67 + p58;
-                if(v58 > sum){
-                    v58 = sum;
-                    d58 = d67;
-                }
-                sum = v57 + p58;
-                if(v58 > sum){
-                    v58 = sum;
-                    d58 = d57;
+                if(!rc.isLocationOccupied(l58)){
+                    p58 = 20*(rc.senseRubble(l58)/10 + 1);
+                    sum = v47 + p58;
+                    if(v58 > sum){
+                        v58 = sum;
+                        d58 = d47;
+                    }
+                    sum = v67 + p58;
+                    if(v58 > sum){
+                        v58 = sum;
+                        d58 = d67;
+                    }
+                    sum = v57 + p58;
+                    if(v58 > sum){
+                        v58 = sum;
+                        d58 = d57;
+                    }
                 }
             }
             if(rc.onTheMap(l13)){
-                p13 = 20*(rc.senseRubble(l13)/10 + 1);
-                sum = v14 + p13;
-                if(v13 > sum){
-                    v13 = sum;
-                    d13 = d14;
-                }
-                sum = v24 + p13;
-                if(v13 > sum){
-                    v13 = sum;
-                    d13 = d24;
-                }
-                sum = v23 + p13;
-                if(v13 > sum){
-                    v13 = sum;
-                    d13 = d23;
-                }
-                sum = v22 + p13;
-                if(v13 > sum){
-                    v13 = sum;
-                    d13 = d22;
+                if(!rc.isLocationOccupied(l13)){
+                    p13 = 20*(rc.senseRubble(l13)/10 + 1);
+                    sum = v14 + p13;
+                    if(v13 > sum){
+                        v13 = sum;
+                        d13 = d14;
+                    }
+                    sum = v24 + p13;
+                    if(v13 > sum){
+                        v13 = sum;
+                        d13 = d24;
+                    }
+                    sum = v23 + p13;
+                    if(v13 > sum){
+                        v13 = sum;
+                        d13 = d23;
+                    }
+                    sum = v22 + p13;
+                    if(v13 > sum){
+                        v13 = sum;
+                        d13 = d22;
+                    }
                 }
             }
             if(rc.onTheMap(l15)){
-                p15 = 20*(rc.senseRubble(l15)/10 + 1);
-                sum = v26 + p15;
-                if(v15 > sum){
-                    v15 = sum;
-                    d15 = d26;
-                }
-                sum = v25 + p15;
-                if(v15 > sum){
-                    v15 = sum;
-                    d15 = d25;
-                }
-                sum = v24 + p15;
-                if(v15 > sum){
-                    v15 = sum;
-                    d15 = d24;
-                }
-                sum = v14 + p15;
-                if(v15 > sum){
-                    v15 = sum;
-                    d15 = d14;
+                if(!rc.isLocationOccupied(l15)){
+                    p15 = 20*(rc.senseRubble(l15)/10 + 1);
+                    sum = v26 + p15;
+                    if(v15 > sum){
+                        v15 = sum;
+                        d15 = d26;
+                    }
+                    sum = v25 + p15;
+                    if(v15 > sum){
+                        v15 = sum;
+                        d15 = d25;
+                    }
+                    sum = v24 + p15;
+                    if(v15 > sum){
+                        v15 = sum;
+                        d15 = d24;
+                    }
+                    sum = v14 + p15;
+                    if(v15 > sum){
+                        v15 = sum;
+                        d15 = d14;
+                    }
                 }
             }
             if(rc.onTheMap(l93)){
-                p93 = 20*(rc.senseRubble(l93)/10 + 1);
-                sum = v82 + p93;
-                if(v93 > sum){
-                    v93 = sum;
-                    d93 = d82;
-                }
-                sum = v83 + p93;
-                if(v93 > sum){
-                    v93 = sum;
-                    d93 = d83;
-                }
-                sum = v84 + p93;
-                if(v93 > sum){
-                    v93 = sum;
-                    d93 = d84;
-                }
-                sum = v94 + p93;
-                if(v93 > sum){
-                    v93 = sum;
-                    d93 = d94;
+                if(!rc.isLocationOccupied(l93)){
+                    p93 = 20*(rc.senseRubble(l93)/10 + 1);
+                    sum = v82 + p93;
+                    if(v93 > sum){
+                        v93 = sum;
+                        d93 = d82;
+                    }
+                    sum = v83 + p93;
+                    if(v93 > sum){
+                        v93 = sum;
+                        d93 = d83;
+                    }
+                    sum = v84 + p93;
+                    if(v93 > sum){
+                        v93 = sum;
+                        d93 = d84;
+                    }
+                    sum = v94 + p93;
+                    if(v93 > sum){
+                        v93 = sum;
+                        d93 = d94;
+                    }
                 }
             }
             if(rc.onTheMap(l95)){
-                p95 = 20*(rc.senseRubble(l95)/10 + 1);
-                sum = v84 + p95;
-                if(v95 > sum){
-                    v95 = sum;
-                    d95 = d84;
-                }
-                sum = v85 + p95;
-                if(v95 > sum){
-                    v95 = sum;
-                    d95 = d85;
-                }
-                sum = v86 + p95;
-                if(v95 > sum){
-                    v95 = sum;
-                    d95 = d86;
-                }
-                sum = v94 + p95;
-                if(v95 > sum){
-                    v95 = sum;
-                    d95 = d94;
+                if(!rc.isLocationOccupied(l95)){
+                    p95 = 20*(rc.senseRubble(l95)/10 + 1);
+                    sum = v84 + p95;
+                    if(v95 > sum){
+                        v95 = sum;
+                        d95 = d84;
+                    }
+                    sum = v85 + p95;
+                    if(v95 > sum){
+                        v95 = sum;
+                        d95 = d85;
+                    }
+                    sum = v86 + p95;
+                    if(v95 > sum){
+                        v95 = sum;
+                        d95 = d86;
+                    }
+                    sum = v94 + p95;
+                    if(v95 > sum){
+                        v95 = sum;
+                        d95 = d94;
+                    }
                 }
             }
             if(rc.onTheMap(l40)){
-                p40 = 20*(rc.senseRubble(l40)/10 + 1);
-                sum = v31 + p40;
-                if(v40 > sum){
-                    v40 = sum;
-                    d40 = d31;
-                }
-                sum = v41 + p40;
-                if(v40 > sum){
-                    v40 = sum;
-                    d40 = d41;
-                }
-                sum = v51 + p40;
-                if(v40 > sum){
-                    v40 = sum;
-                    d40 = d51;
-                }
-                sum = v50 + p40;
-                if(v40 > sum){
-                    v40 = sum;
-                    d40 = d50;
+                if(!rc.isLocationOccupied(l40)){
+                    p40 = 20*(rc.senseRubble(l40)/10 + 1);
+                    sum = v31 + p40;
+                    if(v40 > sum){
+                        v40 = sum;
+                        d40 = d31;
+                    }
+                    sum = v41 + p40;
+                    if(v40 > sum){
+                        v40 = sum;
+                        d40 = d41;
+                    }
+                    sum = v51 + p40;
+                    if(v40 > sum){
+                        v40 = sum;
+                        d40 = d51;
+                    }
+                    sum = v50 + p40;
+                    if(v40 > sum){
+                        v40 = sum;
+                        d40 = d50;
+                    }
                 }
             }
             if(rc.onTheMap(l48)){
-                p48 = 20*(rc.senseRubble(l48)/10 + 1);
-                sum = v37 + p48;
-                if(v48 > sum){
-                    v48 = sum;
-                    d48 = d37;
-                }
-                sum = v58 + p48;
-                if(v48 > sum){
-                    v48 = sum;
-                    d48 = d58;
-                }
-                sum = v57 + p48;
-                if(v48 > sum){
-                    v48 = sum;
-                    d48 = d57;
-                }
-                sum = v47 + p48;
-                if(v48 > sum){
-                    v48 = sum;
-                    d48 = d47;
+                if(!rc.isLocationOccupied(l48)){
+                    p48 = 20*(rc.senseRubble(l48)/10 + 1);
+                    sum = v37 + p48;
+                    if(v48 > sum){
+                        v48 = sum;
+                        d48 = d37;
+                    }
+                    sum = v58 + p48;
+                    if(v48 > sum){
+                        v48 = sum;
+                        d48 = d58;
+                    }
+                    sum = v57 + p48;
+                    if(v48 > sum){
+                        v48 = sum;
+                        d48 = d57;
+                    }
+                    sum = v47 + p48;
+                    if(v48 > sum){
+                        v48 = sum;
+                        d48 = d47;
+                    }
                 }
             }
             if(rc.onTheMap(l60)){
-                p60 = 20*(rc.senseRubble(l60)/10 + 1);
-                sum = v50 + p60;
-                if(v60 > sum){
-                    v60 = sum;
-                    d60 = d50;
-                }
-                sum = v51 + p60;
-                if(v60 > sum){
-                    v60 = sum;
-                    d60 = d51;
-                }
-                sum = v61 + p60;
-                if(v60 > sum){
-                    v60 = sum;
-                    d60 = d61;
-                }
-                sum = v71 + p60;
-                if(v60 > sum){
-                    v60 = sum;
-                    d60 = d71;
+                if(!rc.isLocationOccupied(l60)){
+                    p60 = 20*(rc.senseRubble(l60)/10 + 1);
+                    sum = v50 + p60;
+                    if(v60 > sum){
+                        v60 = sum;
+                        d60 = d50;
+                    }
+                    sum = v51 + p60;
+                    if(v60 > sum){
+                        v60 = sum;
+                        d60 = d51;
+                    }
+                    sum = v61 + p60;
+                    if(v60 > sum){
+                        v60 = sum;
+                        d60 = d61;
+                    }
+                    sum = v71 + p60;
+                    if(v60 > sum){
+                        v60 = sum;
+                        d60 = d71;
+                    }
                 }
             }
             if(rc.onTheMap(l68)){
-                p68 = 20*(rc.senseRubble(l68)/10 + 1);
-                sum = v57 + p68;
-                if(v68 > sum){
-                    v68 = sum;
-                    d68 = d57;
-                }
-                sum = v58 + p68;
-                if(v68 > sum){
-                    v68 = sum;
-                    d68 = d58;
-                }
-                sum = v77 + p68;
-                if(v68 > sum){
-                    v68 = sum;
-                    d68 = d77;
-                }
-                sum = v67 + p68;
-                if(v68 > sum){
-                    v68 = sum;
-                    d68 = d67;
+                if(!rc.isLocationOccupied(l68)){
+                    p68 = 20*(rc.senseRubble(l68)/10 + 1);
+                    sum = v57 + p68;
+                    if(v68 > sum){
+                        v68 = sum;
+                        d68 = d57;
+                    }
+                    sum = v58 + p68;
+                    if(v68 > sum){
+                        v68 = sum;
+                        d68 = d58;
+                    }
+                    sum = v77 + p68;
+                    if(v68 > sum){
+                        v68 = sum;
+                        d68 = d77;
+                    }
+                    sum = v67 + p68;
+                    if(v68 > sum){
+                        v68 = sum;
+                        d68 = d67;
+                    }
                 }
             }
             if(rc.onTheMap(l12)){
-                p12 = 20*(rc.senseRubble(l12)/10 + 1);
-                sum = v13 + p12;
-                if(v12 > sum){
-                    v12 = sum;
-                    d12 = d13;
-                }
-                sum = v23 + p12;
-                if(v12 > sum){
-                    v12 = sum;
-                    d12 = d23;
-                }
-                sum = v22 + p12;
-                if(v12 > sum){
-                    v12 = sum;
-                    d12 = d22;
-                }
-                sum = v21 + p12;
-                if(v12 > sum){
-                    v12 = sum;
-                    d12 = d21;
+                if(!rc.isLocationOccupied(l12)){
+                    p12 = 20*(rc.senseRubble(l12)/10 + 1);
+                    sum = v13 + p12;
+                    if(v12 > sum){
+                        v12 = sum;
+                        d12 = d13;
+                    }
+                    sum = v23 + p12;
+                    if(v12 > sum){
+                        v12 = sum;
+                        d12 = d23;
+                    }
+                    sum = v22 + p12;
+                    if(v12 > sum){
+                        v12 = sum;
+                        d12 = d22;
+                    }
+                    sum = v21 + p12;
+                    if(v12 > sum){
+                        v12 = sum;
+                        d12 = d21;
+                    }
                 }
             }
             if(rc.onTheMap(l16)){
-                p16 = 20*(rc.senseRubble(l16)/10 + 1);
-                sum = v27 + p16;
-                if(v16 > sum){
-                    v16 = sum;
-                    d16 = d27;
-                }
-                sum = v26 + p16;
-                if(v16 > sum){
-                    v16 = sum;
-                    d16 = d26;
-                }
-                sum = v25 + p16;
-                if(v16 > sum){
-                    v16 = sum;
-                    d16 = d25;
-                }
-                sum = v15 + p16;
-                if(v16 > sum){
-                    v16 = sum;
-                    d16 = d15;
+                if(!rc.isLocationOccupied(l16)){
+                    p16 = 20*(rc.senseRubble(l16)/10 + 1);
+                    sum = v27 + p16;
+                    if(v16 > sum){
+                        v16 = sum;
+                        d16 = d27;
+                    }
+                    sum = v26 + p16;
+                    if(v16 > sum){
+                        v16 = sum;
+                        d16 = d26;
+                    }
+                    sum = v25 + p16;
+                    if(v16 > sum){
+                        v16 = sum;
+                        d16 = d25;
+                    }
+                    sum = v15 + p16;
+                    if(v16 > sum){
+                        v16 = sum;
+                        d16 = d15;
+                    }
                 }
             }
             if(rc.onTheMap(l92)){
-                p92 = 20*(rc.senseRubble(l92)/10 + 1);
-                sum = v81 + p92;
-                if(v92 > sum){
-                    v92 = sum;
-                    d92 = d81;
-                }
-                sum = v82 + p92;
-                if(v92 > sum){
-                    v92 = sum;
-                    d92 = d82;
-                }
-                sum = v83 + p92;
-                if(v92 > sum){
-                    v92 = sum;
-                    d92 = d83;
-                }
-                sum = v93 + p92;
-                if(v92 > sum){
-                    v92 = sum;
-                    d92 = d93;
+                if(!rc.isLocationOccupied(l92)){
+                    p92 = 20*(rc.senseRubble(l92)/10 + 1);
+                    sum = v81 + p92;
+                    if(v92 > sum){
+                        v92 = sum;
+                        d92 = d81;
+                    }
+                    sum = v82 + p92;
+                    if(v92 > sum){
+                        v92 = sum;
+                        d92 = d82;
+                    }
+                    sum = v83 + p92;
+                    if(v92 > sum){
+                        v92 = sum;
+                        d92 = d83;
+                    }
+                    sum = v93 + p92;
+                    if(v92 > sum){
+                        v92 = sum;
+                        d92 = d93;
+                    }
                 }
             }
             if(rc.onTheMap(l96)){
-                p96 = 20*(rc.senseRubble(l96)/10 + 1);
-                sum = v85 + p96;
-                if(v96 > sum){
-                    v96 = sum;
-                    d96 = d85;
-                }
-                sum = v86 + p96;
-                if(v96 > sum){
-                    v96 = sum;
-                    d96 = d86;
-                }
-                sum = v87 + p96;
-                if(v96 > sum){
-                    v96 = sum;
-                    d96 = d87;
-                }
-                sum = v95 + p96;
-                if(v96 > sum){
-                    v96 = sum;
-                    d96 = d95;
+                if(!rc.isLocationOccupied(l96)){
+                    p96 = 20*(rc.senseRubble(l96)/10 + 1);
+                    sum = v85 + p96;
+                    if(v96 > sum){
+                        v96 = sum;
+                        d96 = d85;
+                    }
+                    sum = v86 + p96;
+                    if(v96 > sum){
+                        v96 = sum;
+                        d96 = d86;
+                    }
+                    sum = v87 + p96;
+                    if(v96 > sum){
+                        v96 = sum;
+                        d96 = d87;
+                    }
+                    sum = v95 + p96;
+                    if(v96 > sum){
+                        v96 = sum;
+                        d96 = d95;
+                    }
                 }
             }
             if(rc.onTheMap(l30)){
-                p30 = 20*(rc.senseRubble(l30)/10 + 1);
-                sum = v21 + p30;
-                if(v30 > sum){
-                    v30 = sum;
-                    d30 = d21;
-                }
-                sum = v31 + p30;
-                if(v30 > sum){
-                    v30 = sum;
-                    d30 = d31;
-                }
-                sum = v41 + p30;
-                if(v30 > sum){
-                    v30 = sum;
-                    d30 = d41;
-                }
-                sum = v40 + p30;
-                if(v30 > sum){
-                    v30 = sum;
-                    d30 = d40;
+                if(!rc.isLocationOccupied(l30)){
+                    p30 = 20*(rc.senseRubble(l30)/10 + 1);
+                    sum = v21 + p30;
+                    if(v30 > sum){
+                        v30 = sum;
+                        d30 = d21;
+                    }
+                    sum = v31 + p30;
+                    if(v30 > sum){
+                        v30 = sum;
+                        d30 = d31;
+                    }
+                    sum = v41 + p30;
+                    if(v30 > sum){
+                        v30 = sum;
+                        d30 = d41;
+                    }
+                    sum = v40 + p30;
+                    if(v30 > sum){
+                        v30 = sum;
+                        d30 = d40;
+                    }
                 }
             }
             if(rc.onTheMap(l38)){
-                p38 = 20*(rc.senseRubble(l38)/10 + 1);
-                sum = v27 + p38;
-                if(v38 > sum){
-                    v38 = sum;
-                    d38 = d27;
-                }
-                sum = v48 + p38;
-                if(v38 > sum){
-                    v38 = sum;
-                    d38 = d48;
-                }
-                sum = v47 + p38;
-                if(v38 > sum){
-                    v38 = sum;
-                    d38 = d47;
-                }
-                sum = v37 + p38;
-                if(v38 > sum){
-                    v38 = sum;
-                    d38 = d37;
+                if(!rc.isLocationOccupied(l38)){
+                    p38 = 20*(rc.senseRubble(l38)/10 + 1);
+                    sum = v27 + p38;
+                    if(v38 > sum){
+                        v38 = sum;
+                        d38 = d27;
+                    }
+                    sum = v48 + p38;
+                    if(v38 > sum){
+                        v38 = sum;
+                        d38 = d48;
+                    }
+                    sum = v47 + p38;
+                    if(v38 > sum){
+                        v38 = sum;
+                        d38 = d47;
+                    }
+                    sum = v37 + p38;
+                    if(v38 > sum){
+                        v38 = sum;
+                        d38 = d37;
+                    }
                 }
             }
             if(rc.onTheMap(l70)){
-                p70 = 20*(rc.senseRubble(l70)/10 + 1);
-                sum = v60 + p70;
-                if(v70 > sum){
-                    v70 = sum;
-                    d70 = d60;
-                }
-                sum = v61 + p70;
-                if(v70 > sum){
-                    v70 = sum;
-                    d70 = d61;
-                }
-                sum = v71 + p70;
-                if(v70 > sum){
-                    v70 = sum;
-                    d70 = d71;
-                }
-                sum = v81 + p70;
-                if(v70 > sum){
-                    v70 = sum;
-                    d70 = d81;
+                if(!rc.isLocationOccupied(l70)){
+                    p70 = 20*(rc.senseRubble(l70)/10 + 1);
+                    sum = v60 + p70;
+                    if(v70 > sum){
+                        v70 = sum;
+                        d70 = d60;
+                    }
+                    sum = v61 + p70;
+                    if(v70 > sum){
+                        v70 = sum;
+                        d70 = d61;
+                    }
+                    sum = v71 + p70;
+                    if(v70 > sum){
+                        v70 = sum;
+                        d70 = d71;
+                    }
+                    sum = v81 + p70;
+                    if(v70 > sum){
+                        v70 = sum;
+                        d70 = d81;
+                    }
                 }
             }
             if(rc.onTheMap(l78)){
-                p78 = 20*(rc.senseRubble(l78)/10 + 1);
-                sum = v67 + p78;
-                if(v78 > sum){
-                    v78 = sum;
-                    d78 = d67;
-                }
-                sum = v68 + p78;
-                if(v78 > sum){
-                    v78 = sum;
-                    d78 = d68;
-                }
-                sum = v87 + p78;
-                if(v78 > sum){
-                    v78 = sum;
-                    d78 = d87;
-                }
-                sum = v77 + p78;
-                if(v78 > sum){
-                    v78 = sum;
-                    d78 = d77;
+                if(!rc.isLocationOccupied(l78)){
+                    p78 = 20*(rc.senseRubble(l78)/10 + 1);
+                    sum = v67 + p78;
+                    if(v78 > sum){
+                        v78 = sum;
+                        d78 = d67;
+                    }
+                    sum = v68 + p78;
+                    if(v78 > sum){
+                        v78 = sum;
+                        d78 = d68;
+                    }
+                    sum = v87 + p78;
+                    if(v78 > sum){
+                        v78 = sum;
+                        d78 = d87;
+                    }
+                    sum = v77 + p78;
+                    if(v78 > sum){
+                        v78 = sum;
+                        d78 = d77;
+                    }
                 }
             }
-
             System.out.println("Ran BFS: " + Clock.getBytecodesLeft());
-
             int dx = target.x - l54.x;
-            int dy = target.x - l54.y;
+            int dy = target.y - l54.y;
             switch (dx) {
                 case -4:
                     switch (dy){
@@ -2263,11 +2378,9 @@ public class BFS20{
                     }
                     break;
             }
-
             System.out.println("Didn't find within radius, gonna use distance heuristic: " + Clock.getBytecodesLeft());
-
             Direction ans = null;
-            double bestScore = 0;
+            double bestScore = Double.MAX_VALUE;
             double currScore;
             currScore = l22.distanceSquaredTo(target) + v22/10;
             if(currScore < bestScore){
@@ -2433,5 +2546,30 @@ public class BFS20{
         } catch (Exception e){
             e.printStackTrace();
         }return null;
+    }
+
+    public Direction getBestDir(MapLocation target) throws GameActionException {
+        Direction targetDir = robot.myLoc.directionTo(target);
+//        switch(targetDir){
+//            case NORTH:
+//                return runBFSNorth(target);
+//            case SOUTH:
+//                return runBFSSouth(target);
+//            case EAST:
+//                return runBFSEast(target);
+//            case WEST:
+//                return runBFSWest(target);
+//            case NORTHEAST:
+//                return runBFSNortheast(target);
+//            case NORTHWEST:
+//                return runBFSNorthwest(target);
+//            case SOUTHEAST:
+//                return runBFSSoutheast(target);
+//            case SOUTHWEST:
+//                return runBFSSouthwest(target);
+//        }
+        return runBFS(target);
+//        System.out.println("ERROR DIRECTION UNKNOWN");
+//        return null;
     }
 }

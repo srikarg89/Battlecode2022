@@ -161,7 +161,7 @@ for i in range(1, len(order)):
 f.write("System.out.println(\"Ran BFS: \" + Clock.getBytecodesLeft());\n")
 
 f.write("int dx = target.x - l{}{}.x;\n".format(start_loc[0], start_loc[1]))
-f.write("int dy = target.x - l{}{}.y;\n".format(start_loc[0], start_loc[1]))
+f.write("int dy = target.y - l{}{}.y;\n".format(start_loc[0], start_loc[1]))
 
 f.write("switch (dx) {\n")
 for dx in sorted(list(diff_dict.keys())):

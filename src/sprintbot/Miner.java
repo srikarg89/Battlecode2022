@@ -37,6 +37,8 @@ public class Miner extends Robot {
         }
         assert(archonLoc != null);
 
+        System.out.println("My location: " + rc.getLocation());
+
         // Bytecode here is 5800 (1700 used before this line)
         // Logger.Log("A: " + Clock.getBytecodesLeft());
 
@@ -79,7 +81,7 @@ public class Miner extends Robot {
                 MapLocation targetLoc = findClosestMine();
                 // Logger.Log("Found closest mine: " + Clock.getBytecodesLeft());
                 if(targetLoc == null){
-                    if(currentTarget == null || myLoc.distanceSquaredTo(currentTarget) <= 4){
+                    if(currentTarget == null || myLoc.distanceSquaredTo(currentTarget) <= 8){
                         currentTarget = nav.getRandomMapLocation();
                     }
                     targetLoc = currentTarget;

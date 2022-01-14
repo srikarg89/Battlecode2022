@@ -61,6 +61,7 @@ public class Navigation {
             visited.clear();
         }
         Direction toGo = robot.bfs.getBestDir(target);
+        System.out.println("Going in direction: " + toGo.toString());
         if (toGo == null) {
             return false;
         }

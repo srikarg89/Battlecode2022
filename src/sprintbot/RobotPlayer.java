@@ -23,7 +23,7 @@ public strictfp class RobotPlayer {
         }
 
         while (true) {
-//            if(rc.getRoundNum() > 5){
+//            if(rc.getRoundNum() > 120){
 //                rc.resign();
 //            }
 
@@ -34,7 +34,7 @@ public strictfp class RobotPlayer {
                 rc.setIndicatorString(robot.indicatorString);
 //                System.out.println("Bytecode left: " + Clock.getBytecodesLeft());
                 if(!checkBytecode(robot, rc)){
-                    rc.resign();
+//                    rc.resign();
                 }
             } catch (GameActionException e) {
                 Logger.Log("CAUGHT GAMEACTIONEXCEPTION");
