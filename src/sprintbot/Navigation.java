@@ -47,7 +47,7 @@ public class Navigation {
         Util.tryMove(oppDirections);
     }
 
-    public boolean goTo(MapLocation target) throws GameActionException {
+    public boolean goToBFS(MapLocation target) throws GameActionException {
         if (robot.myLoc.distanceSquaredTo(target) <= minDistToSatisfy) {
             return true;
         }
@@ -61,10 +61,35 @@ public class Navigation {
             visited.clear();
         }
         Direction toGo = robot.bfs.getBestDir(target);
-        System.out.println("Going in direction: " + toGo.toString());
         if (toGo == null) {
             return false;
         }
+        System.out.println("Going in direction: " + toGo.toString());
+        if (Util.tryMove(toGo)) {
+            goTo(target);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean goTo(MapLocation target) throws GameActionException {
+        if (robot.myLoc.distanceSquaredTo(target) <= minDistToSatisfy) {
+            return true;
+        }
+        rc.setIndicatorLine(robot.myLoc, target, 0, 255, 0);
+        if (!rc.isMovementReady()) {
+            return false;
+        }
+        if(currentTarget != target){
+            // Reset pathfinding vars
+            currentTarget = target;
+            visited.clear();
+        }
+        Direction toGo = fuzzynav(target);
+        if (toGo == null) {
+            return false;
+        }
+        System.out.println("Going in direction: " + toGo.toString());
         if (Util.tryMove(toGo)) {
             goTo(target);
             return true;

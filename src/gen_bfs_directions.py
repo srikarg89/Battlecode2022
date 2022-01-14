@@ -254,11 +254,13 @@ def gen_code(f, methodname, target_dir):
     f.write("Direction ans = null;\n")
     f.write("double bestScore = Double.MAX_VALUE;\n")
     f.write("double currScore;\n")
+    f.write("double tempDist;\n")
 
     edge_locs = get_edge_locs(order)
     for edge_loc in edge_locs:
         e_x, e_y = edge_loc
-        f.write("currScore = l{}{}.distanceSquaredTo(target) + v{}{}/10;\n".format(e_x, e_y, e_x, e_y))
+        f.write("tempDist = v{}{}/10;\n".format(e_x, e_y, e_x, e_y))
+        f.write("currScore = l{}{}.distanceSquaredTo(target) + tempDist*tempDist;\n".format(e_x, e_y))
         f.write("if(currScore < bestScore){\n")
         f.write("bestScore = currScore;\n")
         f.write("ans = d{}{};\n".format(e_x, e_y))
@@ -274,36 +276,6 @@ def gen_code(f, methodname, target_dir):
 
     # print(order)
     # print((5, 4) in order)
-
-f = open(OUTPUT_FILENAME, "w")
-
-f.write("package {};\n".format(PACKAGE_NAME))
-f.write("import battlecode.common.*;\n")
-f.write("public class {}{{\n".format(CLASS_NAME))
-f.write("RobotController rc;\nRobot robot;\n")
-
-f.write("{}(RobotController rc, Robot robot){{\n".format(CLASS_NAME))
-f.write("this.rc = rc;\nthis.robot=robot;\n}\n")
-
-# section 1
-full_order, _ = get_order([0, 0])
-for x, y in full_order:
-    f.write("static MapLocation l{}{};\n".format(x, y))
-    f.write("static double v{}{};\n".format(x, y))
-    f.write("static Direction d{}{};\n".format(x, y))
-    f.write("static double p{}{};\n".format(x, y))
-    f.write("\n"*2)
-
-
-# gen_code(f, "runBFSNorth", [0, 1])
-# gen_code(f, "runBFSSouth", [0, -1])
-# gen_code(f, "runBFSEast", [1, 0])
-# gen_code(f, "runBFSWest", [-1, ])
-# gen_code(f, "runBFSNortheast", [1, 1])
-# gen_code(f, "runBFSNorthwest", [-1, 1])
-# gen_code(f, "runBFSSoutheast", [1, -1])
-# gen_code(f, "runBFSSouthwest", [-1, -1])
-gen_code(f, "runBFS", [0, 0])
 
 extra_code_commented = """
     public Direction getBestDir(MapLocation target) throws GameActionException {
@@ -334,30 +306,62 @@ extra_code_commented = """
 extra_code = """
     public Direction getBestDir(MapLocation target) throws GameActionException {
         Direction targetDir = robot.myLoc.directionTo(target);
-//        switch(targetDir){
-//            case NORTH:
-//                return runBFSNorth(target);
-//            case SOUTH:
-//                return runBFSSouth(target);
-//            case EAST:
-//                return runBFSEast(target);
-//            case WEST:
-//                return runBFSWest(target);
-//            case NORTHEAST:
-//                return runBFSNortheast(target);
-//            case NORTHWEST:
-//                return runBFSNorthwest(target);
-//            case SOUTHEAST:
-//                return runBFSSoutheast(target);
-//            case SOUTHWEST:
-//                return runBFSSouthwest(target);
-//        }
-        return runBFS(target);
-//        System.out.println("ERROR DIRECTION UNKNOWN");
-//        return null;
+        switch(targetDir){
+            case NORTH:
+                return runBFSNorth(target);
+            case SOUTH:
+                return runBFSSouth(target);
+            case EAST:
+                return runBFSEast(target);
+            case WEST:
+                return runBFSWest(target);
+            case NORTHEAST:
+                return runBFSNortheast(target);
+            case NORTHWEST:
+                return runBFSNorthwest(target);
+            case SOUTHEAST:
+                return runBFSSoutheast(target);
+            case SOUTHWEST:
+                return runBFSSouthwest(target);
+        }
+//        return runBFS(target);
+        System.out.println("ERROR DIRECTION UNKNOWN");
+        return null;
     }
 """
-f.write(extra_code_commented)
+
+f = open(OUTPUT_FILENAME, "w")
+
+f.write("package {};\n".format(PACKAGE_NAME))
+f.write("import battlecode.common.*;\n")
+f.write("public class {}{{\n".format(CLASS_NAME))
+f.write("RobotController rc;\nRobot robot;\n")
+
+f.write("{}(RobotController rc, Robot robot){{\n".format(CLASS_NAME))
+f.write("this.rc = rc;\nthis.robot=robot;\n}\n")
+
+# section 1
+full_order, _ = get_order([0, 0])
+for x, y in full_order:
+    f.write("static MapLocation l{}{};\n".format(x, y))
+    f.write("static double v{}{};\n".format(x, y))
+    f.write("static Direction d{}{};\n".format(x, y))
+    f.write("static double p{}{};\n".format(x, y))
+    f.write("\n"*2)
+
+
+gen_code(f, "runBFSNorth", [0, 1])
+gen_code(f, "runBFSSouth", [0, -1])
+gen_code(f, "runBFSEast", [1, 0])
+gen_code(f, "runBFSWest", [-1, 0])
+gen_code(f, "runBFSNortheast", [1, 1])
+gen_code(f, "runBFSNorthwest", [-1, 1])
+gen_code(f, "runBFSSoutheast", [1, -1])
+gen_code(f, "runBFSSouthwest", [-1, -1])
+f.write(extra_code)
+
+# gen_code(f, "runBFS", [0, 0])
+# f.write(extra_code_commented)
 
 
 f.write("}\n")
