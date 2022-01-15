@@ -9,8 +9,8 @@ public class Robot {
     // Robot properties
     RobotController rc;
     Navigation nav;
-    BFS bfs;
-    BFSOld bfsold;
+//    BFS bfs;
+//    BFSOld bfsold;
     Comms comms;
     MapLocation myLoc;
     Team myTeam;
@@ -41,12 +41,12 @@ public class Robot {
         mapWidth = rc.getMapWidth();
         mapHeight = rc.getMapHeight();
         nav = new Navigation(rc, this);
-        if(this.myType.equals(RobotType.MINER)){
-            bfs = new BFS13(rc, this);
-        }
-        else{
-            bfs = new BFS20(rc, this);
-        }
+//        if(this.myType.equals(RobotType.MINER)){
+//            bfs = new BFS13(rc, this);
+//        }
+//        else{
+//            bfs = new BFS20(rc, this);
+//        }
 //        bfs = new BFS20(rc, this);
 //        bfsold = new BFSOld(rc, this);
         comms = new Comms(rc, this);
