@@ -1,20 +1,23 @@
-package sprintbot2;
+package sprintbot3;
 
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
+import java.util.HashSet;
+
+// TODO BFS
 public class Navigation {
     // Start of Navigation class
     RobotController rc;
     Robot robot;
     MapLocation currentTarget;
     int minDistToSatisfy = 0;
+    HashSet<Integer> visited;
     // Used in bugnav
     MapLocation[] lastVisited = new MapLocation[10];
     boolean goingLeft = true;
-    BFS20 bfs;
 
     public Navigation(RobotController rc, Robot robot){
         this.rc = rc;
@@ -22,13 +25,7 @@ public class Navigation {
         Util.rc = rc;
         Util.robot = robot;
         currentTarget = null;
-        bfs = new BFS20(rc, robot);
-    }
-
-    public void update() throws GameActionException {
-        if(!bfs.vars_are_reset){
-            bfs.resetVars();
-        }
+        visited = new HashSet<Integer>();
     }
 
     public MapLocation getRandomMapLocation() throws GameActionException {
@@ -60,16 +57,9 @@ public class Navigation {
         if(currentTarget != target){
             // Reset pathfinding vars
             currentTarget = target;
+            visited.clear();
         }
         Direction toGo = fuzzynav(target);
-//        Direction toGo = bfs.getBestDir(target);
-//        Direction toGo;
-//        if(robot.age < 2){
-//            toGo = fuzzynav(target);
-//        }
-//        else{
-//            toGo = bfs.getBestDir(target);
-//        }
         if (toGo == null) {
             return false;
         }

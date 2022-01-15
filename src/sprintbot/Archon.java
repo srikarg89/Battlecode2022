@@ -61,6 +61,8 @@ public class Archon extends Robot {
         // If the current miners can build a soldier every round, then just build a soldier every round
 
         int leadDiff = lead - prevLead;
+//        spawnUniformly(RobotType.MINER, myMiners);
+//        return;
 
         if(lead > 1500 && builderCount*30 < rc.getRoundNum() && builderCount < 4) {
 //        if(false){

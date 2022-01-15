@@ -20,7 +20,7 @@ public class Navigation {
     MapLocation[] lastVisited = new MapLocation[10];
     boolean goingLeft = true;
     int turnsToRunFuzzy = 5;
-    BFS20 bfs;
+//    BFS20 bfs;
 
     public Navigation(RobotController rc, Robot robot){
         this.rc = rc;
@@ -29,15 +29,15 @@ public class Navigation {
         Util.robot = robot;
         currentTarget = null;
         visited = new HashSet<Integer>();
-        bfs = new BFS20(rc, this.robot);
+//        bfs = new BFS20(rc, this.robot);
     }
 
-    public void update() throws GameActionException {
-        if(!bfs.vars_are_reset){
-            // Use extra turn to reset variables
-            bfs.resetVars();
-        }
-    }
+//    public void update() throws GameActionException {
+//        if(!bfs.vars_are_reset){
+//            // Use extra turn to reset variables
+//            bfs.resetVars();
+//        }
+//    }
 
     public MapLocation getRandomMapLocation() throws GameActionException {
         int x = (int)(Math.random() * robot.mapWidth);
@@ -63,25 +63,6 @@ public class Navigation {
             currentTarget = target;
             lastVisited = new MapLocation[10];
         }
-//        boolean seen = false;
-//        for(int j = 0; j < lastVisited.length; j++){
-//            if(lastVisited[j] != null){
-//                System.out.println("Last visited: " + lastVisited[j].toString());
-//            }
-//            if(lastVisited[j] != null && lastVisited[j].equals(rc.getLocation())){ // Avoid the last 5 spots i alr went to (to avoid cycles)
-//                seen = true;
-//            }
-//        }
-//        if(seen){
-//            turnsToRunFuzzy = 5;
-//        }
-//        if(turnsToRunFuzzy > 0){
-//            if(goTo(target)){
-//                turnsToRunFuzzy--;
-//                return true;
-//            }
-//            return false;
-//        }
         if (robot.myLoc.distanceSquaredTo(target) <= minDistToSatisfy) {
             return true;
         }
@@ -89,11 +70,12 @@ public class Navigation {
         if (!rc.isMovementReady()) {
             return false;
         }
-        Direction toGo = bfs.getBestDir(target);
+        Direction toGo = fuzzynav(target);
+//        Direction toGo = bfs.getBestDir(target);
         if (toGo == null) {
             return false;
         }
-        System.out.println("Going in direction: " + toGo.toString());
+//        System.out.println("Going in direction: " + toGo.toString());
         MapLocation prevLoc = rc.getLocation();
         if (Util.tryMove(toGo)) {
 //            for(int j = 0; j < lastVisited.length - 1; j++){

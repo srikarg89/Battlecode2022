@@ -1,4 +1,4 @@
-package sprintbot2;
+package testbot;
 
 import battlecode.common.*;
 
@@ -11,7 +11,6 @@ public class Robot {
     Navigation nav;
     Comms comms;
     MapLocation myLoc;
-    MapLocation prevLoc = null;
     Team myTeam;
     Team opponent;
     RobotType myType;
@@ -21,14 +20,14 @@ public class Robot {
     int mapWidth;
     int mapHeight;
     RobotInfo[] nearby;
-//    RobotInfo[] nearbyFriendlies;
+    RobotInfo[] nearbyFriendlies;
     RobotInfo[] nearbyEnemies;
     int roundNum = 1;
     String indicatorString = "";
     boolean mightDie = false;
-    int[][] rubbleMap;
 
     public Robot(RobotController rc) throws GameActionException {
+        nearby = rc.senseNearbyRobots();
         myLoc = rc.getLocation();
         this.rc = rc;
         Util.rc = rc;
@@ -42,21 +41,18 @@ public class Robot {
         age = 0;
         mapWidth = rc.getMapWidth();
         mapHeight = rc.getMapHeight();
-//        rubbleMap = new int[mapWidth][mapHeight];
         nav = new Navigation(rc, this);
         comms = new Comms(rc, this);
         if(myType != RobotType.ARCHON){
             comms.findFriendlyArchons();
         }
-        System.out.println("Time after init: " + Clock.getBytecodesLeft());
     }
 
     public void run() throws GameActionException {
         Logger.Log("My Location: " + rc.getLocation());
-        myLoc = rc.getLocation();
         roundNum = rc.getRoundNum();
         nearby = rc.senseNearbyRobots();
-//        nearbyFriendlies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam);
+        nearbyFriendlies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam);
         nearbyEnemies = rc.senseNearbyRobots(myType.visionRadiusSquared, opponent);
         if(rc.getRoundNum() == 2 && myType == RobotType.ARCHON){
             // Find teammate archons
@@ -67,9 +63,8 @@ public class Robot {
             comms.determineSymmetry();
         }
         comms.scanEnemyArchons();
-//        System.out.println("Time left after yeeting everything: " + Clock.getBytecodesLeft());
-//        nav.update();
         age++;
+        myLoc = rc.getLocation();
     }
 
     public void checkPossibleDeath() throws GameActionException {

@@ -1,8 +1,6 @@
-package sprintbot2;
+package sprintbot3;
 
 import battlecode.common.*;
-
-import java.util.Map;
 
 public class Comms {
 
@@ -13,10 +11,12 @@ public class Comms {
     final int SOLDIER_COUNT_IDX = 14;
     final int SAGE_COUNT_IDX = 15;
     final int BUILDER_COUNT_IDX = 16;
-    final int BIGGEST_THREAT_LEVEL_IDX = 40;
-    final int BIGGEST_THREAT_LOC_IDX = 41;
+    final int BIGGEST_THREAT_LEVEL_IDX = 17;
+    final int BIGGEST_THREAT_LOC_IDX = 18;
     final int THREAT_THRESHOLD = 10;
     final int ARCHON_DEATH_OFFSET = 10000;
+
+    final int LEAD_HOTSPOT_START_IDX = 38; // 63 - 25
 
     // Properties
     RobotController rc;
@@ -161,10 +161,13 @@ public class Comms {
 
     public void addRobotCount(RobotType type, int diff) throws GameActionException {
         int idx = robotTypeToIndex(type);
-        writeSharedArray(idx, rc.readSharedArray(idx) + diff);
+        int newVal = rc.readSharedArray(idx) + diff;
+        if(newVal < 0){
+            newVal = 0;
+        }
+        writeSharedArray(idx, newVal);
     }
 
-    // TODO: Keep track of robots alive not just robots spawned
     public int getRobotCount(RobotType type) throws GameActionException {
         return rc.readSharedArray(robotTypeToIndex(type));
     }
@@ -265,6 +268,30 @@ public class Comms {
                 }
             }
         }
+    }
+
+    // Lead hotspot functions
+
+    public MapLocation getBlockToExplore(){
+        return null;
+    }
+
+    public MapLocation getBlockTopLeft(int x, int y){
+        return new MapLocation(robot.comms_block_width * x, robot.comms_block_height * y);
+    }
+
+    public int getBlockWidth(int x){
+        if(x == 4){
+            return rc.getMapWidth() - robot.comms_block_width * 4;
+        }
+        return robot.comms_block_width;
+    }
+
+    public int getBlockHeight(int y){
+        if(y == 4){
+            return rc.getMapHeight() - robot.comms_block_height * 4;
+        }
+        return robot.comms_block_height;
     }
 
 }

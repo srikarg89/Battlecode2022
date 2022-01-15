@@ -2,9 +2,7 @@ package sprintbot2;
 
 import battlecode.common.*;
 
-import java.util.Map;
-
-public class Comms {
+public class Comms2 {
 
     // Constants
     final int MAX_COMMS_VAL = 65535;
@@ -13,16 +11,19 @@ public class Comms {
     final int SOLDIER_COUNT_IDX = 14;
     final int SAGE_COUNT_IDX = 15;
     final int BUILDER_COUNT_IDX = 16;
-    final int BIGGEST_THREAT_LEVEL_IDX = 40;
-    final int BIGGEST_THREAT_LOC_IDX = 41;
+    final int BIGGEST_THREAT_LEVEL_IDX = 17;
+    final int BIGGEST_THREAT_LOC_IDX = 18;
+    // TODO Comms for archon to tell miner where to go
     final int THREAT_THRESHOLD = 10;
     final int ARCHON_DEATH_OFFSET = 10000;
+
+    final int LEAD_HOTSPOT_START_IDX = 38; // 63 - 25
 
     // Properties
     RobotController rc;
     Robot robot;
 
-    public Comms(RobotController rc, Robot robot){
+    public Comms2(RobotController rc, Robot robot){
         this.rc = rc;
         this.robot = robot;
     }
@@ -59,29 +60,48 @@ public class Comms {
         if(symmetry == 0){
             symmetry = 7;
         }
-//        if(symmetry == 1 || symmetry == 2 || symmetry == 4){ // Already determined symmetry
-//            return;
-//        }
-        int[] binVals = {1, 2, 4};
-        for(int j = 0; j < 3; j++){
-            int reflectionType = j + 1;
-            int binVal = binVals[j];
-            if((symmetry & binVal) != 0){
-                MapLocation[] enemyArchonLocs = Util.reflect(robot.friendlyArchons, reflectionType);
-                for(int i = 0; i < enemyArchonLocs.length; i++){
-                    if(!rc.canSenseLocation(enemyArchonLocs[i])){
-                        continue;
+
+        if(symmetry == 1 || symmetry == 2 || symmetry == 4){ // Already determined symmetry
+            return;
+        }
+
+        int radiusToCheck = 2;
+        MapLocation[] visionLocs = rc.getAllLocationsWithinRadiusSquared(robot.myLoc, radiusToCheck); // 100 bytecode
+        if(robot.prevLoc == null){
+            for(int i = visionLocs.length; i-- > 0; ){
+                MapLocation loc = visionLocs[i];
+                robot.rubbleMap[loc.x][loc.y] = rc.senseRubble(loc) + 1;
+            }
+        }
+        else{
+            for(int i = visionLocs.length; i-- > 0; ){
+                MapLocation loc = visionLocs[i];
+                if(robot.rubbleMap[loc.x][loc.y] != 0){ // Already visited this location
+                    continue;
+                }
+                int rubble = rc.senseRubble(loc) + 1;
+                robot.rubbleMap[loc.x][loc.y] = rubble;
+                if((symmetry & 1) != 0) { // Check if symmetry is followed
+                    int symRubble = robot.rubbleMap[loc.x][robot.mapHeight - loc.y - 1];
+                    if (symRubble != 0 && symRubble != rubble) {
+                        symmetry &= 6;
                     }
-                    if(!Util.checkRobotPresent(enemyArchonLocs[i], RobotType.ARCHON, robot.myTeam.opponent())){
-                        if(!checkEnemyArchonDied(enemyArchonLocs[i])){
-                            symmetry &= (7 ^ binVal);
-                            System.out.println("Updating symmetry! New symmetry is: " + symmetry);
-                            break;
-                        }
+                }
+                if((symmetry & 2) != 0) { // Check if symmetry is followed
+                    int symRubble = robot.rubbleMap[robot.mapWidth - loc.x - 1][loc.y];
+                    if (symRubble != 0 && symRubble != rubble) {
+                        symmetry &= 5;
+                    }
+                }
+                if((symmetry & 4) != 0) { // Check if symmetry is followed
+                    int symRubble = robot.rubbleMap[robot.mapWidth - loc.x - 1][robot.mapHeight - loc.y - 1];
+                    if (symRubble != 0 && symRubble != rubble) {
+                        symmetry &= 3;
                     }
                 }
             }
         }
+
         writeSharedArray(SYMMETRY_IDX, symmetry);
 
     }
@@ -161,10 +181,13 @@ public class Comms {
 
     public void addRobotCount(RobotType type, int diff) throws GameActionException {
         int idx = robotTypeToIndex(type);
-        writeSharedArray(idx, rc.readSharedArray(idx) + diff);
+        int newVal = rc.readSharedArray(idx) + diff;
+        if(newVal < 0){
+            newVal = 0;
+        }
+        writeSharedArray(idx, newVal);
     }
 
-    // TODO: Keep track of robots alive not just robots spawned
     public int getRobotCount(RobotType type) throws GameActionException {
         return rc.readSharedArray(robotTypeToIndex(type));
     }

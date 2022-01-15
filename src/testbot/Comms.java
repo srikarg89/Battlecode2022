@@ -1,8 +1,6 @@
-package sprintbot2;
+package testbot;
 
 import battlecode.common.*;
-
-import java.util.Map;
 
 public class Comms {
 
@@ -161,10 +159,13 @@ public class Comms {
 
     public void addRobotCount(RobotType type, int diff) throws GameActionException {
         int idx = robotTypeToIndex(type);
-        writeSharedArray(idx, rc.readSharedArray(idx) + diff);
+        int newVal = rc.readSharedArray(idx) + diff;
+        if(newVal < 0){
+            newVal = 0;
+        }
+        writeSharedArray(idx, newVal);
     }
 
-    // TODO: Keep track of robots alive not just robots spawned
     public int getRobotCount(RobotType type) throws GameActionException {
         return rc.readSharedArray(robotTypeToIndex(type));
     }

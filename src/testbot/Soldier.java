@@ -1,4 +1,4 @@
-package sprintbot2;
+package testbot;
 
 import battlecode.common.*;
 
@@ -31,8 +31,6 @@ public class Soldier extends Robot {
 
     public void run() throws GameActionException {
         super.run();
-        Logger.Log("Start of soldier run method: " + Clock.getBytecodesLeft());
-        Logger.Log("Current Location: " + rc.getLocation());
 //        Logger.Log("lead amount: " + rc.getTeamLeadAmount(this.myTeam));
         if(archonIndex == -1){
             archonIndex = comms.getClosestFriendlyArchonIndex();
@@ -44,18 +42,19 @@ public class Soldier extends Robot {
         comms.updateCurrAttackLoc(enemiesInVision, enemyCOM);
 
         // If your bois are attacking an enemy more than the enemy is attacking ur bois, then go for the attack
-        Logger.Log("Before checking if safe: " + Clock.getBytecodesLeft());
         RobotInfo[] nearbyFriendlies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam);
         RobotInfo[] nearbyActionEnemies = rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam.opponent());
         RobotInfo[] nearbyVisionEnemies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
+
         RobotInfo nearestEnemyInfo = getNearestEnemy(nearbyActionEnemies);
-        boolean inSafeZone = checkSafe(nearbyFriendlies, nearbyActionEnemies, nearestEnemyInfo); // 2300 bytecode for 31 nearby
-        Logger.Log("After checking if safe: " + Clock.getBytecodesLeft());
+        boolean inSafeZone = checkSafe(nearbyFriendlies, nearbyVisionEnemies, nearestEnemyInfo); // 2300 bytecode for 31 nearby
         RobotInfo attackTarget = findAttackTarget(nearbyActionEnemies);
+
         Logger.Log("Action cooldown: " + rc.getActionCooldownTurns());
         Logger.Log("Movement cooldown: " + rc.getMovementCooldownTurns());
         // The strat is to get two shots for the enemy's one shot. ie, you try to stay on the boundary of the enemy's vision. Then, you push, attack, (they get a turn so they attack), then you attack again, then you retreat (back out of their range)
         if(inSafeZone){
+            indicatorString += "S; ";
             Logger.Log("In safe zone!");
             if(attackTarget != null){
                 // If I can both move and attack, the check if I can move to a better loc and attack from there
@@ -64,13 +63,24 @@ public class Soldier extends Robot {
                     boolean movedToLowerCooldown = attackFromLowerCooldown(attackTarget);
                     if(movedToLowerCooldown) {
                         Logger.Log("Moved lower coooldown");
+                        indicatorString += "LC; ";
                         attack(attackTarget);
                     }
                     else { // Attack and back up (you know the drill)
                         Logger.Log("Punch and pull back");
                         attack(attackTarget);
                         if(attackTarget.type == RobotType.SOLDIER || attackTarget.type == RobotType.WATCHTOWER){
-                            retreat(enemyCOM);
+                            Direction dirToEnemyCOM = myLoc.directionTo(enemyCOM);
+                            MapLocation awayFromEnemyCOM = myLoc.subtract(dirToEnemyCOM).subtract(dirToEnemyCOM).subtract(dirToEnemyCOM);
+                            boolean retreated = moveForwardSafely(awayFromEnemyCOM);
+                            if(retreated){
+                                Logger.Log("Successfully retreated!");
+                                indicatorString += "BACKUP1; ";
+                            }
+                            else{
+                                Logger.Log("Couldn't move back safely");
+                            }
+//                            retreat(enemyCOM);
                         }
 //                        retreat(enemyCOM);
                     }
@@ -85,7 +95,11 @@ public class Soldier extends Robot {
 //                    retreat(enemyCOM);
                     // Retreat safely
                     Direction dirToEnemyCOM = myLoc.directionTo(enemyCOM);
-                    moveForwardSafely(myLoc.subtract(dirToEnemyCOM).subtract(dirToEnemyCOM).subtract(dirToEnemyCOM));
+                    MapLocation awayFromEnemyCOM = myLoc.subtract(dirToEnemyCOM).subtract(dirToEnemyCOM).subtract(dirToEnemyCOM);
+                    boolean retreated = moveForwardSafely(awayFromEnemyCOM);
+                    if(retreated){
+                        indicatorString += "BACKUP2; ";
+                    }
                 }
             }
             else{
@@ -108,21 +122,22 @@ public class Soldier extends Robot {
             }
         }
         else{
+            indicatorString += "NS; ";
             Logger.Log("Not in safe zone!");
             attack(attackTarget);
-            // Retreat safely
-            Direction dirToEnemyCOM = myLoc.directionTo(enemyCOM);
-            moveForwardSafely(myLoc.subtract(dirToEnemyCOM).subtract(dirToEnemyCOM).subtract(dirToEnemyCOM));
-//            retreat(enemyCOM); // Get the hell out of there
+            // Get the hell outta there
+//            Direction dirToEnemyCOM = myLoc.directionTo(enemyCOM);
+//            moveForwardSafely(myLoc.subtract(dirToEnemyCOM).subtract(dirToEnemyCOM).subtract(dirToEnemyCOM));
+            retreat(enemyCOM);
         }
-
+        checkPossibleDeath();
         turnsSinceAttack++;
 
     }
 
     public void retreat(MapLocation enemyCOM) throws GameActionException { // Movement method
         Logger.Log("Retreating from: " + enemyCOM.toString());
-        indicatorString += "Retreating from: " + enemyCOM.toString();
+        indicatorString += "RTR!; ";
         if(enemyCOM.equals(myLoc)){ // No enemies nearby, just retreat back to base
             nav.goTo(archonLoc);
         }
@@ -131,8 +146,6 @@ public class Soldier extends Robot {
             nav.goTo(myLoc.add(away).add(away).add(away).add(away));
         }
     }
-
-    // TODO: Don't push archon unless you have an overwhelming force
 
     public void push(MapLocation enemyCOM, MapLocation bestAttackTarget) throws GameActionException { // Movement method
         Logger.Log("Pushing towards: " + enemyCOM.toString());
@@ -156,7 +169,7 @@ public class Soldier extends Robot {
         if (rc.canAttack(toAttack.location)) { // TODO: If you can move to a better spot and then continue attacking, do that instead
             // Check if you have more friendly soldiers than enemy soldiers
             rc.attack(toAttack.location);
-            indicatorString += "Attacking: " + toAttack.location.toString();
+            indicatorString += "ATK: " + toAttack.location.toString() + "; ";
             turnsSinceAttack = 0;
             lastAttackLoc = toAttack.getLocation();
             // Check if you killed an archon, and if you did, update comms
@@ -256,7 +269,7 @@ public class Soldier extends Robot {
         double myTurnsNeeded = enemyHP / friendlyDamage;
         double enemyTurnsNeeded = friendlyHP / enemyDamage;
 
-        indicatorString += "myTurns: " + myTurnsNeeded + ", eTurns: " + enemyTurnsNeeded;
+        indicatorString += "MT: " + (int)myTurnsNeeded + ", ET: " + (int)enemyTurnsNeeded + "; ";
 
         // 1.5 simply because im ballsy and wanna go for it
         return myTurnsNeeded <= enemyTurnsNeeded * 1.2; // If you can kill them faster than they can kill you, return true
@@ -291,8 +304,7 @@ public class Soldier extends Robot {
 
     public boolean attackFromLowerCooldown(RobotInfo attackTarget) throws GameActionException {
         MapLocation targetLoc = attackTarget.location;
-        int currRubble = rc.senseRubble(myLoc);
-        int lowestRubble = Integer.MAX_VALUE;
+        double lowestHeuristic = rc.senseRubble(myLoc) + 10;
         MapLocation lowestLoc = null;
         Direction targetDir = myLoc.directionTo(targetLoc);
         Direction[] testDirs = {targetDir, targetDir.rotateLeft(), targetDir.rotateRight(), targetDir.rotateLeft().rotateLeft(), targetDir.rotateRight().rotateRight()};
@@ -307,14 +319,16 @@ public class Soldier extends Robot {
             if(myLoc.distanceSquaredTo(targetLoc) > myType.actionRadiusSquared){ // Make sure you can still attack the enemy troop
                 continue;
             }
-            int rubble = rc.senseRubble(testLoc);
-            if(rubble < lowestRubble){
+            double newEnemies = numNewEnemiesAttackableAfterMoving(testDirs[i]) + 1;
+            double cooldown = rc.senseRubble(testLoc) + 10;
+            double heuristic = newEnemies * cooldown;
+            // If i can attack twice as fast, its worth walking into another enemy
+            if(heuristic < lowestHeuristic){
                 lowestLoc = testLoc;
-                lowestRubble = rubble;
+                lowestHeuristic = heuristic;
             }
         }
-        // TODO: Check if its safe to move in that direction
-        if(lowestRubble >= currRubble){ // Only move towards a direction w/ less than or equal to rubble
+        if(lowestLoc == null){ // Only move towards a direction w/ less than or equal to rubble
             return false;
         }
         rc.move(myLoc.directionTo(lowestLoc));
@@ -326,21 +340,17 @@ public class Soldier extends Robot {
             targetLevel = 0; // Reached target and nothing there, so find a new target
         }
 
-        Logger.Log("Before resetting target: " + Clock.getBytecodesLeft());
         resetTarget(); // Find best target at current round. 500 bytecode
-        Logger.Log("After resetting target: " + Clock.getBytecodesLeft());
         assert(currentTarget != null);
 //        Logger.Log("Current target: " + currentTarget.toString());
         nav.goTo(currentTarget);
         rc.setIndicatorLine(myLoc, currentTarget, 0, 255, 0);
         indicatorString += "Fuzzynav to: " + currentTarget.toString() + " becuz " + targetLevel;
-//        Logger.Log("Bytecode left at end of soldier class: " + Clock.getBytecodesLeft());
     }
 
     public void resetTarget() throws GameActionException {
-        // Search for enemy on comms
         // Check if the squad is currently attacking anyone
-        MapLocation tempLoc = comms.getCurrAttackLoc(); // TODO: Let archon updateCurrAttackLoc so that soldiers will go back to help defend archon
+        MapLocation tempLoc = comms.getCurrAttackLoc();
         if(tempLoc != null){
             currentTarget = tempLoc;
             targetLevel = 4;
@@ -451,6 +461,110 @@ public class Soldier extends Robot {
         }
 
         return closestEnemy;
+    }
+
+    int numNewEnemiesAttackableAfterMoving(Direction dir) throws GameActionException {
+        MapLocation[] checkLocs = new MapLocation[9];
+        switch(dir){
+            case NORTH:
+                checkLocs[0] = new MapLocation(myLoc.x - 3, myLoc.y + 3);
+                checkLocs[1] = new MapLocation(myLoc.x - 2, myLoc.y + 4);
+                checkLocs[2] = new MapLocation(myLoc.x - 1, myLoc.y + 4);
+                checkLocs[3] = new MapLocation(myLoc.x, myLoc.y + 4);
+                checkLocs[4] = new MapLocation(myLoc.x + 1, myLoc.y + 4);
+                checkLocs[5] = new MapLocation(myLoc.x + 2, myLoc.y + 4);
+                checkLocs[6] = new MapLocation(myLoc.x + 3, myLoc.y + 3);
+                break;
+            case SOUTH:
+                checkLocs[0] = new MapLocation(myLoc.x - 3, myLoc.y - 3);
+                checkLocs[1] = new MapLocation(myLoc.x - 2, myLoc.y - 4);
+                checkLocs[2] = new MapLocation(myLoc.x - 1, myLoc.y - 4);
+                checkLocs[3] = new MapLocation(myLoc.x, myLoc.y - 4);
+                checkLocs[4] = new MapLocation(myLoc.x + 1, myLoc.y - 4);
+                checkLocs[5] = new MapLocation(myLoc.x + 2, myLoc.y - 4);
+                checkLocs[6] = new MapLocation(myLoc.x + 3, myLoc.y - 3);
+                break;
+            case EAST:
+                checkLocs[0] = new MapLocation(myLoc.x + 3, myLoc.y - 3);
+                checkLocs[1] = new MapLocation(myLoc.x + 4, myLoc.y - 2);
+                checkLocs[2] = new MapLocation(myLoc.x + 4, myLoc.y - 1);
+                checkLocs[3] = new MapLocation(myLoc.x + 4, myLoc.y);
+                checkLocs[4] = new MapLocation(myLoc.x + 4, myLoc.y + 1);
+                checkLocs[5] = new MapLocation(myLoc.x + 4, myLoc.y + 2);
+                checkLocs[6] = new MapLocation(myLoc.x + 3, myLoc.y + 3);
+                break;
+            case WEST:
+                checkLocs[0] = new MapLocation(myLoc.x - 3, myLoc.y - 3);
+                checkLocs[1] = new MapLocation(myLoc.x - 4, myLoc.y - 2);
+                checkLocs[2] = new MapLocation(myLoc.x - 4, myLoc.y - 1);
+                checkLocs[3] = new MapLocation(myLoc.x - 4, myLoc.y);
+                checkLocs[4] = new MapLocation(myLoc.x - 4, myLoc.y + 1);
+                checkLocs[5] = new MapLocation(myLoc.x - 4, myLoc.y + 2);
+                checkLocs[6] = new MapLocation(myLoc.x - 3, myLoc.y + 3);
+                break;
+            case NORTHEAST:
+                checkLocs[0] = new MapLocation(myLoc.x + 4, myLoc.y - 1);
+                checkLocs[1] = new MapLocation(myLoc.x + 4, myLoc.y);
+                checkLocs[2] = new MapLocation(myLoc.x + 4, myLoc.y + 1);
+                checkLocs[3] = new MapLocation(myLoc.x + 4, myLoc.y + 2);
+                checkLocs[4] = new MapLocation(myLoc.x + 3, myLoc.y + 3);
+                checkLocs[5] = new MapLocation(myLoc.x + 2, myLoc.y + 4);
+                checkLocs[6] = new MapLocation(myLoc.x + 1, myLoc.y + 4);
+                checkLocs[7] = new MapLocation(myLoc.x, myLoc.y + 4);
+                checkLocs[8] = new MapLocation(myLoc.x - 1, myLoc.y + 4);
+                break;
+            case NORTHWEST:
+                checkLocs[0] = new MapLocation(myLoc.x - 4, myLoc.y - 1);
+                checkLocs[1] = new MapLocation(myLoc.x - 4, myLoc.y);
+                checkLocs[2] = new MapLocation(myLoc.x - 4, myLoc.y + 1);
+                checkLocs[3] = new MapLocation(myLoc.x - 4, myLoc.y + 2);
+                checkLocs[4] = new MapLocation(myLoc.x - 3, myLoc.y + 3);
+                checkLocs[5] = new MapLocation(myLoc.x - 2, myLoc.y + 4);
+                checkLocs[6] = new MapLocation(myLoc.x - 1, myLoc.y + 4);
+                checkLocs[7] = new MapLocation(myLoc.x, myLoc.y + 4);
+                checkLocs[8] = new MapLocation(myLoc.x + 1, myLoc.y + 4);
+                break;
+            case SOUTHEAST:
+                checkLocs[0] = new MapLocation(myLoc.x + 4, myLoc.y + 1);
+                checkLocs[1] = new MapLocation(myLoc.x + 4, myLoc.y);
+                checkLocs[2] = new MapLocation(myLoc.x + 4, myLoc.y - 1);
+                checkLocs[3] = new MapLocation(myLoc.x + 4, myLoc.y - 2);
+                checkLocs[4] = new MapLocation(myLoc.x + 3, myLoc.y - 3);
+                checkLocs[5] = new MapLocation(myLoc.x + 2, myLoc.y - 4);
+                checkLocs[6] = new MapLocation(myLoc.x + 1, myLoc.y - 4);
+                checkLocs[7] = new MapLocation(myLoc.x, myLoc.y - 4);
+                checkLocs[8] = new MapLocation(myLoc.x - 1, myLoc.y - 4);
+                break;
+            case SOUTHWEST:
+                checkLocs[0] = new MapLocation(myLoc.x - 4, myLoc.y + 1);
+                checkLocs[1] = new MapLocation(myLoc.x - 4, myLoc.y);
+                checkLocs[2] = new MapLocation(myLoc.x - 4, myLoc.y - 1);
+                checkLocs[3] = new MapLocation(myLoc.x - 4, myLoc.y - 2);
+                checkLocs[4] = new MapLocation(myLoc.x - 3, myLoc.y - 3);
+                checkLocs[5] = new MapLocation(myLoc.x - 2, myLoc.y - 4);
+                checkLocs[6] = new MapLocation(myLoc.x - 1, myLoc.y - 4);
+                checkLocs[7] = new MapLocation(myLoc.x, myLoc.y - 4);
+                checkLocs[8] = new MapLocation(myLoc.x + 1, myLoc.y - 4);
+                break;
+        }
+        int newBots = 0;
+        for(int i = 0; i < checkLocs.length; i++){
+            MapLocation loc = checkLocs[i];
+            if(loc == null){
+                continue;
+            }
+            if(!rc.canSenseLocation(loc)){
+                continue;
+            }
+            RobotInfo info = rc.senseRobotAtLocation(loc);
+            if(info == null){
+                continue;
+            }
+            if(info.team == opponent && info.type == RobotType.SOLDIER){
+                newBots++;
+            }
+        }
+        return newBots;
     }
 
 }

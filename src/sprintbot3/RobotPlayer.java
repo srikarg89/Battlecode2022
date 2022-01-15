@@ -1,4 +1,4 @@
-package sprintbot2;
+package sprintbot3;
 
 import battlecode.common.Clock;
 import battlecode.common.GameActionException;
@@ -14,7 +14,7 @@ public strictfp class RobotPlayer {
 
         switch (rc.getType()) {
             case ARCHON:     robot = new Archon(rc);  break;
-            case MINER:      robot = new Miner2(rc);   break;
+            case MINER:      robot = new Miner(rc);   break;
             case SOLDIER:    robot = new Soldier(rc); break;
             case LABORATORY: robot = new Laboratory(rc); break;
             case WATCHTOWER: robot = new WatchTower(rc); break;
@@ -36,7 +36,7 @@ public strictfp class RobotPlayer {
 //                System.out.println("Bytecode left: " + Clock.getBytecodesLeft());
                 robot.prevLoc = rc.getLocation();
                 if(!checkBytecode(robot, rc)){
-                    rc.resign();
+//                    rc.resign();
                 }
             } catch (GameActionException e) {
                 Logger.Log("CAUGHT GAMEACTIONEXCEPTION");

@@ -1,4 +1,4 @@
-package sprintbot;
+package sprintbot2;
 import battlecode.common.*;
 public class BFS20{
     RobotController rc;
@@ -12038,7 +12038,7 @@ public class BFS20{
 
     public Direction getBestDir(MapLocation target) throws GameActionException {
         Direction targetDir = robot.myLoc.directionTo(target);
-        if(!this.vars_are_reset){
+        if(l54 == null || !l54.equals(robot.myLoc)){
             resetVars();
         }
         // System.out.println("Running getBestDir: " + Clock.getBytecodesLeft());

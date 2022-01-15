@@ -1,4 +1,4 @@
-package sprintbot2;
+package sprintbot3;
 
 import battlecode.common.*;
 
@@ -443,37 +443,37 @@ public class Util {
         MapLocation myLoc = rc.getLocation();
         switch(minerNumber){
             case 0:
-                return new MapLocation(1, 1);
+                return new MapLocation(0, 0);
             case 1:
-                return new MapLocation(robot.mapWidth - 2, robot.mapHeight - 2);
+                return new MapLocation(robot.mapWidth, robot.mapHeight);
             case 2:
-                return new MapLocation(1, robot.mapHeight - 2);
+                return new MapLocation(0, robot.mapHeight);
             case 3:
-                return new MapLocation(robot.mapWidth - 2, 1);
+                return new MapLocation(robot.mapWidth, 0);
             case 4:
-                return new MapLocation(1, robot.mapHeight / 2);
+                return new MapLocation(0, robot.mapHeight / 2);
             case 5:
-                return new MapLocation(robot.mapWidth / 2, 1);
+                return new MapLocation(robot.mapWidth / 2, 0);
             case 6:
-                return new MapLocation(robot.mapWidth / 2, robot.mapHeight - 2);
+                return new MapLocation(robot.mapWidth / 2, robot.mapHeight);
             case 7:
-                return new MapLocation(robot.mapWidth - 2, robot.mapHeight / 2);
+                return new MapLocation(robot.mapWidth, robot.mapHeight / 2);
             case 8:
-                return new MapLocation(1, robot.mapHeight * 1 / 4);
+                return new MapLocation(0, robot.mapHeight * 1 / 4);
             case 9:
-                return new MapLocation(robot.mapWidth * 1 / 4, robot.mapHeight - 2);
+                return new MapLocation(robot.mapWidth * 1 / 4, robot.mapHeight);
             case 10:
-                return new MapLocation(robot.mapWidth * 3 / 4, 1);
+                return new MapLocation(robot.mapWidth * 3 / 4, 0);
             case 11:
-                return new MapLocation(robot.mapWidth - 2, robot.mapHeight * 3 / 4);
+                return new MapLocation(robot.mapWidth, robot.mapHeight * 3 / 4);
             case 12:
-                return new MapLocation(robot.mapWidth * 1 / 4, 1);
+                return new MapLocation(robot.mapWidth * 1 / 4, 0);
             case 13:
-                return new MapLocation(1, robot.mapHeight * 3 / 4);
+                return new MapLocation(0, robot.mapHeight * 3 / 4);
             case 14:
-                return new MapLocation(robot.mapWidth * 3 / 4, robot.mapHeight - 2);
+                return new MapLocation(robot.mapWidth * 3 / 4, robot.mapHeight);
             case 15:
-                return new MapLocation(robot.mapWidth - 2, robot.mapHeight * 1 / 4);
+                return new MapLocation(robot.mapWidth, robot.mapHeight * 1 / 4);
         }
         return robot.nav.getRandomMapLocation();
     }

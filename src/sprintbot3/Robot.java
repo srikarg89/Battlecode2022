@@ -1,10 +1,12 @@
-package sprintbot2;
+package sprintbot3;
 
 import battlecode.common.*;
 
 public class Robot {
 
     // Constants
+    int comms_block_width = -1;
+    int comms_block_height = -1;
 
     // Robot properties
     RobotController rc;
@@ -21,12 +23,12 @@ public class Robot {
     int mapWidth;
     int mapHeight;
     RobotInfo[] nearby;
-//    RobotInfo[] nearbyFriendlies;
+    RobotInfo[] nearbyFriendlies;
     RobotInfo[] nearbyEnemies;
     int roundNum = 1;
     String indicatorString = "";
     boolean mightDie = false;
-    int[][] rubbleMap;
+//    int[][] rubbleMap;
 
     public Robot(RobotController rc) throws GameActionException {
         myLoc = rc.getLocation();
@@ -42,13 +44,15 @@ public class Robot {
         age = 0;
         mapWidth = rc.getMapWidth();
         mapHeight = rc.getMapHeight();
+        comms_block_width = (int)Math.ceil((double)mapWidth / 5.0);
+        comms_block_height = (int)Math.ceil((double)mapHeight / 5.0);
 //        rubbleMap = new int[mapWidth][mapHeight];
+        nearby = rc.senseNearbyRobots();
         nav = new Navigation(rc, this);
         comms = new Comms(rc, this);
         if(myType != RobotType.ARCHON){
             comms.findFriendlyArchons();
         }
-        System.out.println("Time after init: " + Clock.getBytecodesLeft());
     }
 
     public void run() throws GameActionException {
@@ -56,7 +60,7 @@ public class Robot {
         myLoc = rc.getLocation();
         roundNum = rc.getRoundNum();
         nearby = rc.senseNearbyRobots();
-//        nearbyFriendlies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam);
+        nearbyFriendlies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam);
         nearbyEnemies = rc.senseNearbyRobots(myType.visionRadiusSquared, opponent);
         if(rc.getRoundNum() == 2 && myType == RobotType.ARCHON){
             // Find teammate archons
@@ -68,7 +72,6 @@ public class Robot {
         }
         comms.scanEnemyArchons();
 //        System.out.println("Time left after yeeting everything: " + Clock.getBytecodesLeft());
-//        nav.update();
         age++;
     }
 
