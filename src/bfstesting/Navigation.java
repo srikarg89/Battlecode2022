@@ -1,9 +1,6 @@
 package bfstesting;
 
-import battlecode.common.Direction;
-import battlecode.common.GameActionException;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
+import battlecode.common.*;
 
 import java.util.HashSet;
 
@@ -20,6 +17,7 @@ public class Navigation {
     MapLocation[] lastVisited = new MapLocation[10];
     boolean goingLeft = true;
     int turnsToRunFuzzy = 5;
+    BFS bfs;
 
     public Navigation(RobotController rc, Robot robot){
         this.rc = rc;
@@ -28,12 +26,19 @@ public class Navigation {
         Util.robot = robot;
         currentTarget = null;
         visited = new HashSet<Integer>();
+
+        if(robot.myType.equals(RobotType.MINER)){
+            bfs = new BFS13(rc, robot);
+        }
+        else{
+            bfs = new BFS20(rc, robot);
+        }
     }
 
     public void update() throws GameActionException {
-        if(!robot.bfs.vars_are_reset){
+        if(!bfs.vars_are_reset){
             // Use extra turn to reset variables
-            robot.bfs.resetVars();
+            bfs.resetVars();
         }
     }
 
@@ -87,7 +92,7 @@ public class Navigation {
         if (!rc.isMovementReady()) {
             return false;
         }
-        Direction toGo = robot.bfs.getBestDir(target);
+        Direction toGo = bfs.getBestDir(target);
         if (toGo == null) {
             return false;
         }
@@ -115,7 +120,7 @@ public class Navigation {
             // Reset pathfinding vars
             currentTarget = target;
         }
-        Direction toGo = robot.bfsold.getBestDir(target);
+        Direction toGo = bfs.getBestDir(target);
         if (toGo == null) {
             return false;
         }

@@ -1,10 +1,11 @@
-RADIUS_SQUARED = 20
-CLASS_NAME = "BFS20"
+RADIUS_SQUARED = 13
+CLASS_NAME = "BFS13"
 OUTPUT_FILENAME = "bfs_code.txt"
 # OUTPUT_FILENAME = "sprintbot/BFS20.java"
-PACKAGE_NAME = "sprintbot"
+PACKAGE_NAME = "bfstesting"
 start_loc = (5, 4)  # you may need to increase these vals if the RADIUS_SQUARED is increased from 20
 THRESHOLD_KEEP_ALL_DIRECTIONS = 100
+
 
 def get_neighbor_locs(loc, order=None):
     neighbors = []
@@ -37,6 +38,7 @@ def distSquared(loca, locb):
     dy = loca[1] - locb[1]
     return dx ** 2 + dy ** 2
 
+
 def valid_point(start_loc, point, target_dir):
     if distSquared(start_loc, point) <= THRESHOLD_KEEP_ALL_DIRECTIONS:
         return True
@@ -44,25 +46,26 @@ def valid_point(start_loc, point, target_dir):
     dy = point[1] - start_loc[1]
     # Say target_dir is [0, 1] (north)
     # Then we want to remove points that are (relatively) facing south
-    if target_dir == [0,1]: # North
+    if target_dir == [0, 1]:  # North
         return dy >= 0 or abs(dx) > abs(dy)
-    if target_dir == [0,-1]: # South
+    if target_dir == [0, -1]:  # South
         return dy <= 0 or abs(dx) > abs(dy)
-    if target_dir == [1,0]: # East
+    if target_dir == [1, 0]:  # East
         return dx >= 0 or abs(dy) > abs(dx)
-    if target_dir == [-1,0]: # West
+    if target_dir == [-1, 0]:  # West
         return dx <= 0 or abs(dy) > abs(dx)
 
-    if target_dir == [1,1]: # Northeast
+    if target_dir == [1, 1]:  # Northeast
         return dx >= 0 or dy >= 0
-    if target_dir == [-1,1]: # Northwest
+    if target_dir == [-1, 1]:  # Northwest
         return dx <= 0 or dy >= 0
-    if target_dir == [1,-1]: # Southeast
+    if target_dir == [1, -1]:  # Southeast
         return dx >= 0 or dy <= 0
-    if target_dir == [-1,-1]: # Southwest
+    if target_dir == [-1, -1]:  # Southwest
         return dx <= 0 or dy <= 0
 
     return True
+
 
 def clockwise(dir):
     if dir == [0, 1]:
@@ -82,6 +85,7 @@ def clockwise(dir):
     if dir == [-1, 1]:
         return [0, 1]
 
+
 def counter_clockwise(dir):
     for i in range(7):
         dir = clockwise(dir)
@@ -100,6 +104,7 @@ def get_dirs(target_dir):
     dirs = [(-1, 0), (-1, -1), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1)]
     return sorted(dirs, key=lambda d: distSquared(d, target_dir))
 
+
 def get_order(target_dir):
     move_arr = []
     for i in range(0, RADIUS_SQUARED):
@@ -111,7 +116,6 @@ def get_order(target_dir):
             else:
                 break
 
-
         # order in which we will conduct updates to heuristic
     order = []
     diff = []
@@ -121,7 +125,7 @@ def get_order(target_dir):
                 x_move, y_move = x_dir*dx, y_dir*dy
                 new_loc = (start_loc[0]+x_move, start_loc[1]+y_move)
 
-                if not valid_point(start_loc, new_loc, target_dir): # Remove points that prolly won't matter
+                if not valid_point(start_loc, new_loc, target_dir):  # Remove points that prolly won't matter
                     continue
 
                 if new_loc not in order:
@@ -163,7 +167,6 @@ def gen_code(f, methodname, target_dir):
             if prev_loc in order[0:i]:
                 direction_arr.append((order[i], prev_loc, opp_dir_dict[dir]))
 
-
     # generating diff_dict for try_catch code
     diff_dict = {x: [] for x in set([i for (i, j) in diff])}
     for d in diff:
@@ -194,7 +197,6 @@ def gen_code(f, methodname, target_dir):
         f.write("v{}{} = 100000000;\n".format(curr_x, curr_y, prev_x, prev_y, dir))
         f.write("d{}{} = null;\n\n".format(curr_x, curr_y))
 
-
     # section 3
     f.write("System.out.println(\"Initialized vars: \" + Clock.getBytecodesLeft());\n")
     f.write("try{ ")
@@ -203,10 +205,9 @@ def gen_code(f, methodname, target_dir):
         x, y = order[i]
         f.write("if(rc.onTheMap(l{}{})){{\n".format(x, y))
         if start_loc in get_neighbor_locs((x, y)):
-        # if True:
+            # if True:
             f.write("if(!rc.isLocationOccupied(l{}{})){{\n".format(x, y))
         f.write("p{}{} = 20*((double)rc.senseRubble(l{}{})/10.0 + 1);\n".format(x, y, x, y))
-
 
         neighbors = get_neighbor_locs((x, y))
         neighbors = sorted(neighbors, key=lambda n: distSquared(n, start_loc))
@@ -226,10 +227,9 @@ def gen_code(f, methodname, target_dir):
                 f.write("}\n")
 
         if start_loc in get_neighbor_locs((x, y)):
-        # if True:
+            # if True:
             f.write("}\n")
         f.write("}\n")
-
 
     # section 4 (try catch section to check if we have just explored the target)
     f.write("System.out.println(\"Ran BFS: \" + Clock.getBytecodesLeft());\n")
@@ -282,6 +282,7 @@ def gen_code(f, methodname, target_dir):
 
     # print(order)
     # print((5, 4) in order)
+
 
 extra_code_commented = """
     public Direction getBestDir(MapLocation target) throws GameActionException {

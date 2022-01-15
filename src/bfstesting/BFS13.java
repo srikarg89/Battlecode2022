@@ -1,7 +1,7 @@
 package bfstesting;
 import battlecode.common.*;
-public class BFS20 extends BFS{
-    BFS20(RobotController rc, Robot robot){
+public class BFS13 extends BFS{
+    BFS13(RobotController rc, Robot robot){
         super(rc, robot);
     }
     static MapLocation l54;
@@ -274,150 +274,6 @@ public class BFS20 extends BFS{
     static double p77;
 
 
-    static MapLocation l21;
-    static double v21;
-    static Direction d21;
-    static double p21;
-
-
-    static MapLocation l27;
-    static double v27;
-    static Direction d27;
-    static double p27;
-
-
-    static MapLocation l81;
-    static double v81;
-    static Direction d81;
-    static double p81;
-
-
-    static MapLocation l87;
-    static double v87;
-    static Direction d87;
-    static double p87;
-
-
-    static MapLocation l14;
-    static double v14;
-    static Direction d14;
-    static double p14;
-
-
-    static MapLocation l94;
-    static double v94;
-    static Direction d94;
-    static double p94;
-
-
-    static MapLocation l50;
-    static double v50;
-    static Direction d50;
-    static double p50;
-
-
-    static MapLocation l58;
-    static double v58;
-    static Direction d58;
-    static double p58;
-
-
-    static MapLocation l13;
-    static double v13;
-    static Direction d13;
-    static double p13;
-
-
-    static MapLocation l15;
-    static double v15;
-    static Direction d15;
-    static double p15;
-
-
-    static MapLocation l93;
-    static double v93;
-    static Direction d93;
-    static double p93;
-
-
-    static MapLocation l95;
-    static double v95;
-    static Direction d95;
-    static double p95;
-
-
-    static MapLocation l40;
-    static double v40;
-    static Direction d40;
-    static double p40;
-
-
-    static MapLocation l48;
-    static double v48;
-    static Direction d48;
-    static double p48;
-
-
-    static MapLocation l60;
-    static double v60;
-    static Direction d60;
-    static double p60;
-
-
-    static MapLocation l68;
-    static double v68;
-    static Direction d68;
-    static double p68;
-
-
-    static MapLocation l12;
-    static double v12;
-    static Direction d12;
-    static double p12;
-
-
-    static MapLocation l16;
-    static double v16;
-    static Direction d16;
-    static double p16;
-
-
-    static MapLocation l92;
-    static double v92;
-    static Direction d92;
-    static double p92;
-
-
-    static MapLocation l96;
-    static double v96;
-    static Direction d96;
-    static double p96;
-
-
-    static MapLocation l30;
-    static double v30;
-    static Direction d30;
-    static double p30;
-
-
-    static MapLocation l38;
-    static double v38;
-    static Direction d38;
-    static double p38;
-
-
-    static MapLocation l70;
-    static double v70;
-    static Direction d70;
-    static double p70;
-
-
-    static MapLocation l78;
-    static double v78;
-    static Direction d78;
-    static double p78;
-
-
     public void resetVars() throws GameActionException{
         l54 = robot.myLoc;
         v54 = 0;
@@ -597,102 +453,6 @@ public class BFS20 extends BFS{
         l77 = l67.add(Direction.EAST);
         v77 = 100000000;
         d77 = null;
-
-        l21 = l22.add(Direction.SOUTH);
-        v21 = 100000000;
-        d21 = null;
-
-        l27 = l37.add(Direction.WEST);
-        v27 = 100000000;
-        d27 = null;
-
-        l81 = l71.add(Direction.EAST);
-        v81 = 100000000;
-        d81 = null;
-
-        l87 = l77.add(Direction.EAST);
-        v87 = 100000000;
-        d87 = null;
-
-        l14 = l24.add(Direction.WEST);
-        v14 = 100000000;
-        d14 = null;
-
-        l94 = l84.add(Direction.EAST);
-        v94 = 100000000;
-        d94 = null;
-
-        l50 = l51.add(Direction.SOUTH);
-        v50 = 100000000;
-        d50 = null;
-
-        l58 = l57.add(Direction.NORTH);
-        v58 = 100000000;
-        d58 = null;
-
-        l13 = l14.add(Direction.SOUTH);
-        v13 = 100000000;
-        d13 = null;
-
-        l15 = l25.add(Direction.WEST);
-        v15 = 100000000;
-        d15 = null;
-
-        l93 = l83.add(Direction.EAST);
-        v93 = 100000000;
-        d93 = null;
-
-        l95 = l85.add(Direction.EAST);
-        v95 = 100000000;
-        d95 = null;
-
-        l40 = l41.add(Direction.SOUTH);
-        v40 = 100000000;
-        d40 = null;
-
-        l48 = l58.add(Direction.WEST);
-        v48 = 100000000;
-        d48 = null;
-
-        l60 = l50.add(Direction.EAST);
-        v60 = 100000000;
-        d60 = null;
-
-        l68 = l58.add(Direction.EAST);
-        v68 = 100000000;
-        d68 = null;
-
-        l12 = l13.add(Direction.SOUTH);
-        v12 = 100000000;
-        d12 = null;
-
-        l16 = l26.add(Direction.WEST);
-        v16 = 100000000;
-        d16 = null;
-
-        l92 = l82.add(Direction.EAST);
-        v92 = 100000000;
-        d92 = null;
-
-        l96 = l86.add(Direction.EAST);
-        v96 = 100000000;
-        d96 = null;
-
-        l30 = l31.add(Direction.SOUTH);
-        v30 = 100000000;
-        d30 = null;
-
-        l38 = l48.add(Direction.WEST);
-        v38 = 100000000;
-        d38 = null;
-
-        l70 = l60.add(Direction.EAST);
-        v70 = 100000000;
-        d70 = null;
-
-        l78 = l68.add(Direction.EAST);
-        v78 = 100000000;
-        d78 = null;
 
         this.vars_are_reset = true;
         System.out.println("Finished Initializing Variables: " + Clock.getBytecodesLeft());
@@ -1411,353 +1171,10 @@ public class BFS20 extends BFS{
                 }
                 v77 += p77;
             }
-            if(rc.onTheMap(l27)){
-                p27 = rc.senseRubble(l27) + 10.0;
-                v27 -= p27;
-                if(v27 > v36){
-                    v27 = v36;
-                    d27 = d36;
-                }
-                if(v27 > v37){
-                    v27 = v37;
-                    d27 = d37;
-                }
-                if(v27 > v26){
-                    v27 = v26;
-                    d27 = d26;
-                }
-                v27 += p27;
-            }
-            if(rc.onTheMap(l87)){
-                p87 = rc.senseRubble(l87) + 10.0;
-                v87 -= p87;
-                if(v87 > v76){
-                    v87 = v76;
-                    d87 = d76;
-                }
-                if(v87 > v77){
-                    v87 = v77;
-                    d87 = d77;
-                }
-                if(v87 > v86){
-                    v87 = v86;
-                    d87 = d86;
-                }
-                v87 += p87;
-            }
-            if(rc.onTheMap(l14)){
-                p14 = rc.senseRubble(l14) + 10.0;
-                v14 -= p14;
-                if(v14 > v24){
-                    v14 = v24;
-                    d14 = d24;
-                }
-                if(v14 > v25){
-                    v14 = v25;
-                    d14 = d25;
-                }
-                if(v14 > v23){
-                    v14 = v23;
-                    d14 = d23;
-                }
-                v14 += p14;
-            }
-            if(rc.onTheMap(l94)){
-                p94 = rc.senseRubble(l94) + 10.0;
-                v94 -= p94;
-                if(v94 > v84){
-                    v94 = v84;
-                    d94 = d84;
-                }
-                if(v94 > v83){
-                    v94 = v83;
-                    d94 = d83;
-                }
-                if(v94 > v85){
-                    v94 = v85;
-                    d94 = d85;
-                }
-                v94 += p94;
-            }
-            if(rc.onTheMap(l58)){
-                p58 = rc.senseRubble(l58) + 10.0;
-                v58 -= p58;
-                if(v58 > v57){
-                    v58 = v57;
-                    d58 = d57;
-                }
-                if(v58 > v47){
-                    v58 = v47;
-                    d58 = d47;
-                }
-                if(v58 > v67){
-                    v58 = v67;
-                    d58 = d67;
-                }
-                v58 += p58;
-            }
-            if(rc.onTheMap(l13)){
-                p13 = rc.senseRubble(l13) + 10.0;
-                v13 -= p13;
-                if(v13 > v24){
-                    v13 = v24;
-                    d13 = d24;
-                }
-                if(v13 > v23){
-                    v13 = v23;
-                    d13 = d23;
-                }
-                if(v13 > v22){
-                    v13 = v22;
-                    d13 = d22;
-                }
-                if(v13 > v14){
-                    v13 = v14;
-                    d13 = d14;
-                }
-                v13 += p13;
-            }
-            if(rc.onTheMap(l15)){
-                p15 = rc.senseRubble(l15) + 10.0;
-                v15 -= p15;
-                if(v15 > v24){
-                    v15 = v24;
-                    d15 = d24;
-                }
-                if(v15 > v25){
-                    v15 = v25;
-                    d15 = d25;
-                }
-                if(v15 > v26){
-                    v15 = v26;
-                    d15 = d26;
-                }
-                if(v15 > v14){
-                    v15 = v14;
-                    d15 = d14;
-                }
-                v15 += p15;
-            }
-            if(rc.onTheMap(l93)){
-                p93 = rc.senseRubble(l93) + 10.0;
-                v93 -= p93;
-                if(v93 > v84){
-                    v93 = v84;
-                    d93 = d84;
-                }
-                if(v93 > v83){
-                    v93 = v83;
-                    d93 = d83;
-                }
-                if(v93 > v82){
-                    v93 = v82;
-                    d93 = d82;
-                }
-                if(v93 > v94){
-                    v93 = v94;
-                    d93 = d94;
-                }
-                v93 += p93;
-            }
-            if(rc.onTheMap(l95)){
-                p95 = rc.senseRubble(l95) + 10.0;
-                v95 -= p95;
-                if(v95 > v84){
-                    v95 = v84;
-                    d95 = d84;
-                }
-                if(v95 > v85){
-                    v95 = v85;
-                    d95 = d85;
-                }
-                if(v95 > v86){
-                    v95 = v86;
-                    d95 = d86;
-                }
-                if(v95 > v94){
-                    v95 = v94;
-                    d95 = d94;
-                }
-                v95 += p95;
-            }
-            if(rc.onTheMap(l48)){
-                p48 = rc.senseRubble(l48) + 10.0;
-                v48 -= p48;
-                if(v48 > v57){
-                    v48 = v57;
-                    d48 = d57;
-                }
-                if(v48 > v47){
-                    v48 = v47;
-                    d48 = d47;
-                }
-                if(v48 > v37){
-                    v48 = v37;
-                    d48 = d37;
-                }
-                if(v48 > v58){
-                    v48 = v58;
-                    d48 = d58;
-                }
-                v48 += p48;
-            }
-            if(rc.onTheMap(l68)){
-                p68 = rc.senseRubble(l68) + 10.0;
-                v68 -= p68;
-                if(v68 > v57){
-                    v68 = v57;
-                    d68 = d57;
-                }
-                if(v68 > v67){
-                    v68 = v67;
-                    d68 = d67;
-                }
-                if(v68 > v77){
-                    v68 = v77;
-                    d68 = d77;
-                }
-                if(v68 > v58){
-                    v68 = v58;
-                    d68 = d58;
-                }
-                v68 += p68;
-            }
-            if(rc.onTheMap(l12)){
-                p12 = rc.senseRubble(l12) + 10.0;
-                v12 -= p12;
-                if(v12 > v23){
-                    v12 = v23;
-                    d12 = d23;
-                }
-                if(v12 > v22){
-                    v12 = v22;
-                    d12 = d22;
-                }
-                if(v12 > v13){
-                    v12 = v13;
-                    d12 = d13;
-                }
-                v12 += p12;
-            }
-            if(rc.onTheMap(l16)){
-                p16 = rc.senseRubble(l16) + 10.0;
-                v16 -= p16;
-                if(v16 > v25){
-                    v16 = v25;
-                    d16 = d25;
-                }
-                if(v16 > v26){
-                    v16 = v26;
-                    d16 = d26;
-                }
-                if(v16 > v15){
-                    v16 = v15;
-                    d16 = d15;
-                }
-                if(v16 > v27){
-                    v16 = v27;
-                    d16 = d27;
-                }
-                v16 += p16;
-            }
-            if(rc.onTheMap(l92)){
-                p92 = rc.senseRubble(l92) + 10.0;
-                v92 -= p92;
-                if(v92 > v83){
-                    v92 = v83;
-                    d92 = d83;
-                }
-                if(v92 > v82){
-                    v92 = v82;
-                    d92 = d82;
-                }
-                if(v92 > v93){
-                    v92 = v93;
-                    d92 = d93;
-                }
-                v92 += p92;
-            }
-            if(rc.onTheMap(l96)){
-                p96 = rc.senseRubble(l96) + 10.0;
-                v96 -= p96;
-                if(v96 > v85){
-                    v96 = v85;
-                    d96 = d85;
-                }
-                if(v96 > v86){
-                    v96 = v86;
-                    d96 = d86;
-                }
-                if(v96 > v95){
-                    v96 = v95;
-                    d96 = d95;
-                }
-                if(v96 > v87){
-                    v96 = v87;
-                    d96 = d87;
-                }
-                v96 += p96;
-            }
-            if(rc.onTheMap(l38)){
-                p38 = rc.senseRubble(l38) + 10.0;
-                v38 -= p38;
-                if(v38 > v47){
-                    v38 = v47;
-                    d38 = d47;
-                }
-                if(v38 > v37){
-                    v38 = v37;
-                    d38 = d37;
-                }
-                if(v38 > v48){
-                    v38 = v48;
-                    d38 = d48;
-                }
-                if(v38 > v27){
-                    v38 = v27;
-                    d38 = d27;
-                }
-                v38 += p38;
-            }
-            if(rc.onTheMap(l78)){
-                p78 = rc.senseRubble(l78) + 10.0;
-                v78 -= p78;
-                if(v78 > v67){
-                    v78 = v67;
-                    d78 = d67;
-                }
-                if(v78 > v77){
-                    v78 = v77;
-                    d78 = d77;
-                }
-                if(v78 > v68){
-                    v78 = v68;
-                    d78 = d68;
-                }
-                if(v78 > v87){
-                    v78 = v87;
-                    d78 = d87;
-                }
-                v78 += p78;
-            }
             System.out.println("Ran BFS: " + Clock.getBytecodesLeft());
             int dx = target.x - l54.x;
             int dy = target.y - l54.y;
             switch (dx) {
-                case -4:
-                    switch (dy){
-                        case -2:
-                            return d12;
-                        case -1:
-                            return d13;
-                        case 0:
-                            return d14;
-                        case 1:
-                            return d15;
-                        case 2:
-                            return d16;
-                    }
-                    break;
                 case -3:
                     switch (dy){
                         case -2:
@@ -1770,8 +1187,6 @@ public class BFS20 extends BFS{
                             return d25;
                         case 2:
                             return d26;
-                        case 3:
-                            return d27;
                     }
                     break;
                 case -2:
@@ -1788,8 +1203,6 @@ public class BFS20 extends BFS{
                             return d36;
                         case 3:
                             return d37;
-                        case 4:
-                            return d38;
                     }
                     break;
                 case -1:
@@ -1806,8 +1219,6 @@ public class BFS20 extends BFS{
                             return d46;
                         case 3:
                             return d47;
-                        case 4:
-                            return d48;
                     }
                     break;
                 case 0:
@@ -1824,8 +1235,6 @@ public class BFS20 extends BFS{
                             return d56;
                         case 3:
                             return d57;
-                        case 4:
-                            return d58;
                     }
                     break;
                 case 1:
@@ -1842,8 +1251,6 @@ public class BFS20 extends BFS{
                             return d66;
                         case 3:
                             return d67;
-                        case 4:
-                            return d68;
                     }
                     break;
                 case 2:
@@ -1860,8 +1267,6 @@ public class BFS20 extends BFS{
                             return d76;
                         case 3:
                             return d77;
-                        case 4:
-                            return d78;
                     }
                     break;
                 case 3:
@@ -1876,22 +1281,6 @@ public class BFS20 extends BFS{
                             return d85;
                         case 2:
                             return d86;
-                        case 3:
-                            return d87;
-                    }
-                    break;
-                case 4:
-                    switch (dy){
-                        case -2:
-                            return d92;
-                        case -1:
-                            return d93;
-                        case 0:
-                            return d94;
-                        case 1:
-                            return d95;
-                        case 2:
-                            return d96;
                     }
                     break;
             }
@@ -1920,11 +1309,66 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d32;
                 System.out.println("Best end location: " + l32.toString());}
+            currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d36;
+                System.out.println("Best end location: " + l36.toString());}
             currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
             if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d72;
                 System.out.println("Best end location: " + l72.toString());}
+            currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d76;
+                System.out.println("Best end location: " + l76.toString());}
+            currScore = (initialDist - l24.distanceSquaredTo(target)) / v24;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d24;
+                System.out.println("Best end location: " + l24.toString());}
+            currScore = (initialDist - l84.distanceSquaredTo(target)) / v84;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d84;
+                System.out.println("Best end location: " + l84.toString());}
+            currScore = (initialDist - l57.distanceSquaredTo(target)) / v57;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d57;
+                System.out.println("Best end location: " + l57.toString());}
+            currScore = (initialDist - l23.distanceSquaredTo(target)) / v23;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d23;
+                System.out.println("Best end location: " + l23.toString());}
+            currScore = (initialDist - l25.distanceSquaredTo(target)) / v25;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d25;
+                System.out.println("Best end location: " + l25.toString());}
+            currScore = (initialDist - l83.distanceSquaredTo(target)) / v83;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d83;
+                System.out.println("Best end location: " + l83.toString());}
+            currScore = (initialDist - l85.distanceSquaredTo(target)) / v85;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d85;
+                System.out.println("Best end location: " + l85.toString());}
+            currScore = (initialDist - l47.distanceSquaredTo(target)) / v47;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d47;
+                System.out.println("Best end location: " + l47.toString());}
+            currScore = (initialDist - l67.distanceSquaredTo(target)) / v67;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d67;
+                System.out.println("Best end location: " + l67.toString());}
             currScore = (initialDist - l22.distanceSquaredTo(target)) / v22;
             if(currScore > bestScore){
                 bestScore = currScore;
@@ -1955,91 +1399,6 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d77;
                 System.out.println("Best end location: " + l77.toString());}
-            currScore = (initialDist - l27.distanceSquaredTo(target)) / v27;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d27;
-                System.out.println("Best end location: " + l27.toString());}
-            currScore = (initialDist - l87.distanceSquaredTo(target)) / v87;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d87;
-                System.out.println("Best end location: " + l87.toString());}
-            currScore = (initialDist - l14.distanceSquaredTo(target)) / v14;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d14;
-                System.out.println("Best end location: " + l14.toString());}
-            currScore = (initialDist - l94.distanceSquaredTo(target)) / v94;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d94;
-                System.out.println("Best end location: " + l94.toString());}
-            currScore = (initialDist - l58.distanceSquaredTo(target)) / v58;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d58;
-                System.out.println("Best end location: " + l58.toString());}
-            currScore = (initialDist - l13.distanceSquaredTo(target)) / v13;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d13;
-                System.out.println("Best end location: " + l13.toString());}
-            currScore = (initialDist - l15.distanceSquaredTo(target)) / v15;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d15;
-                System.out.println("Best end location: " + l15.toString());}
-            currScore = (initialDist - l93.distanceSquaredTo(target)) / v93;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d93;
-                System.out.println("Best end location: " + l93.toString());}
-            currScore = (initialDist - l95.distanceSquaredTo(target)) / v95;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d95;
-                System.out.println("Best end location: " + l95.toString());}
-            currScore = (initialDist - l48.distanceSquaredTo(target)) / v48;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d48;
-                System.out.println("Best end location: " + l48.toString());}
-            currScore = (initialDist - l68.distanceSquaredTo(target)) / v68;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d68;
-                System.out.println("Best end location: " + l68.toString());}
-            currScore = (initialDist - l12.distanceSquaredTo(target)) / v12;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d12;
-                System.out.println("Best end location: " + l12.toString());}
-            currScore = (initialDist - l16.distanceSquaredTo(target)) / v16;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d16;
-                System.out.println("Best end location: " + l16.toString());}
-            currScore = (initialDist - l92.distanceSquaredTo(target)) / v92;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d92;
-                System.out.println("Best end location: " + l92.toString());}
-            currScore = (initialDist - l96.distanceSquaredTo(target)) / v96;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d96;
-                System.out.println("Best end location: " + l96.toString());}
-            currScore = (initialDist - l38.distanceSquaredTo(target)) / v38;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d38;
-                System.out.println("Best end location: " + l38.toString());}
-            currScore = (initialDist - l78.distanceSquaredTo(target)) / v78;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d78;
-                System.out.println("Best end location: " + l78.toString());}
             return ans;
         } catch (Exception e){
             e.printStackTrace();
@@ -2758,357 +2117,12 @@ public class BFS20 extends BFS{
                 }
                 v71 += p71;
             }
-            if(rc.onTheMap(l21)){
-                p21 = rc.senseRubble(l21) + 10.0;
-                v21 -= p21;
-                if(v21 > v32){
-                    v21 = v32;
-                    d21 = d32;
-                }
-                if(v21 > v22){
-                    v21 = v22;
-                    d21 = d22;
-                }
-                if(v21 > v31){
-                    v21 = v31;
-                    d21 = d31;
-                }
-                v21 += p21;
-            }
-            if(rc.onTheMap(l81)){
-                p81 = rc.senseRubble(l81) + 10.0;
-                v81 -= p81;
-                if(v81 > v72){
-                    v81 = v72;
-                    d81 = d72;
-                }
-                if(v81 > v71){
-                    v81 = v71;
-                    d81 = d71;
-                }
-                if(v81 > v82){
-                    v81 = v82;
-                    d81 = d82;
-                }
-                v81 += p81;
-            }
-            if(rc.onTheMap(l14)){
-                p14 = rc.senseRubble(l14) + 10.0;
-                v14 -= p14;
-                if(v14 > v24){
-                    v14 = v24;
-                    d14 = d24;
-                }
-                if(v14 > v25){
-                    v14 = v25;
-                    d14 = d25;
-                }
-                if(v14 > v23){
-                    v14 = v23;
-                    d14 = d23;
-                }
-                v14 += p14;
-            }
-            if(rc.onTheMap(l94)){
-                p94 = rc.senseRubble(l94) + 10.0;
-                v94 -= p94;
-                if(v94 > v84){
-                    v94 = v84;
-                    d94 = d84;
-                }
-                if(v94 > v83){
-                    v94 = v83;
-                    d94 = d83;
-                }
-                if(v94 > v85){
-                    v94 = v85;
-                    d94 = d85;
-                }
-                v94 += p94;
-            }
-            if(rc.onTheMap(l50)){
-                p50 = rc.senseRubble(l50) + 10.0;
-                v50 -= p50;
-                if(v50 > v51){
-                    v50 = v51;
-                    d50 = d51;
-                }
-                if(v50 > v41){
-                    v50 = v41;
-                    d50 = d41;
-                }
-                if(v50 > v61){
-                    v50 = v61;
-                    d50 = d61;
-                }
-                v50 += p50;
-            }
-            if(rc.onTheMap(l13)){
-                p13 = rc.senseRubble(l13) + 10.0;
-                v13 -= p13;
-                if(v13 > v24){
-                    v13 = v24;
-                    d13 = d24;
-                }
-                if(v13 > v23){
-                    v13 = v23;
-                    d13 = d23;
-                }
-                if(v13 > v22){
-                    v13 = v22;
-                    d13 = d22;
-                }
-                if(v13 > v14){
-                    v13 = v14;
-                    d13 = d14;
-                }
-                v13 += p13;
-            }
-            if(rc.onTheMap(l15)){
-                p15 = rc.senseRubble(l15) + 10.0;
-                v15 -= p15;
-                if(v15 > v24){
-                    v15 = v24;
-                    d15 = d24;
-                }
-                if(v15 > v25){
-                    v15 = v25;
-                    d15 = d25;
-                }
-                if(v15 > v26){
-                    v15 = v26;
-                    d15 = d26;
-                }
-                if(v15 > v14){
-                    v15 = v14;
-                    d15 = d14;
-                }
-                v15 += p15;
-            }
-            if(rc.onTheMap(l93)){
-                p93 = rc.senseRubble(l93) + 10.0;
-                v93 -= p93;
-                if(v93 > v84){
-                    v93 = v84;
-                    d93 = d84;
-                }
-                if(v93 > v83){
-                    v93 = v83;
-                    d93 = d83;
-                }
-                if(v93 > v82){
-                    v93 = v82;
-                    d93 = d82;
-                }
-                if(v93 > v94){
-                    v93 = v94;
-                    d93 = d94;
-                }
-                v93 += p93;
-            }
-            if(rc.onTheMap(l95)){
-                p95 = rc.senseRubble(l95) + 10.0;
-                v95 -= p95;
-                if(v95 > v84){
-                    v95 = v84;
-                    d95 = d84;
-                }
-                if(v95 > v85){
-                    v95 = v85;
-                    d95 = d85;
-                }
-                if(v95 > v86){
-                    v95 = v86;
-                    d95 = d86;
-                }
-                if(v95 > v94){
-                    v95 = v94;
-                    d95 = d94;
-                }
-                v95 += p95;
-            }
-            if(rc.onTheMap(l40)){
-                p40 = rc.senseRubble(l40) + 10.0;
-                v40 -= p40;
-                if(v40 > v51){
-                    v40 = v51;
-                    d40 = d51;
-                }
-                if(v40 > v41){
-                    v40 = v41;
-                    d40 = d41;
-                }
-                if(v40 > v31){
-                    v40 = v31;
-                    d40 = d31;
-                }
-                if(v40 > v50){
-                    v40 = v50;
-                    d40 = d50;
-                }
-                v40 += p40;
-            }
-            if(rc.onTheMap(l60)){
-                p60 = rc.senseRubble(l60) + 10.0;
-                v60 -= p60;
-                if(v60 > v51){
-                    v60 = v51;
-                    d60 = d51;
-                }
-                if(v60 > v61){
-                    v60 = v61;
-                    d60 = d61;
-                }
-                if(v60 > v71){
-                    v60 = v71;
-                    d60 = d71;
-                }
-                if(v60 > v50){
-                    v60 = v50;
-                    d60 = d50;
-                }
-                v60 += p60;
-            }
-            if(rc.onTheMap(l12)){
-                p12 = rc.senseRubble(l12) + 10.0;
-                v12 -= p12;
-                if(v12 > v23){
-                    v12 = v23;
-                    d12 = d23;
-                }
-                if(v12 > v22){
-                    v12 = v22;
-                    d12 = d22;
-                }
-                if(v12 > v13){
-                    v12 = v13;
-                    d12 = d13;
-                }
-                if(v12 > v21){
-                    v12 = v21;
-                    d12 = d21;
-                }
-                v12 += p12;
-            }
-            if(rc.onTheMap(l16)){
-                p16 = rc.senseRubble(l16) + 10.0;
-                v16 -= p16;
-                if(v16 > v25){
-                    v16 = v25;
-                    d16 = d25;
-                }
-                if(v16 > v26){
-                    v16 = v26;
-                    d16 = d26;
-                }
-                if(v16 > v15){
-                    v16 = v15;
-                    d16 = d15;
-                }
-                v16 += p16;
-            }
-            if(rc.onTheMap(l92)){
-                p92 = rc.senseRubble(l92) + 10.0;
-                v92 -= p92;
-                if(v92 > v83){
-                    v92 = v83;
-                    d92 = d83;
-                }
-                if(v92 > v82){
-                    v92 = v82;
-                    d92 = d82;
-                }
-                if(v92 > v93){
-                    v92 = v93;
-                    d92 = d93;
-                }
-                if(v92 > v81){
-                    v92 = v81;
-                    d92 = d81;
-                }
-                v92 += p92;
-            }
-            if(rc.onTheMap(l96)){
-                p96 = rc.senseRubble(l96) + 10.0;
-                v96 -= p96;
-                if(v96 > v85){
-                    v96 = v85;
-                    d96 = d85;
-                }
-                if(v96 > v86){
-                    v96 = v86;
-                    d96 = d86;
-                }
-                if(v96 > v95){
-                    v96 = v95;
-                    d96 = d95;
-                }
-                v96 += p96;
-            }
-            if(rc.onTheMap(l30)){
-                p30 = rc.senseRubble(l30) + 10.0;
-                v30 -= p30;
-                if(v30 > v41){
-                    v30 = v41;
-                    d30 = d41;
-                }
-                if(v30 > v31){
-                    v30 = v31;
-                    d30 = d31;
-                }
-                if(v30 > v40){
-                    v30 = v40;
-                    d30 = d40;
-                }
-                if(v30 > v21){
-                    v30 = v21;
-                    d30 = d21;
-                }
-                v30 += p30;
-            }
-            if(rc.onTheMap(l70)){
-                p70 = rc.senseRubble(l70) + 10.0;
-                v70 -= p70;
-                if(v70 > v61){
-                    v70 = v61;
-                    d70 = d61;
-                }
-                if(v70 > v71){
-                    v70 = v71;
-                    d70 = d71;
-                }
-                if(v70 > v60){
-                    v70 = v60;
-                    d70 = d60;
-                }
-                if(v70 > v81){
-                    v70 = v81;
-                    d70 = d81;
-                }
-                v70 += p70;
-            }
             System.out.println("Ran BFS: " + Clock.getBytecodesLeft());
             int dx = target.x - l54.x;
             int dy = target.y - l54.y;
             switch (dx) {
-                case -4:
-                    switch (dy){
-                        case -2:
-                            return d12;
-                        case -1:
-                            return d13;
-                        case 0:
-                            return d14;
-                        case 1:
-                            return d15;
-                        case 2:
-                            return d16;
-                    }
-                    break;
                 case -3:
                     switch (dy){
-                        case -3:
-                            return d21;
                         case -2:
                             return d22;
                         case -1:
@@ -3123,8 +2137,6 @@ public class BFS20 extends BFS{
                     break;
                 case -2:
                     switch (dy){
-                        case -4:
-                            return d30;
                         case -3:
                             return d31;
                         case -2:
@@ -3141,8 +2153,6 @@ public class BFS20 extends BFS{
                     break;
                 case -1:
                     switch (dy){
-                        case -4:
-                            return d40;
                         case -3:
                             return d41;
                         case -2:
@@ -3159,8 +2169,6 @@ public class BFS20 extends BFS{
                     break;
                 case 0:
                     switch (dy){
-                        case -4:
-                            return d50;
                         case -3:
                             return d51;
                         case -2:
@@ -3177,8 +2185,6 @@ public class BFS20 extends BFS{
                     break;
                 case 1:
                     switch (dy){
-                        case -4:
-                            return d60;
                         case -3:
                             return d61;
                         case -2:
@@ -3195,8 +2201,6 @@ public class BFS20 extends BFS{
                     break;
                 case 2:
                     switch (dy){
-                        case -4:
-                            return d70;
                         case -3:
                             return d71;
                         case -2:
@@ -3213,8 +2217,6 @@ public class BFS20 extends BFS{
                     break;
                 case 3:
                     switch (dy){
-                        case -3:
-                            return d81;
                         case -2:
                             return d82;
                         case -1:
@@ -3225,20 +2227,6 @@ public class BFS20 extends BFS{
                             return d85;
                         case 2:
                             return d86;
-                    }
-                    break;
-                case 4:
-                    switch (dy){
-                        case -2:
-                            return d92;
-                        case -1:
-                            return d93;
-                        case 0:
-                            return d94;
-                        case 1:
-                            return d95;
-                        case 2:
-                            return d96;
                     }
                     break;
             }
@@ -3262,16 +2250,71 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d66;
                 System.out.println("Best end location: " + l66.toString());}
+            currScore = (initialDist - l32.distanceSquaredTo(target)) / v32;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d32;
+                System.out.println("Best end location: " + l32.toString());}
             currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
             if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d36;
                 System.out.println("Best end location: " + l36.toString());}
+            currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d72;
+                System.out.println("Best end location: " + l72.toString());}
             currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
             if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d76;
                 System.out.println("Best end location: " + l76.toString());}
+            currScore = (initialDist - l24.distanceSquaredTo(target)) / v24;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d24;
+                System.out.println("Best end location: " + l24.toString());}
+            currScore = (initialDist - l84.distanceSquaredTo(target)) / v84;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d84;
+                System.out.println("Best end location: " + l84.toString());}
+            currScore = (initialDist - l51.distanceSquaredTo(target)) / v51;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d51;
+                System.out.println("Best end location: " + l51.toString());}
+            currScore = (initialDist - l23.distanceSquaredTo(target)) / v23;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d23;
+                System.out.println("Best end location: " + l23.toString());}
+            currScore = (initialDist - l25.distanceSquaredTo(target)) / v25;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d25;
+                System.out.println("Best end location: " + l25.toString());}
+            currScore = (initialDist - l83.distanceSquaredTo(target)) / v83;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d83;
+                System.out.println("Best end location: " + l83.toString());}
+            currScore = (initialDist - l85.distanceSquaredTo(target)) / v85;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d85;
+                System.out.println("Best end location: " + l85.toString());}
+            currScore = (initialDist - l41.distanceSquaredTo(target)) / v41;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d41;
+                System.out.println("Best end location: " + l41.toString());}
+            currScore = (initialDist - l61.distanceSquaredTo(target)) / v61;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d61;
+                System.out.println("Best end location: " + l61.toString());}
             currScore = (initialDist - l22.distanceSquaredTo(target)) / v22;
             if(currScore > bestScore){
                 bestScore = currScore;
@@ -3302,91 +2345,6 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d71;
                 System.out.println("Best end location: " + l71.toString());}
-            currScore = (initialDist - l21.distanceSquaredTo(target)) / v21;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d21;
-                System.out.println("Best end location: " + l21.toString());}
-            currScore = (initialDist - l81.distanceSquaredTo(target)) / v81;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d81;
-                System.out.println("Best end location: " + l81.toString());}
-            currScore = (initialDist - l14.distanceSquaredTo(target)) / v14;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d14;
-                System.out.println("Best end location: " + l14.toString());}
-            currScore = (initialDist - l94.distanceSquaredTo(target)) / v94;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d94;
-                System.out.println("Best end location: " + l94.toString());}
-            currScore = (initialDist - l50.distanceSquaredTo(target)) / v50;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d50;
-                System.out.println("Best end location: " + l50.toString());}
-            currScore = (initialDist - l13.distanceSquaredTo(target)) / v13;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d13;
-                System.out.println("Best end location: " + l13.toString());}
-            currScore = (initialDist - l15.distanceSquaredTo(target)) / v15;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d15;
-                System.out.println("Best end location: " + l15.toString());}
-            currScore = (initialDist - l93.distanceSquaredTo(target)) / v93;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d93;
-                System.out.println("Best end location: " + l93.toString());}
-            currScore = (initialDist - l95.distanceSquaredTo(target)) / v95;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d95;
-                System.out.println("Best end location: " + l95.toString());}
-            currScore = (initialDist - l40.distanceSquaredTo(target)) / v40;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d40;
-                System.out.println("Best end location: " + l40.toString());}
-            currScore = (initialDist - l60.distanceSquaredTo(target)) / v60;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d60;
-                System.out.println("Best end location: " + l60.toString());}
-            currScore = (initialDist - l12.distanceSquaredTo(target)) / v12;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d12;
-                System.out.println("Best end location: " + l12.toString());}
-            currScore = (initialDist - l16.distanceSquaredTo(target)) / v16;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d16;
-                System.out.println("Best end location: " + l16.toString());}
-            currScore = (initialDist - l92.distanceSquaredTo(target)) / v92;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d92;
-                System.out.println("Best end location: " + l92.toString());}
-            currScore = (initialDist - l96.distanceSquaredTo(target)) / v96;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d96;
-                System.out.println("Best end location: " + l96.toString());}
-            currScore = (initialDist - l30.distanceSquaredTo(target)) / v30;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d30;
-                System.out.println("Best end location: " + l30.toString());}
-            currScore = (initialDist - l70.distanceSquaredTo(target)) / v70;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d70;
-                System.out.println("Best end location: " + l70.toString());}
             return ans;
         } catch (Exception e){
             e.printStackTrace();
@@ -4105,343 +3063,12 @@ public class BFS20 extends BFS{
                 }
                 v77 += p77;
             }
-            if(rc.onTheMap(l81)){
-                p81 = rc.senseRubble(l81) + 10.0;
-                v81 -= p81;
-                if(v81 > v72){
-                    v81 = v72;
-                    d81 = d72;
-                }
-                if(v81 > v71){
-                    v81 = v71;
-                    d81 = d71;
-                }
-                if(v81 > v82){
-                    v81 = v82;
-                    d81 = d82;
-                }
-                v81 += p81;
-            }
-            if(rc.onTheMap(l87)){
-                p87 = rc.senseRubble(l87) + 10.0;
-                v87 -= p87;
-                if(v87 > v76){
-                    v87 = v76;
-                    d87 = d76;
-                }
-                if(v87 > v77){
-                    v87 = v77;
-                    d87 = d77;
-                }
-                if(v87 > v86){
-                    v87 = v86;
-                    d87 = d86;
-                }
-                v87 += p87;
-            }
-            if(rc.onTheMap(l94)){
-                p94 = rc.senseRubble(l94) + 10.0;
-                v94 -= p94;
-                if(v94 > v84){
-                    v94 = v84;
-                    d94 = d84;
-                }
-                if(v94 > v83){
-                    v94 = v83;
-                    d94 = d83;
-                }
-                if(v94 > v85){
-                    v94 = v85;
-                    d94 = d85;
-                }
-                v94 += p94;
-            }
-            if(rc.onTheMap(l50)){
-                p50 = rc.senseRubble(l50) + 10.0;
-                v50 -= p50;
-                if(v50 > v51){
-                    v50 = v51;
-                    d50 = d51;
-                }
-                if(v50 > v41){
-                    v50 = v41;
-                    d50 = d41;
-                }
-                if(v50 > v61){
-                    v50 = v61;
-                    d50 = d61;
-                }
-                v50 += p50;
-            }
-            if(rc.onTheMap(l58)){
-                p58 = rc.senseRubble(l58) + 10.0;
-                v58 -= p58;
-                if(v58 > v57){
-                    v58 = v57;
-                    d58 = d57;
-                }
-                if(v58 > v47){
-                    v58 = v47;
-                    d58 = d47;
-                }
-                if(v58 > v67){
-                    v58 = v67;
-                    d58 = d67;
-                }
-                v58 += p58;
-            }
-            if(rc.onTheMap(l93)){
-                p93 = rc.senseRubble(l93) + 10.0;
-                v93 -= p93;
-                if(v93 > v84){
-                    v93 = v84;
-                    d93 = d84;
-                }
-                if(v93 > v83){
-                    v93 = v83;
-                    d93 = d83;
-                }
-                if(v93 > v82){
-                    v93 = v82;
-                    d93 = d82;
-                }
-                if(v93 > v94){
-                    v93 = v94;
-                    d93 = d94;
-                }
-                v93 += p93;
-            }
-            if(rc.onTheMap(l95)){
-                p95 = rc.senseRubble(l95) + 10.0;
-                v95 -= p95;
-                if(v95 > v84){
-                    v95 = v84;
-                    d95 = d84;
-                }
-                if(v95 > v85){
-                    v95 = v85;
-                    d95 = d85;
-                }
-                if(v95 > v86){
-                    v95 = v86;
-                    d95 = d86;
-                }
-                if(v95 > v94){
-                    v95 = v94;
-                    d95 = d94;
-                }
-                v95 += p95;
-            }
-            if(rc.onTheMap(l40)){
-                p40 = rc.senseRubble(l40) + 10.0;
-                v40 -= p40;
-                if(v40 > v51){
-                    v40 = v51;
-                    d40 = d51;
-                }
-                if(v40 > v41){
-                    v40 = v41;
-                    d40 = d41;
-                }
-                if(v40 > v31){
-                    v40 = v31;
-                    d40 = d31;
-                }
-                if(v40 > v50){
-                    v40 = v50;
-                    d40 = d50;
-                }
-                v40 += p40;
-            }
-            if(rc.onTheMap(l48)){
-                p48 = rc.senseRubble(l48) + 10.0;
-                v48 -= p48;
-                if(v48 > v57){
-                    v48 = v57;
-                    d48 = d57;
-                }
-                if(v48 > v47){
-                    v48 = v47;
-                    d48 = d47;
-                }
-                if(v48 > v37){
-                    v48 = v37;
-                    d48 = d37;
-                }
-                if(v48 > v58){
-                    v48 = v58;
-                    d48 = d58;
-                }
-                v48 += p48;
-            }
-            if(rc.onTheMap(l60)){
-                p60 = rc.senseRubble(l60) + 10.0;
-                v60 -= p60;
-                if(v60 > v51){
-                    v60 = v51;
-                    d60 = d51;
-                }
-                if(v60 > v61){
-                    v60 = v61;
-                    d60 = d61;
-                }
-                if(v60 > v71){
-                    v60 = v71;
-                    d60 = d71;
-                }
-                if(v60 > v50){
-                    v60 = v50;
-                    d60 = d50;
-                }
-                v60 += p60;
-            }
-            if(rc.onTheMap(l68)){
-                p68 = rc.senseRubble(l68) + 10.0;
-                v68 -= p68;
-                if(v68 > v57){
-                    v68 = v57;
-                    d68 = d57;
-                }
-                if(v68 > v67){
-                    v68 = v67;
-                    d68 = d67;
-                }
-                if(v68 > v77){
-                    v68 = v77;
-                    d68 = d77;
-                }
-                if(v68 > v58){
-                    v68 = v58;
-                    d68 = d58;
-                }
-                v68 += p68;
-            }
-            if(rc.onTheMap(l92)){
-                p92 = rc.senseRubble(l92) + 10.0;
-                v92 -= p92;
-                if(v92 > v83){
-                    v92 = v83;
-                    d92 = d83;
-                }
-                if(v92 > v82){
-                    v92 = v82;
-                    d92 = d82;
-                }
-                if(v92 > v93){
-                    v92 = v93;
-                    d92 = d93;
-                }
-                if(v92 > v81){
-                    v92 = v81;
-                    d92 = d81;
-                }
-                v92 += p92;
-            }
-            if(rc.onTheMap(l96)){
-                p96 = rc.senseRubble(l96) + 10.0;
-                v96 -= p96;
-                if(v96 > v85){
-                    v96 = v85;
-                    d96 = d85;
-                }
-                if(v96 > v86){
-                    v96 = v86;
-                    d96 = d86;
-                }
-                if(v96 > v95){
-                    v96 = v95;
-                    d96 = d95;
-                }
-                if(v96 > v87){
-                    v96 = v87;
-                    d96 = d87;
-                }
-                v96 += p96;
-            }
-            if(rc.onTheMap(l30)){
-                p30 = rc.senseRubble(l30) + 10.0;
-                v30 -= p30;
-                if(v30 > v41){
-                    v30 = v41;
-                    d30 = d41;
-                }
-                if(v30 > v31){
-                    v30 = v31;
-                    d30 = d31;
-                }
-                if(v30 > v40){
-                    v30 = v40;
-                    d30 = d40;
-                }
-                v30 += p30;
-            }
-            if(rc.onTheMap(l38)){
-                p38 = rc.senseRubble(l38) + 10.0;
-                v38 -= p38;
-                if(v38 > v47){
-                    v38 = v47;
-                    d38 = d47;
-                }
-                if(v38 > v37){
-                    v38 = v37;
-                    d38 = d37;
-                }
-                if(v38 > v48){
-                    v38 = v48;
-                    d38 = d48;
-                }
-                v38 += p38;
-            }
-            if(rc.onTheMap(l70)){
-                p70 = rc.senseRubble(l70) + 10.0;
-                v70 -= p70;
-                if(v70 > v61){
-                    v70 = v61;
-                    d70 = d61;
-                }
-                if(v70 > v71){
-                    v70 = v71;
-                    d70 = d71;
-                }
-                if(v70 > v60){
-                    v70 = v60;
-                    d70 = d60;
-                }
-                if(v70 > v81){
-                    v70 = v81;
-                    d70 = d81;
-                }
-                v70 += p70;
-            }
-            if(rc.onTheMap(l78)){
-                p78 = rc.senseRubble(l78) + 10.0;
-                v78 -= p78;
-                if(v78 > v67){
-                    v78 = v67;
-                    d78 = d67;
-                }
-                if(v78 > v77){
-                    v78 = v77;
-                    d78 = d77;
-                }
-                if(v78 > v68){
-                    v78 = v68;
-                    d78 = d68;
-                }
-                if(v78 > v87){
-                    v78 = v87;
-                    d78 = d87;
-                }
-                v78 += p78;
-            }
             System.out.println("Ran BFS: " + Clock.getBytecodesLeft());
             int dx = target.x - l54.x;
             int dy = target.y - l54.y;
             switch (dx) {
                 case -2:
                     switch (dy){
-                        case -4:
-                            return d30;
                         case -3:
                             return d31;
                         case -2:
@@ -4456,14 +3083,10 @@ public class BFS20 extends BFS{
                             return d36;
                         case 3:
                             return d37;
-                        case 4:
-                            return d38;
                     }
                     break;
                 case -1:
                     switch (dy){
-                        case -4:
-                            return d40;
                         case -3:
                             return d41;
                         case -2:
@@ -4478,14 +3101,10 @@ public class BFS20 extends BFS{
                             return d46;
                         case 3:
                             return d47;
-                        case 4:
-                            return d48;
                     }
                     break;
                 case 0:
                     switch (dy){
-                        case -4:
-                            return d50;
                         case -3:
                             return d51;
                         case -2:
@@ -4500,14 +3119,10 @@ public class BFS20 extends BFS{
                             return d56;
                         case 3:
                             return d57;
-                        case 4:
-                            return d58;
                     }
                     break;
                 case 1:
                     switch (dy){
-                        case -4:
-                            return d60;
                         case -3:
                             return d61;
                         case -2:
@@ -4522,14 +3137,10 @@ public class BFS20 extends BFS{
                             return d66;
                         case 3:
                             return d67;
-                        case 4:
-                            return d68;
                     }
                     break;
                 case 2:
                     switch (dy){
-                        case -4:
-                            return d70;
                         case -3:
                             return d71;
                         case -2:
@@ -4544,14 +3155,10 @@ public class BFS20 extends BFS{
                             return d76;
                         case 3:
                             return d77;
-                        case 4:
-                            return d78;
                     }
                     break;
                 case 3:
                     switch (dy){
-                        case -3:
-                            return d81;
                         case -2:
                             return d82;
                         case -1:
@@ -4562,22 +3169,6 @@ public class BFS20 extends BFS{
                             return d85;
                         case 2:
                             return d86;
-                        case 3:
-                            return d87;
-                    }
-                    break;
-                case 4:
-                    switch (dy){
-                        case -2:
-                            return d92;
-                        case -1:
-                            return d93;
-                        case 0:
-                            return d94;
-                        case 1:
-                            return d95;
-                        case 2:
-                            return d96;
                     }
                     break;
             }
@@ -4611,6 +3202,61 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d36;
                 System.out.println("Best end location: " + l36.toString());}
+            currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d72;
+                System.out.println("Best end location: " + l72.toString());}
+            currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d76;
+                System.out.println("Best end location: " + l76.toString());}
+            currScore = (initialDist - l84.distanceSquaredTo(target)) / v84;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d84;
+                System.out.println("Best end location: " + l84.toString());}
+            currScore = (initialDist - l51.distanceSquaredTo(target)) / v51;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d51;
+                System.out.println("Best end location: " + l51.toString());}
+            currScore = (initialDist - l57.distanceSquaredTo(target)) / v57;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d57;
+                System.out.println("Best end location: " + l57.toString());}
+            currScore = (initialDist - l83.distanceSquaredTo(target)) / v83;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d83;
+                System.out.println("Best end location: " + l83.toString());}
+            currScore = (initialDist - l85.distanceSquaredTo(target)) / v85;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d85;
+                System.out.println("Best end location: " + l85.toString());}
+            currScore = (initialDist - l41.distanceSquaredTo(target)) / v41;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d41;
+                System.out.println("Best end location: " + l41.toString());}
+            currScore = (initialDist - l47.distanceSquaredTo(target)) / v47;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d47;
+                System.out.println("Best end location: " + l47.toString());}
+            currScore = (initialDist - l61.distanceSquaredTo(target)) / v61;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d61;
+                System.out.println("Best end location: " + l61.toString());}
+            currScore = (initialDist - l67.distanceSquaredTo(target)) / v67;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d67;
+                System.out.println("Best end location: " + l67.toString());}
             currScore = (initialDist - l82.distanceSquaredTo(target)) / v82;
             if(currScore > bestScore){
                 bestScore = currScore;
@@ -4641,91 +3287,6 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d77;
                 System.out.println("Best end location: " + l77.toString());}
-            currScore = (initialDist - l81.distanceSquaredTo(target)) / v81;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d81;
-                System.out.println("Best end location: " + l81.toString());}
-            currScore = (initialDist - l87.distanceSquaredTo(target)) / v87;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d87;
-                System.out.println("Best end location: " + l87.toString());}
-            currScore = (initialDist - l94.distanceSquaredTo(target)) / v94;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d94;
-                System.out.println("Best end location: " + l94.toString());}
-            currScore = (initialDist - l50.distanceSquaredTo(target)) / v50;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d50;
-                System.out.println("Best end location: " + l50.toString());}
-            currScore = (initialDist - l58.distanceSquaredTo(target)) / v58;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d58;
-                System.out.println("Best end location: " + l58.toString());}
-            currScore = (initialDist - l93.distanceSquaredTo(target)) / v93;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d93;
-                System.out.println("Best end location: " + l93.toString());}
-            currScore = (initialDist - l95.distanceSquaredTo(target)) / v95;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d95;
-                System.out.println("Best end location: " + l95.toString());}
-            currScore = (initialDist - l40.distanceSquaredTo(target)) / v40;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d40;
-                System.out.println("Best end location: " + l40.toString());}
-            currScore = (initialDist - l48.distanceSquaredTo(target)) / v48;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d48;
-                System.out.println("Best end location: " + l48.toString());}
-            currScore = (initialDist - l60.distanceSquaredTo(target)) / v60;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d60;
-                System.out.println("Best end location: " + l60.toString());}
-            currScore = (initialDist - l68.distanceSquaredTo(target)) / v68;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d68;
-                System.out.println("Best end location: " + l68.toString());}
-            currScore = (initialDist - l92.distanceSquaredTo(target)) / v92;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d92;
-                System.out.println("Best end location: " + l92.toString());}
-            currScore = (initialDist - l96.distanceSquaredTo(target)) / v96;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d96;
-                System.out.println("Best end location: " + l96.toString());}
-            currScore = (initialDist - l30.distanceSquaredTo(target)) / v30;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d30;
-                System.out.println("Best end location: " + l30.toString());}
-            currScore = (initialDist - l38.distanceSquaredTo(target)) / v38;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d38;
-                System.out.println("Best end location: " + l38.toString());}
-            currScore = (initialDist - l70.distanceSquaredTo(target)) / v70;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d70;
-                System.out.println("Best end location: " + l70.toString());}
-            currScore = (initialDist - l78.distanceSquaredTo(target)) / v78;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d78;
-                System.out.println("Best end location: " + l78.toString());}
             return ans;
         } catch (Exception e){
             e.printStackTrace();
@@ -5444,357 +4005,12 @@ public class BFS20 extends BFS{
                 }
                 v77 += p77;
             }
-            if(rc.onTheMap(l21)){
-                p21 = rc.senseRubble(l21) + 10.0;
-                v21 -= p21;
-                if(v21 > v32){
-                    v21 = v32;
-                    d21 = d32;
-                }
-                if(v21 > v22){
-                    v21 = v22;
-                    d21 = d22;
-                }
-                if(v21 > v31){
-                    v21 = v31;
-                    d21 = d31;
-                }
-                v21 += p21;
-            }
-            if(rc.onTheMap(l27)){
-                p27 = rc.senseRubble(l27) + 10.0;
-                v27 -= p27;
-                if(v27 > v36){
-                    v27 = v36;
-                    d27 = d36;
-                }
-                if(v27 > v37){
-                    v27 = v37;
-                    d27 = d37;
-                }
-                if(v27 > v26){
-                    v27 = v26;
-                    d27 = d26;
-                }
-                v27 += p27;
-            }
-            if(rc.onTheMap(l14)){
-                p14 = rc.senseRubble(l14) + 10.0;
-                v14 -= p14;
-                if(v14 > v24){
-                    v14 = v24;
-                    d14 = d24;
-                }
-                if(v14 > v25){
-                    v14 = v25;
-                    d14 = d25;
-                }
-                if(v14 > v23){
-                    v14 = v23;
-                    d14 = d23;
-                }
-                v14 += p14;
-            }
-            if(rc.onTheMap(l50)){
-                p50 = rc.senseRubble(l50) + 10.0;
-                v50 -= p50;
-                if(v50 > v51){
-                    v50 = v51;
-                    d50 = d51;
-                }
-                if(v50 > v41){
-                    v50 = v41;
-                    d50 = d41;
-                }
-                if(v50 > v61){
-                    v50 = v61;
-                    d50 = d61;
-                }
-                v50 += p50;
-            }
-            if(rc.onTheMap(l58)){
-                p58 = rc.senseRubble(l58) + 10.0;
-                v58 -= p58;
-                if(v58 > v57){
-                    v58 = v57;
-                    d58 = d57;
-                }
-                if(v58 > v47){
-                    v58 = v47;
-                    d58 = d47;
-                }
-                if(v58 > v67){
-                    v58 = v67;
-                    d58 = d67;
-                }
-                v58 += p58;
-            }
-            if(rc.onTheMap(l13)){
-                p13 = rc.senseRubble(l13) + 10.0;
-                v13 -= p13;
-                if(v13 > v24){
-                    v13 = v24;
-                    d13 = d24;
-                }
-                if(v13 > v23){
-                    v13 = v23;
-                    d13 = d23;
-                }
-                if(v13 > v22){
-                    v13 = v22;
-                    d13 = d22;
-                }
-                if(v13 > v14){
-                    v13 = v14;
-                    d13 = d14;
-                }
-                v13 += p13;
-            }
-            if(rc.onTheMap(l15)){
-                p15 = rc.senseRubble(l15) + 10.0;
-                v15 -= p15;
-                if(v15 > v24){
-                    v15 = v24;
-                    d15 = d24;
-                }
-                if(v15 > v25){
-                    v15 = v25;
-                    d15 = d25;
-                }
-                if(v15 > v26){
-                    v15 = v26;
-                    d15 = d26;
-                }
-                if(v15 > v14){
-                    v15 = v14;
-                    d15 = d14;
-                }
-                v15 += p15;
-            }
-            if(rc.onTheMap(l40)){
-                p40 = rc.senseRubble(l40) + 10.0;
-                v40 -= p40;
-                if(v40 > v51){
-                    v40 = v51;
-                    d40 = d51;
-                }
-                if(v40 > v41){
-                    v40 = v41;
-                    d40 = d41;
-                }
-                if(v40 > v31){
-                    v40 = v31;
-                    d40 = d31;
-                }
-                if(v40 > v50){
-                    v40 = v50;
-                    d40 = d50;
-                }
-                v40 += p40;
-            }
-            if(rc.onTheMap(l48)){
-                p48 = rc.senseRubble(l48) + 10.0;
-                v48 -= p48;
-                if(v48 > v57){
-                    v48 = v57;
-                    d48 = d57;
-                }
-                if(v48 > v47){
-                    v48 = v47;
-                    d48 = d47;
-                }
-                if(v48 > v37){
-                    v48 = v37;
-                    d48 = d37;
-                }
-                if(v48 > v58){
-                    v48 = v58;
-                    d48 = d58;
-                }
-                v48 += p48;
-            }
-            if(rc.onTheMap(l60)){
-                p60 = rc.senseRubble(l60) + 10.0;
-                v60 -= p60;
-                if(v60 > v51){
-                    v60 = v51;
-                    d60 = d51;
-                }
-                if(v60 > v61){
-                    v60 = v61;
-                    d60 = d61;
-                }
-                if(v60 > v71){
-                    v60 = v71;
-                    d60 = d71;
-                }
-                if(v60 > v50){
-                    v60 = v50;
-                    d60 = d50;
-                }
-                v60 += p60;
-            }
-            if(rc.onTheMap(l68)){
-                p68 = rc.senseRubble(l68) + 10.0;
-                v68 -= p68;
-                if(v68 > v57){
-                    v68 = v57;
-                    d68 = d57;
-                }
-                if(v68 > v67){
-                    v68 = v67;
-                    d68 = d67;
-                }
-                if(v68 > v77){
-                    v68 = v77;
-                    d68 = d77;
-                }
-                if(v68 > v58){
-                    v68 = v58;
-                    d68 = d58;
-                }
-                v68 += p68;
-            }
-            if(rc.onTheMap(l12)){
-                p12 = rc.senseRubble(l12) + 10.0;
-                v12 -= p12;
-                if(v12 > v23){
-                    v12 = v23;
-                    d12 = d23;
-                }
-                if(v12 > v22){
-                    v12 = v22;
-                    d12 = d22;
-                }
-                if(v12 > v13){
-                    v12 = v13;
-                    d12 = d13;
-                }
-                if(v12 > v21){
-                    v12 = v21;
-                    d12 = d21;
-                }
-                v12 += p12;
-            }
-            if(rc.onTheMap(l16)){
-                p16 = rc.senseRubble(l16) + 10.0;
-                v16 -= p16;
-                if(v16 > v25){
-                    v16 = v25;
-                    d16 = d25;
-                }
-                if(v16 > v26){
-                    v16 = v26;
-                    d16 = d26;
-                }
-                if(v16 > v15){
-                    v16 = v15;
-                    d16 = d15;
-                }
-                if(v16 > v27){
-                    v16 = v27;
-                    d16 = d27;
-                }
-                v16 += p16;
-            }
-            if(rc.onTheMap(l30)){
-                p30 = rc.senseRubble(l30) + 10.0;
-                v30 -= p30;
-                if(v30 > v41){
-                    v30 = v41;
-                    d30 = d41;
-                }
-                if(v30 > v31){
-                    v30 = v31;
-                    d30 = d31;
-                }
-                if(v30 > v40){
-                    v30 = v40;
-                    d30 = d40;
-                }
-                if(v30 > v21){
-                    v30 = v21;
-                    d30 = d21;
-                }
-                v30 += p30;
-            }
-            if(rc.onTheMap(l38)){
-                p38 = rc.senseRubble(l38) + 10.0;
-                v38 -= p38;
-                if(v38 > v47){
-                    v38 = v47;
-                    d38 = d47;
-                }
-                if(v38 > v37){
-                    v38 = v37;
-                    d38 = d37;
-                }
-                if(v38 > v48){
-                    v38 = v48;
-                    d38 = d48;
-                }
-                if(v38 > v27){
-                    v38 = v27;
-                    d38 = d27;
-                }
-                v38 += p38;
-            }
-            if(rc.onTheMap(l70)){
-                p70 = rc.senseRubble(l70) + 10.0;
-                v70 -= p70;
-                if(v70 > v61){
-                    v70 = v61;
-                    d70 = d61;
-                }
-                if(v70 > v71){
-                    v70 = v71;
-                    d70 = d71;
-                }
-                if(v70 > v60){
-                    v70 = v60;
-                    d70 = d60;
-                }
-                v70 += p70;
-            }
-            if(rc.onTheMap(l78)){
-                p78 = rc.senseRubble(l78) + 10.0;
-                v78 -= p78;
-                if(v78 > v67){
-                    v78 = v67;
-                    d78 = d67;
-                }
-                if(v78 > v77){
-                    v78 = v77;
-                    d78 = d77;
-                }
-                if(v78 > v68){
-                    v78 = v68;
-                    d78 = d68;
-                }
-                v78 += p78;
-            }
             System.out.println("Ran BFS: " + Clock.getBytecodesLeft());
             int dx = target.x - l54.x;
             int dy = target.y - l54.y;
             switch (dx) {
-                case -4:
-                    switch (dy){
-                        case -2:
-                            return d12;
-                        case -1:
-                            return d13;
-                        case 0:
-                            return d14;
-                        case 1:
-                            return d15;
-                        case 2:
-                            return d16;
-                    }
-                    break;
                 case -3:
                     switch (dy){
-                        case -3:
-                            return d21;
                         case -2:
                             return d22;
                         case -1:
@@ -5805,14 +4021,10 @@ public class BFS20 extends BFS{
                             return d25;
                         case 2:
                             return d26;
-                        case 3:
-                            return d27;
                     }
                     break;
                 case -2:
                     switch (dy){
-                        case -4:
-                            return d30;
                         case -3:
                             return d31;
                         case -2:
@@ -5827,14 +4039,10 @@ public class BFS20 extends BFS{
                             return d36;
                         case 3:
                             return d37;
-                        case 4:
-                            return d38;
                     }
                     break;
                 case -1:
                     switch (dy){
-                        case -4:
-                            return d40;
                         case -3:
                             return d41;
                         case -2:
@@ -5849,14 +4057,10 @@ public class BFS20 extends BFS{
                             return d46;
                         case 3:
                             return d47;
-                        case 4:
-                            return d48;
                     }
                     break;
                 case 0:
                     switch (dy){
-                        case -4:
-                            return d50;
                         case -3:
                             return d51;
                         case -2:
@@ -5871,14 +4075,10 @@ public class BFS20 extends BFS{
                             return d56;
                         case 3:
                             return d57;
-                        case 4:
-                            return d58;
                     }
                     break;
                 case 1:
                     switch (dy){
-                        case -4:
-                            return d60;
                         case -3:
                             return d61;
                         case -2:
@@ -5893,14 +4093,10 @@ public class BFS20 extends BFS{
                             return d66;
                         case 3:
                             return d67;
-                        case 4:
-                            return d68;
                     }
                     break;
                 case 2:
                     switch (dy){
-                        case -4:
-                            return d70;
                         case -3:
                             return d71;
                         case -2:
@@ -5915,8 +4111,6 @@ public class BFS20 extends BFS{
                             return d76;
                         case 3:
                             return d77;
-                        case 4:
-                            return d78;
                     }
                     break;
             }
@@ -5940,6 +4134,16 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d75;
                 System.out.println("Best end location: " + l75.toString());}
+            currScore = (initialDist - l32.distanceSquaredTo(target)) / v32;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d32;
+                System.out.println("Best end location: " + l32.toString());}
+            currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d36;
+                System.out.println("Best end location: " + l36.toString());}
             currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
             if(currScore > bestScore){
                 bestScore = currScore;
@@ -5950,6 +4154,51 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d76;
                 System.out.println("Best end location: " + l76.toString());}
+            currScore = (initialDist - l24.distanceSquaredTo(target)) / v24;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d24;
+                System.out.println("Best end location: " + l24.toString());}
+            currScore = (initialDist - l51.distanceSquaredTo(target)) / v51;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d51;
+                System.out.println("Best end location: " + l51.toString());}
+            currScore = (initialDist - l57.distanceSquaredTo(target)) / v57;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d57;
+                System.out.println("Best end location: " + l57.toString());}
+            currScore = (initialDist - l23.distanceSquaredTo(target)) / v23;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d23;
+                System.out.println("Best end location: " + l23.toString());}
+            currScore = (initialDist - l25.distanceSquaredTo(target)) / v25;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d25;
+                System.out.println("Best end location: " + l25.toString());}
+            currScore = (initialDist - l41.distanceSquaredTo(target)) / v41;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d41;
+                System.out.println("Best end location: " + l41.toString());}
+            currScore = (initialDist - l47.distanceSquaredTo(target)) / v47;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d47;
+                System.out.println("Best end location: " + l47.toString());}
+            currScore = (initialDist - l61.distanceSquaredTo(target)) / v61;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d61;
+                System.out.println("Best end location: " + l61.toString());}
+            currScore = (initialDist - l67.distanceSquaredTo(target)) / v67;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d67;
+                System.out.println("Best end location: " + l67.toString());}
             currScore = (initialDist - l22.distanceSquaredTo(target)) / v22;
             if(currScore > bestScore){
                 bestScore = currScore;
@@ -5980,91 +4229,6 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d77;
                 System.out.println("Best end location: " + l77.toString());}
-            currScore = (initialDist - l21.distanceSquaredTo(target)) / v21;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d21;
-                System.out.println("Best end location: " + l21.toString());}
-            currScore = (initialDist - l27.distanceSquaredTo(target)) / v27;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d27;
-                System.out.println("Best end location: " + l27.toString());}
-            currScore = (initialDist - l14.distanceSquaredTo(target)) / v14;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d14;
-                System.out.println("Best end location: " + l14.toString());}
-            currScore = (initialDist - l50.distanceSquaredTo(target)) / v50;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d50;
-                System.out.println("Best end location: " + l50.toString());}
-            currScore = (initialDist - l58.distanceSquaredTo(target)) / v58;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d58;
-                System.out.println("Best end location: " + l58.toString());}
-            currScore = (initialDist - l13.distanceSquaredTo(target)) / v13;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d13;
-                System.out.println("Best end location: " + l13.toString());}
-            currScore = (initialDist - l15.distanceSquaredTo(target)) / v15;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d15;
-                System.out.println("Best end location: " + l15.toString());}
-            currScore = (initialDist - l40.distanceSquaredTo(target)) / v40;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d40;
-                System.out.println("Best end location: " + l40.toString());}
-            currScore = (initialDist - l48.distanceSquaredTo(target)) / v48;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d48;
-                System.out.println("Best end location: " + l48.toString());}
-            currScore = (initialDist - l60.distanceSquaredTo(target)) / v60;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d60;
-                System.out.println("Best end location: " + l60.toString());}
-            currScore = (initialDist - l68.distanceSquaredTo(target)) / v68;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d68;
-                System.out.println("Best end location: " + l68.toString());}
-            currScore = (initialDist - l12.distanceSquaredTo(target)) / v12;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d12;
-                System.out.println("Best end location: " + l12.toString());}
-            currScore = (initialDist - l16.distanceSquaredTo(target)) / v16;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d16;
-                System.out.println("Best end location: " + l16.toString());}
-            currScore = (initialDist - l30.distanceSquaredTo(target)) / v30;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d30;
-                System.out.println("Best end location: " + l30.toString());}
-            currScore = (initialDist - l38.distanceSquaredTo(target)) / v38;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d38;
-                System.out.println("Best end location: " + l38.toString());}
-            currScore = (initialDist - l70.distanceSquaredTo(target)) / v70;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d70;
-                System.out.println("Best end location: " + l70.toString());}
-            currScore = (initialDist - l78.distanceSquaredTo(target)) / v78;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d78;
-                System.out.println("Best end location: " + l78.toString());}
             return ans;
         } catch (Exception e){
             e.printStackTrace();
@@ -6804,383 +4968,10 @@ public class BFS20 extends BFS{
                 }
                 v77 += p77;
             }
-            if(rc.onTheMap(l27)){
-                p27 = rc.senseRubble(l27) + 10.0;
-                v27 -= p27;
-                if(v27 > v36){
-                    v27 = v36;
-                    d27 = d36;
-                }
-                if(v27 > v37){
-                    v27 = v37;
-                    d27 = d37;
-                }
-                if(v27 > v26){
-                    v27 = v26;
-                    d27 = d26;
-                }
-                v27 += p27;
-            }
-            if(rc.onTheMap(l81)){
-                p81 = rc.senseRubble(l81) + 10.0;
-                v81 -= p81;
-                if(v81 > v72){
-                    v81 = v72;
-                    d81 = d72;
-                }
-                if(v81 > v71){
-                    v81 = v71;
-                    d81 = d71;
-                }
-                if(v81 > v82){
-                    v81 = v82;
-                    d81 = d82;
-                }
-                v81 += p81;
-            }
-            if(rc.onTheMap(l87)){
-                p87 = rc.senseRubble(l87) + 10.0;
-                v87 -= p87;
-                if(v87 > v76){
-                    v87 = v76;
-                    d87 = d76;
-                }
-                if(v87 > v77){
-                    v87 = v77;
-                    d87 = d77;
-                }
-                if(v87 > v86){
-                    v87 = v86;
-                    d87 = d86;
-                }
-                v87 += p87;
-            }
-            if(rc.onTheMap(l14)){
-                p14 = rc.senseRubble(l14) + 10.0;
-                v14 -= p14;
-                if(v14 > v24){
-                    v14 = v24;
-                    d14 = d24;
-                }
-                if(v14 > v25){
-                    v14 = v25;
-                    d14 = d25;
-                }
-                v14 += p14;
-            }
-            if(rc.onTheMap(l94)){
-                p94 = rc.senseRubble(l94) + 10.0;
-                v94 -= p94;
-                if(v94 > v84){
-                    v94 = v84;
-                    d94 = d84;
-                }
-                if(v94 > v83){
-                    v94 = v83;
-                    d94 = d83;
-                }
-                if(v94 > v85){
-                    v94 = v85;
-                    d94 = d85;
-                }
-                v94 += p94;
-            }
-            if(rc.onTheMap(l50)){
-                p50 = rc.senseRubble(l50) + 10.0;
-                v50 -= p50;
-                if(v50 > v51){
-                    v50 = v51;
-                    d50 = d51;
-                }
-                if(v50 > v61){
-                    v50 = v61;
-                    d50 = d61;
-                }
-                v50 += p50;
-            }
-            if(rc.onTheMap(l58)){
-                p58 = rc.senseRubble(l58) + 10.0;
-                v58 -= p58;
-                if(v58 > v57){
-                    v58 = v57;
-                    d58 = d57;
-                }
-                if(v58 > v47){
-                    v58 = v47;
-                    d58 = d47;
-                }
-                if(v58 > v67){
-                    v58 = v67;
-                    d58 = d67;
-                }
-                v58 += p58;
-            }
-            if(rc.onTheMap(l15)){
-                p15 = rc.senseRubble(l15) + 10.0;
-                v15 -= p15;
-                if(v15 > v24){
-                    v15 = v24;
-                    d15 = d24;
-                }
-                if(v15 > v25){
-                    v15 = v25;
-                    d15 = d25;
-                }
-                if(v15 > v26){
-                    v15 = v26;
-                    d15 = d26;
-                }
-                if(v15 > v14){
-                    v15 = v14;
-                    d15 = d14;
-                }
-                v15 += p15;
-            }
-            if(rc.onTheMap(l93)){
-                p93 = rc.senseRubble(l93) + 10.0;
-                v93 -= p93;
-                if(v93 > v84){
-                    v93 = v84;
-                    d93 = d84;
-                }
-                if(v93 > v83){
-                    v93 = v83;
-                    d93 = d83;
-                }
-                if(v93 > v82){
-                    v93 = v82;
-                    d93 = d82;
-                }
-                if(v93 > v94){
-                    v93 = v94;
-                    d93 = d94;
-                }
-                v93 += p93;
-            }
-            if(rc.onTheMap(l95)){
-                p95 = rc.senseRubble(l95) + 10.0;
-                v95 -= p95;
-                if(v95 > v84){
-                    v95 = v84;
-                    d95 = d84;
-                }
-                if(v95 > v85){
-                    v95 = v85;
-                    d95 = d85;
-                }
-                if(v95 > v86){
-                    v95 = v86;
-                    d95 = d86;
-                }
-                if(v95 > v94){
-                    v95 = v94;
-                    d95 = d94;
-                }
-                v95 += p95;
-            }
-            if(rc.onTheMap(l48)){
-                p48 = rc.senseRubble(l48) + 10.0;
-                v48 -= p48;
-                if(v48 > v57){
-                    v48 = v57;
-                    d48 = d57;
-                }
-                if(v48 > v47){
-                    v48 = v47;
-                    d48 = d47;
-                }
-                if(v48 > v37){
-                    v48 = v37;
-                    d48 = d37;
-                }
-                if(v48 > v58){
-                    v48 = v58;
-                    d48 = d58;
-                }
-                v48 += p48;
-            }
-            if(rc.onTheMap(l60)){
-                p60 = rc.senseRubble(l60) + 10.0;
-                v60 -= p60;
-                if(v60 > v51){
-                    v60 = v51;
-                    d60 = d51;
-                }
-                if(v60 > v61){
-                    v60 = v61;
-                    d60 = d61;
-                }
-                if(v60 > v71){
-                    v60 = v71;
-                    d60 = d71;
-                }
-                if(v60 > v50){
-                    v60 = v50;
-                    d60 = d50;
-                }
-                v60 += p60;
-            }
-            if(rc.onTheMap(l68)){
-                p68 = rc.senseRubble(l68) + 10.0;
-                v68 -= p68;
-                if(v68 > v57){
-                    v68 = v57;
-                    d68 = d57;
-                }
-                if(v68 > v67){
-                    v68 = v67;
-                    d68 = d67;
-                }
-                if(v68 > v77){
-                    v68 = v77;
-                    d68 = d77;
-                }
-                if(v68 > v58){
-                    v68 = v58;
-                    d68 = d58;
-                }
-                v68 += p68;
-            }
-            if(rc.onTheMap(l16)){
-                p16 = rc.senseRubble(l16) + 10.0;
-                v16 -= p16;
-                if(v16 > v25){
-                    v16 = v25;
-                    d16 = d25;
-                }
-                if(v16 > v26){
-                    v16 = v26;
-                    d16 = d26;
-                }
-                if(v16 > v15){
-                    v16 = v15;
-                    d16 = d15;
-                }
-                if(v16 > v27){
-                    v16 = v27;
-                    d16 = d27;
-                }
-                v16 += p16;
-            }
-            if(rc.onTheMap(l92)){
-                p92 = rc.senseRubble(l92) + 10.0;
-                v92 -= p92;
-                if(v92 > v83){
-                    v92 = v83;
-                    d92 = d83;
-                }
-                if(v92 > v82){
-                    v92 = v82;
-                    d92 = d82;
-                }
-                if(v92 > v93){
-                    v92 = v93;
-                    d92 = d93;
-                }
-                if(v92 > v81){
-                    v92 = v81;
-                    d92 = d81;
-                }
-                v92 += p92;
-            }
-            if(rc.onTheMap(l96)){
-                p96 = rc.senseRubble(l96) + 10.0;
-                v96 -= p96;
-                if(v96 > v85){
-                    v96 = v85;
-                    d96 = d85;
-                }
-                if(v96 > v86){
-                    v96 = v86;
-                    d96 = d86;
-                }
-                if(v96 > v95){
-                    v96 = v95;
-                    d96 = d95;
-                }
-                if(v96 > v87){
-                    v96 = v87;
-                    d96 = d87;
-                }
-                v96 += p96;
-            }
-            if(rc.onTheMap(l38)){
-                p38 = rc.senseRubble(l38) + 10.0;
-                v38 -= p38;
-                if(v38 > v47){
-                    v38 = v47;
-                    d38 = d47;
-                }
-                if(v38 > v37){
-                    v38 = v37;
-                    d38 = d37;
-                }
-                if(v38 > v48){
-                    v38 = v48;
-                    d38 = d48;
-                }
-                if(v38 > v27){
-                    v38 = v27;
-                    d38 = d27;
-                }
-                v38 += p38;
-            }
-            if(rc.onTheMap(l70)){
-                p70 = rc.senseRubble(l70) + 10.0;
-                v70 -= p70;
-                if(v70 > v61){
-                    v70 = v61;
-                    d70 = d61;
-                }
-                if(v70 > v71){
-                    v70 = v71;
-                    d70 = d71;
-                }
-                if(v70 > v60){
-                    v70 = v60;
-                    d70 = d60;
-                }
-                if(v70 > v81){
-                    v70 = v81;
-                    d70 = d81;
-                }
-                v70 += p70;
-            }
-            if(rc.onTheMap(l78)){
-                p78 = rc.senseRubble(l78) + 10.0;
-                v78 -= p78;
-                if(v78 > v67){
-                    v78 = v67;
-                    d78 = d67;
-                }
-                if(v78 > v77){
-                    v78 = v77;
-                    d78 = d77;
-                }
-                if(v78 > v68){
-                    v78 = v68;
-                    d78 = d68;
-                }
-                if(v78 > v87){
-                    v78 = v87;
-                    d78 = d87;
-                }
-                v78 += p78;
-            }
             System.out.println("Ran BFS: " + Clock.getBytecodesLeft());
             int dx = target.x - l54.x;
             int dy = target.y - l54.y;
             switch (dx) {
-                case -4:
-                    switch (dy){
-                        case 0:
-                            return d14;
-                        case 1:
-                            return d15;
-                        case 2:
-                            return d16;
-                    }
-                    break;
                 case -3:
                     switch (dy){
                         case 0:
@@ -7189,8 +4980,6 @@ public class BFS20 extends BFS{
                             return d25;
                         case 2:
                             return d26;
-                        case 3:
-                            return d27;
                     }
                     break;
                 case -2:
@@ -7207,8 +4996,6 @@ public class BFS20 extends BFS{
                             return d36;
                         case 3:
                             return d37;
-                        case 4:
-                            return d38;
                     }
                     break;
                 case -1:
@@ -7225,14 +5012,10 @@ public class BFS20 extends BFS{
                             return d46;
                         case 3:
                             return d47;
-                        case 4:
-                            return d48;
                     }
                     break;
                 case 0:
                     switch (dy){
-                        case -4:
-                            return d50;
                         case -3:
                             return d51;
                         case -2:
@@ -7247,14 +5030,10 @@ public class BFS20 extends BFS{
                             return d56;
                         case 3:
                             return d57;
-                        case 4:
-                            return d58;
                     }
                     break;
                 case 1:
                     switch (dy){
-                        case -4:
-                            return d60;
                         case -3:
                             return d61;
                         case -2:
@@ -7269,14 +5048,10 @@ public class BFS20 extends BFS{
                             return d66;
                         case 3:
                             return d67;
-                        case 4:
-                            return d68;
                     }
                     break;
                 case 2:
                     switch (dy){
-                        case -4:
-                            return d70;
                         case -3:
                             return d71;
                         case -2:
@@ -7291,14 +5066,10 @@ public class BFS20 extends BFS{
                             return d76;
                         case 3:
                             return d77;
-                        case 4:
-                            return d78;
                     }
                     break;
                 case 3:
                     switch (dy){
-                        case -3:
-                            return d81;
                         case -2:
                             return d82;
                         case -1:
@@ -7309,22 +5080,6 @@ public class BFS20 extends BFS{
                             return d85;
                         case 2:
                             return d86;
-                        case 3:
-                            return d87;
-                    }
-                    break;
-                case 4:
-                    switch (dy){
-                        case -2:
-                            return d92;
-                        case -1:
-                            return d93;
-                        case 0:
-                            return d94;
-                        case 1:
-                            return d95;
-                        case 2:
-                            return d96;
                     }
                     break;
             }
@@ -7358,16 +5113,71 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d32;
                 System.out.println("Best end location: " + l32.toString());}
+            currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d36;
+                System.out.println("Best end location: " + l36.toString());}
+            currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d72;
+                System.out.println("Best end location: " + l72.toString());}
+            currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d76;
+                System.out.println("Best end location: " + l76.toString());}
             currScore = (initialDist - l24.distanceSquaredTo(target)) / v24;
             if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d24;
                 System.out.println("Best end location: " + l24.toString());}
+            currScore = (initialDist - l84.distanceSquaredTo(target)) / v84;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d84;
+                System.out.println("Best end location: " + l84.toString());}
             currScore = (initialDist - l51.distanceSquaredTo(target)) / v51;
             if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d51;
                 System.out.println("Best end location: " + l51.toString());}
+            currScore = (initialDist - l57.distanceSquaredTo(target)) / v57;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d57;
+                System.out.println("Best end location: " + l57.toString());}
+            currScore = (initialDist - l25.distanceSquaredTo(target)) / v25;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d25;
+                System.out.println("Best end location: " + l25.toString());}
+            currScore = (initialDist - l83.distanceSquaredTo(target)) / v83;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d83;
+                System.out.println("Best end location: " + l83.toString());}
+            currScore = (initialDist - l85.distanceSquaredTo(target)) / v85;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d85;
+                System.out.println("Best end location: " + l85.toString());}
+            currScore = (initialDist - l47.distanceSquaredTo(target)) / v47;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d47;
+                System.out.println("Best end location: " + l47.toString());}
+            currScore = (initialDist - l61.distanceSquaredTo(target)) / v61;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d61;
+                System.out.println("Best end location: " + l61.toString());}
+            currScore = (initialDist - l67.distanceSquaredTo(target)) / v67;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d67;
+                System.out.println("Best end location: " + l67.toString());}
             currScore = (initialDist - l26.distanceSquaredTo(target)) / v26;
             if(currScore > bestScore){
                 bestScore = currScore;
@@ -7398,101 +5208,6 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d77;
                 System.out.println("Best end location: " + l77.toString());}
-            currScore = (initialDist - l27.distanceSquaredTo(target)) / v27;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d27;
-                System.out.println("Best end location: " + l27.toString());}
-            currScore = (initialDist - l81.distanceSquaredTo(target)) / v81;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d81;
-                System.out.println("Best end location: " + l81.toString());}
-            currScore = (initialDist - l87.distanceSquaredTo(target)) / v87;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d87;
-                System.out.println("Best end location: " + l87.toString());}
-            currScore = (initialDist - l14.distanceSquaredTo(target)) / v14;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d14;
-                System.out.println("Best end location: " + l14.toString());}
-            currScore = (initialDist - l94.distanceSquaredTo(target)) / v94;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d94;
-                System.out.println("Best end location: " + l94.toString());}
-            currScore = (initialDist - l50.distanceSquaredTo(target)) / v50;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d50;
-                System.out.println("Best end location: " + l50.toString());}
-            currScore = (initialDist - l58.distanceSquaredTo(target)) / v58;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d58;
-                System.out.println("Best end location: " + l58.toString());}
-            currScore = (initialDist - l15.distanceSquaredTo(target)) / v15;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d15;
-                System.out.println("Best end location: " + l15.toString());}
-            currScore = (initialDist - l93.distanceSquaredTo(target)) / v93;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d93;
-                System.out.println("Best end location: " + l93.toString());}
-            currScore = (initialDist - l95.distanceSquaredTo(target)) / v95;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d95;
-                System.out.println("Best end location: " + l95.toString());}
-            currScore = (initialDist - l48.distanceSquaredTo(target)) / v48;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d48;
-                System.out.println("Best end location: " + l48.toString());}
-            currScore = (initialDist - l60.distanceSquaredTo(target)) / v60;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d60;
-                System.out.println("Best end location: " + l60.toString());}
-            currScore = (initialDist - l68.distanceSquaredTo(target)) / v68;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d68;
-                System.out.println("Best end location: " + l68.toString());}
-            currScore = (initialDist - l16.distanceSquaredTo(target)) / v16;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d16;
-                System.out.println("Best end location: " + l16.toString());}
-            currScore = (initialDist - l92.distanceSquaredTo(target)) / v92;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d92;
-                System.out.println("Best end location: " + l92.toString());}
-            currScore = (initialDist - l96.distanceSquaredTo(target)) / v96;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d96;
-                System.out.println("Best end location: " + l96.toString());}
-            currScore = (initialDist - l38.distanceSquaredTo(target)) / v38;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d38;
-                System.out.println("Best end location: " + l38.toString());}
-            currScore = (initialDist - l70.distanceSquaredTo(target)) / v70;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d70;
-                System.out.println("Best end location: " + l70.toString());}
-            currScore = (initialDist - l78.distanceSquaredTo(target)) / v78;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d78;
-                System.out.println("Best end location: " + l78.toString());}
             return ans;
         } catch (Exception e){
             e.printStackTrace();
@@ -8232,391 +5947,12 @@ public class BFS20 extends BFS{
                 }
                 v77 += p77;
             }
-            if(rc.onTheMap(l21)){
-                p21 = rc.senseRubble(l21) + 10.0;
-                v21 -= p21;
-                if(v21 > v32){
-                    v21 = v32;
-                    d21 = d32;
-                }
-                if(v21 > v22){
-                    v21 = v22;
-                    d21 = d22;
-                }
-                if(v21 > v31){
-                    v21 = v31;
-                    d21 = d31;
-                }
-                v21 += p21;
-            }
-            if(rc.onTheMap(l27)){
-                p27 = rc.senseRubble(l27) + 10.0;
-                v27 -= p27;
-                if(v27 > v36){
-                    v27 = v36;
-                    d27 = d36;
-                }
-                if(v27 > v37){
-                    v27 = v37;
-                    d27 = d37;
-                }
-                if(v27 > v26){
-                    v27 = v26;
-                    d27 = d26;
-                }
-                v27 += p27;
-            }
-            if(rc.onTheMap(l87)){
-                p87 = rc.senseRubble(l87) + 10.0;
-                v87 -= p87;
-                if(v87 > v76){
-                    v87 = v76;
-                    d87 = d76;
-                }
-                if(v87 > v77){
-                    v87 = v77;
-                    d87 = d77;
-                }
-                if(v87 > v86){
-                    v87 = v86;
-                    d87 = d86;
-                }
-                v87 += p87;
-            }
-            if(rc.onTheMap(l14)){
-                p14 = rc.senseRubble(l14) + 10.0;
-                v14 -= p14;
-                if(v14 > v24){
-                    v14 = v24;
-                    d14 = d24;
-                }
-                if(v14 > v25){
-                    v14 = v25;
-                    d14 = d25;
-                }
-                if(v14 > v23){
-                    v14 = v23;
-                    d14 = d23;
-                }
-                v14 += p14;
-            }
-            if(rc.onTheMap(l94)){
-                p94 = rc.senseRubble(l94) + 10.0;
-                v94 -= p94;
-                if(v94 > v84){
-                    v94 = v84;
-                    d94 = d84;
-                }
-                if(v94 > v85){
-                    v94 = v85;
-                    d94 = d85;
-                }
-                v94 += p94;
-            }
-            if(rc.onTheMap(l50)){
-                p50 = rc.senseRubble(l50) + 10.0;
-                v50 -= p50;
-                if(v50 > v51){
-                    v50 = v51;
-                    d50 = d51;
-                }
-                if(v50 > v41){
-                    v50 = v41;
-                    d50 = d41;
-                }
-                v50 += p50;
-            }
-            if(rc.onTheMap(l58)){
-                p58 = rc.senseRubble(l58) + 10.0;
-                v58 -= p58;
-                if(v58 > v57){
-                    v58 = v57;
-                    d58 = d57;
-                }
-                if(v58 > v47){
-                    v58 = v47;
-                    d58 = d47;
-                }
-                if(v58 > v67){
-                    v58 = v67;
-                    d58 = d67;
-                }
-                v58 += p58;
-            }
-            if(rc.onTheMap(l13)){
-                p13 = rc.senseRubble(l13) + 10.0;
-                v13 -= p13;
-                if(v13 > v24){
-                    v13 = v24;
-                    d13 = d24;
-                }
-                if(v13 > v23){
-                    v13 = v23;
-                    d13 = d23;
-                }
-                if(v13 > v22){
-                    v13 = v22;
-                    d13 = d22;
-                }
-                if(v13 > v14){
-                    v13 = v14;
-                    d13 = d14;
-                }
-                v13 += p13;
-            }
-            if(rc.onTheMap(l15)){
-                p15 = rc.senseRubble(l15) + 10.0;
-                v15 -= p15;
-                if(v15 > v24){
-                    v15 = v24;
-                    d15 = d24;
-                }
-                if(v15 > v25){
-                    v15 = v25;
-                    d15 = d25;
-                }
-                if(v15 > v26){
-                    v15 = v26;
-                    d15 = d26;
-                }
-                if(v15 > v14){
-                    v15 = v14;
-                    d15 = d14;
-                }
-                v15 += p15;
-            }
-            if(rc.onTheMap(l95)){
-                p95 = rc.senseRubble(l95) + 10.0;
-                v95 -= p95;
-                if(v95 > v84){
-                    v95 = v84;
-                    d95 = d84;
-                }
-                if(v95 > v85){
-                    v95 = v85;
-                    d95 = d85;
-                }
-                if(v95 > v86){
-                    v95 = v86;
-                    d95 = d86;
-                }
-                if(v95 > v94){
-                    v95 = v94;
-                    d95 = d94;
-                }
-                v95 += p95;
-            }
-            if(rc.onTheMap(l40)){
-                p40 = rc.senseRubble(l40) + 10.0;
-                v40 -= p40;
-                if(v40 > v51){
-                    v40 = v51;
-                    d40 = d51;
-                }
-                if(v40 > v41){
-                    v40 = v41;
-                    d40 = d41;
-                }
-                if(v40 > v31){
-                    v40 = v31;
-                    d40 = d31;
-                }
-                if(v40 > v50){
-                    v40 = v50;
-                    d40 = d50;
-                }
-                v40 += p40;
-            }
-            if(rc.onTheMap(l48)){
-                p48 = rc.senseRubble(l48) + 10.0;
-                v48 -= p48;
-                if(v48 > v57){
-                    v48 = v57;
-                    d48 = d57;
-                }
-                if(v48 > v47){
-                    v48 = v47;
-                    d48 = d47;
-                }
-                if(v48 > v37){
-                    v48 = v37;
-                    d48 = d37;
-                }
-                if(v48 > v58){
-                    v48 = v58;
-                    d48 = d58;
-                }
-                v48 += p48;
-            }
-            if(rc.onTheMap(l68)){
-                p68 = rc.senseRubble(l68) + 10.0;
-                v68 -= p68;
-                if(v68 > v57){
-                    v68 = v57;
-                    d68 = d57;
-                }
-                if(v68 > v67){
-                    v68 = v67;
-                    d68 = d67;
-                }
-                if(v68 > v77){
-                    v68 = v77;
-                    d68 = d77;
-                }
-                if(v68 > v58){
-                    v68 = v58;
-                    d68 = d58;
-                }
-                v68 += p68;
-            }
-            if(rc.onTheMap(l12)){
-                p12 = rc.senseRubble(l12) + 10.0;
-                v12 -= p12;
-                if(v12 > v23){
-                    v12 = v23;
-                    d12 = d23;
-                }
-                if(v12 > v22){
-                    v12 = v22;
-                    d12 = d22;
-                }
-                if(v12 > v13){
-                    v12 = v13;
-                    d12 = d13;
-                }
-                if(v12 > v21){
-                    v12 = v21;
-                    d12 = d21;
-                }
-                v12 += p12;
-            }
-            if(rc.onTheMap(l16)){
-                p16 = rc.senseRubble(l16) + 10.0;
-                v16 -= p16;
-                if(v16 > v25){
-                    v16 = v25;
-                    d16 = d25;
-                }
-                if(v16 > v26){
-                    v16 = v26;
-                    d16 = d26;
-                }
-                if(v16 > v15){
-                    v16 = v15;
-                    d16 = d15;
-                }
-                if(v16 > v27){
-                    v16 = v27;
-                    d16 = d27;
-                }
-                v16 += p16;
-            }
-            if(rc.onTheMap(l96)){
-                p96 = rc.senseRubble(l96) + 10.0;
-                v96 -= p96;
-                if(v96 > v85){
-                    v96 = v85;
-                    d96 = d85;
-                }
-                if(v96 > v86){
-                    v96 = v86;
-                    d96 = d86;
-                }
-                if(v96 > v95){
-                    v96 = v95;
-                    d96 = d95;
-                }
-                if(v96 > v87){
-                    v96 = v87;
-                    d96 = d87;
-                }
-                v96 += p96;
-            }
-            if(rc.onTheMap(l30)){
-                p30 = rc.senseRubble(l30) + 10.0;
-                v30 -= p30;
-                if(v30 > v41){
-                    v30 = v41;
-                    d30 = d41;
-                }
-                if(v30 > v31){
-                    v30 = v31;
-                    d30 = d31;
-                }
-                if(v30 > v40){
-                    v30 = v40;
-                    d30 = d40;
-                }
-                if(v30 > v21){
-                    v30 = v21;
-                    d30 = d21;
-                }
-                v30 += p30;
-            }
-            if(rc.onTheMap(l38)){
-                p38 = rc.senseRubble(l38) + 10.0;
-                v38 -= p38;
-                if(v38 > v47){
-                    v38 = v47;
-                    d38 = d47;
-                }
-                if(v38 > v37){
-                    v38 = v37;
-                    d38 = d37;
-                }
-                if(v38 > v48){
-                    v38 = v48;
-                    d38 = d48;
-                }
-                if(v38 > v27){
-                    v38 = v27;
-                    d38 = d27;
-                }
-                v38 += p38;
-            }
-            if(rc.onTheMap(l78)){
-                p78 = rc.senseRubble(l78) + 10.0;
-                v78 -= p78;
-                if(v78 > v67){
-                    v78 = v67;
-                    d78 = d67;
-                }
-                if(v78 > v77){
-                    v78 = v77;
-                    d78 = d77;
-                }
-                if(v78 > v68){
-                    v78 = v68;
-                    d78 = d68;
-                }
-                if(v78 > v87){
-                    v78 = v87;
-                    d78 = d87;
-                }
-                v78 += p78;
-            }
             System.out.println("Ran BFS: " + Clock.getBytecodesLeft());
             int dx = target.x - l54.x;
             int dy = target.y - l54.y;
             switch (dx) {
-                case -4:
-                    switch (dy){
-                        case -2:
-                            return d12;
-                        case -1:
-                            return d13;
-                        case 0:
-                            return d14;
-                        case 1:
-                            return d15;
-                        case 2:
-                            return d16;
-                    }
-                    break;
                 case -3:
                     switch (dy){
-                        case -3:
-                            return d21;
                         case -2:
                             return d22;
                         case -1:
@@ -8627,14 +5963,10 @@ public class BFS20 extends BFS{
                             return d25;
                         case 2:
                             return d26;
-                        case 3:
-                            return d27;
                     }
                     break;
                 case -2:
                     switch (dy){
-                        case -4:
-                            return d30;
                         case -3:
                             return d31;
                         case -2:
@@ -8649,14 +5981,10 @@ public class BFS20 extends BFS{
                             return d36;
                         case 3:
                             return d37;
-                        case 4:
-                            return d38;
                     }
                     break;
                 case -1:
                     switch (dy){
-                        case -4:
-                            return d40;
                         case -3:
                             return d41;
                         case -2:
@@ -8671,14 +5999,10 @@ public class BFS20 extends BFS{
                             return d46;
                         case 3:
                             return d47;
-                        case 4:
-                            return d48;
                     }
                     break;
                 case 0:
                     switch (dy){
-                        case -4:
-                            return d50;
                         case -3:
                             return d51;
                         case -2:
@@ -8693,8 +6017,6 @@ public class BFS20 extends BFS{
                             return d56;
                         case 3:
                             return d57;
-                        case 4:
-                            return d58;
                     }
                     break;
                 case 1:
@@ -8711,8 +6033,6 @@ public class BFS20 extends BFS{
                             return d66;
                         case 3:
                             return d67;
-                        case 4:
-                            return d68;
                     }
                     break;
                 case 2:
@@ -8729,8 +6049,6 @@ public class BFS20 extends BFS{
                             return d76;
                         case 3:
                             return d77;
-                        case 4:
-                            return d78;
                     }
                     break;
                 case 3:
@@ -8741,18 +6059,6 @@ public class BFS20 extends BFS{
                             return d85;
                         case 2:
                             return d86;
-                        case 3:
-                            return d87;
-                    }
-                    break;
-                case 4:
-                    switch (dy){
-                        case 0:
-                            return d94;
-                        case 1:
-                            return d95;
-                        case 2:
-                            return d96;
                     }
                     break;
             }
@@ -8781,11 +6087,31 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d62;
                 System.out.println("Best end location: " + l62.toString());}
+            currScore = (initialDist - l32.distanceSquaredTo(target)) / v32;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d32;
+                System.out.println("Best end location: " + l32.toString());}
+            currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d36;
+                System.out.println("Best end location: " + l36.toString());}
             currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
             if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d72;
                 System.out.println("Best end location: " + l72.toString());}
+            currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d76;
+                System.out.println("Best end location: " + l76.toString());}
+            currScore = (initialDist - l24.distanceSquaredTo(target)) / v24;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d24;
+                System.out.println("Best end location: " + l24.toString());}
             currScore = (initialDist - l84.distanceSquaredTo(target)) / v84;
             if(currScore > bestScore){
                 bestScore = currScore;
@@ -8796,6 +6122,41 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d51;
                 System.out.println("Best end location: " + l51.toString());}
+            currScore = (initialDist - l57.distanceSquaredTo(target)) / v57;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d57;
+                System.out.println("Best end location: " + l57.toString());}
+            currScore = (initialDist - l23.distanceSquaredTo(target)) / v23;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d23;
+                System.out.println("Best end location: " + l23.toString());}
+            currScore = (initialDist - l25.distanceSquaredTo(target)) / v25;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d25;
+                System.out.println("Best end location: " + l25.toString());}
+            currScore = (initialDist - l85.distanceSquaredTo(target)) / v85;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d85;
+                System.out.println("Best end location: " + l85.toString());}
+            currScore = (initialDist - l41.distanceSquaredTo(target)) / v41;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d41;
+                System.out.println("Best end location: " + l41.toString());}
+            currScore = (initialDist - l47.distanceSquaredTo(target)) / v47;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d47;
+                System.out.println("Best end location: " + l47.toString());}
+            currScore = (initialDist - l67.distanceSquaredTo(target)) / v67;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d67;
+                System.out.println("Best end location: " + l67.toString());}
             currScore = (initialDist - l22.distanceSquaredTo(target)) / v22;
             if(currScore > bestScore){
                 bestScore = currScore;
@@ -8826,101 +6187,6 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d77;
                 System.out.println("Best end location: " + l77.toString());}
-            currScore = (initialDist - l21.distanceSquaredTo(target)) / v21;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d21;
-                System.out.println("Best end location: " + l21.toString());}
-            currScore = (initialDist - l27.distanceSquaredTo(target)) / v27;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d27;
-                System.out.println("Best end location: " + l27.toString());}
-            currScore = (initialDist - l87.distanceSquaredTo(target)) / v87;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d87;
-                System.out.println("Best end location: " + l87.toString());}
-            currScore = (initialDist - l14.distanceSquaredTo(target)) / v14;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d14;
-                System.out.println("Best end location: " + l14.toString());}
-            currScore = (initialDist - l94.distanceSquaredTo(target)) / v94;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d94;
-                System.out.println("Best end location: " + l94.toString());}
-            currScore = (initialDist - l50.distanceSquaredTo(target)) / v50;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d50;
-                System.out.println("Best end location: " + l50.toString());}
-            currScore = (initialDist - l58.distanceSquaredTo(target)) / v58;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d58;
-                System.out.println("Best end location: " + l58.toString());}
-            currScore = (initialDist - l13.distanceSquaredTo(target)) / v13;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d13;
-                System.out.println("Best end location: " + l13.toString());}
-            currScore = (initialDist - l15.distanceSquaredTo(target)) / v15;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d15;
-                System.out.println("Best end location: " + l15.toString());}
-            currScore = (initialDist - l95.distanceSquaredTo(target)) / v95;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d95;
-                System.out.println("Best end location: " + l95.toString());}
-            currScore = (initialDist - l40.distanceSquaredTo(target)) / v40;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d40;
-                System.out.println("Best end location: " + l40.toString());}
-            currScore = (initialDist - l48.distanceSquaredTo(target)) / v48;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d48;
-                System.out.println("Best end location: " + l48.toString());}
-            currScore = (initialDist - l68.distanceSquaredTo(target)) / v68;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d68;
-                System.out.println("Best end location: " + l68.toString());}
-            currScore = (initialDist - l12.distanceSquaredTo(target)) / v12;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d12;
-                System.out.println("Best end location: " + l12.toString());}
-            currScore = (initialDist - l16.distanceSquaredTo(target)) / v16;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d16;
-                System.out.println("Best end location: " + l16.toString());}
-            currScore = (initialDist - l96.distanceSquaredTo(target)) / v96;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d96;
-                System.out.println("Best end location: " + l96.toString());}
-            currScore = (initialDist - l30.distanceSquaredTo(target)) / v30;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d30;
-                System.out.println("Best end location: " + l30.toString());}
-            currScore = (initialDist - l38.distanceSquaredTo(target)) / v38;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d38;
-                System.out.println("Best end location: " + l38.toString());}
-            currScore = (initialDist - l78.distanceSquaredTo(target)) / v78;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d78;
-                System.out.println("Best end location: " + l78.toString());}
             return ans;
         } catch (Exception e){
             e.printStackTrace();
@@ -9660,387 +6926,12 @@ public class BFS20 extends BFS{
                 }
                 v77 += p77;
             }
-            if(rc.onTheMap(l21)){
-                p21 = rc.senseRubble(l21) + 10.0;
-                v21 -= p21;
-                if(v21 > v32){
-                    v21 = v32;
-                    d21 = d32;
-                }
-                if(v21 > v22){
-                    v21 = v22;
-                    d21 = d22;
-                }
-                if(v21 > v31){
-                    v21 = v31;
-                    d21 = d31;
-                }
-                v21 += p21;
-            }
-            if(rc.onTheMap(l81)){
-                p81 = rc.senseRubble(l81) + 10.0;
-                v81 -= p81;
-                if(v81 > v72){
-                    v81 = v72;
-                    d81 = d72;
-                }
-                if(v81 > v71){
-                    v81 = v71;
-                    d81 = d71;
-                }
-                if(v81 > v82){
-                    v81 = v82;
-                    d81 = d82;
-                }
-                v81 += p81;
-            }
-            if(rc.onTheMap(l87)){
-                p87 = rc.senseRubble(l87) + 10.0;
-                v87 -= p87;
-                if(v87 > v76){
-                    v87 = v76;
-                    d87 = d76;
-                }
-                if(v87 > v77){
-                    v87 = v77;
-                    d87 = d77;
-                }
-                if(v87 > v86){
-                    v87 = v86;
-                    d87 = d86;
-                }
-                v87 += p87;
-            }
-            if(rc.onTheMap(l14)){
-                p14 = rc.senseRubble(l14) + 10.0;
-                v14 -= p14;
-                if(v14 > v24){
-                    v14 = v24;
-                    d14 = d24;
-                }
-                if(v14 > v23){
-                    v14 = v23;
-                    d14 = d23;
-                }
-                v14 += p14;
-            }
-            if(rc.onTheMap(l94)){
-                p94 = rc.senseRubble(l94) + 10.0;
-                v94 -= p94;
-                if(v94 > v84){
-                    v94 = v84;
-                    d94 = d84;
-                }
-                if(v94 > v83){
-                    v94 = v83;
-                    d94 = d83;
-                }
-                if(v94 > v85){
-                    v94 = v85;
-                    d94 = d85;
-                }
-                v94 += p94;
-            }
-            if(rc.onTheMap(l50)){
-                p50 = rc.senseRubble(l50) + 10.0;
-                v50 -= p50;
-                if(v50 > v51){
-                    v50 = v51;
-                    d50 = d51;
-                }
-                if(v50 > v41){
-                    v50 = v41;
-                    d50 = d41;
-                }
-                if(v50 > v61){
-                    v50 = v61;
-                    d50 = d61;
-                }
-                v50 += p50;
-            }
-            if(rc.onTheMap(l58)){
-                p58 = rc.senseRubble(l58) + 10.0;
-                v58 -= p58;
-                if(v58 > v57){
-                    v58 = v57;
-                    d58 = d57;
-                }
-                if(v58 > v67){
-                    v58 = v67;
-                    d58 = d67;
-                }
-                v58 += p58;
-            }
-            if(rc.onTheMap(l13)){
-                p13 = rc.senseRubble(l13) + 10.0;
-                v13 -= p13;
-                if(v13 > v24){
-                    v13 = v24;
-                    d13 = d24;
-                }
-                if(v13 > v23){
-                    v13 = v23;
-                    d13 = d23;
-                }
-                if(v13 > v22){
-                    v13 = v22;
-                    d13 = d22;
-                }
-                if(v13 > v14){
-                    v13 = v14;
-                    d13 = d14;
-                }
-                v13 += p13;
-            }
-            if(rc.onTheMap(l93)){
-                p93 = rc.senseRubble(l93) + 10.0;
-                v93 -= p93;
-                if(v93 > v84){
-                    v93 = v84;
-                    d93 = d84;
-                }
-                if(v93 > v83){
-                    v93 = v83;
-                    d93 = d83;
-                }
-                if(v93 > v82){
-                    v93 = v82;
-                    d93 = d82;
-                }
-                if(v93 > v94){
-                    v93 = v94;
-                    d93 = d94;
-                }
-                v93 += p93;
-            }
-            if(rc.onTheMap(l95)){
-                p95 = rc.senseRubble(l95) + 10.0;
-                v95 -= p95;
-                if(v95 > v84){
-                    v95 = v84;
-                    d95 = d84;
-                }
-                if(v95 > v85){
-                    v95 = v85;
-                    d95 = d85;
-                }
-                if(v95 > v86){
-                    v95 = v86;
-                    d95 = d86;
-                }
-                if(v95 > v94){
-                    v95 = v94;
-                    d95 = d94;
-                }
-                v95 += p95;
-            }
-            if(rc.onTheMap(l40)){
-                p40 = rc.senseRubble(l40) + 10.0;
-                v40 -= p40;
-                if(v40 > v51){
-                    v40 = v51;
-                    d40 = d51;
-                }
-                if(v40 > v41){
-                    v40 = v41;
-                    d40 = d41;
-                }
-                if(v40 > v31){
-                    v40 = v31;
-                    d40 = d31;
-                }
-                if(v40 > v50){
-                    v40 = v50;
-                    d40 = d50;
-                }
-                v40 += p40;
-            }
-            if(rc.onTheMap(l60)){
-                p60 = rc.senseRubble(l60) + 10.0;
-                v60 -= p60;
-                if(v60 > v51){
-                    v60 = v51;
-                    d60 = d51;
-                }
-                if(v60 > v61){
-                    v60 = v61;
-                    d60 = d61;
-                }
-                if(v60 > v71){
-                    v60 = v71;
-                    d60 = d71;
-                }
-                if(v60 > v50){
-                    v60 = v50;
-                    d60 = d50;
-                }
-                v60 += p60;
-            }
-            if(rc.onTheMap(l68)){
-                p68 = rc.senseRubble(l68) + 10.0;
-                v68 -= p68;
-                if(v68 > v57){
-                    v68 = v57;
-                    d68 = d57;
-                }
-                if(v68 > v67){
-                    v68 = v67;
-                    d68 = d67;
-                }
-                if(v68 > v77){
-                    v68 = v77;
-                    d68 = d77;
-                }
-                if(v68 > v58){
-                    v68 = v58;
-                    d68 = d58;
-                }
-                v68 += p68;
-            }
-            if(rc.onTheMap(l12)){
-                p12 = rc.senseRubble(l12) + 10.0;
-                v12 -= p12;
-                if(v12 > v23){
-                    v12 = v23;
-                    d12 = d23;
-                }
-                if(v12 > v22){
-                    v12 = v22;
-                    d12 = d22;
-                }
-                if(v12 > v13){
-                    v12 = v13;
-                    d12 = d13;
-                }
-                if(v12 > v21){
-                    v12 = v21;
-                    d12 = d21;
-                }
-                v12 += p12;
-            }
-            if(rc.onTheMap(l92)){
-                p92 = rc.senseRubble(l92) + 10.0;
-                v92 -= p92;
-                if(v92 > v83){
-                    v92 = v83;
-                    d92 = d83;
-                }
-                if(v92 > v82){
-                    v92 = v82;
-                    d92 = d82;
-                }
-                if(v92 > v93){
-                    v92 = v93;
-                    d92 = d93;
-                }
-                if(v92 > v81){
-                    v92 = v81;
-                    d92 = d81;
-                }
-                v92 += p92;
-            }
-            if(rc.onTheMap(l96)){
-                p96 = rc.senseRubble(l96) + 10.0;
-                v96 -= p96;
-                if(v96 > v85){
-                    v96 = v85;
-                    d96 = d85;
-                }
-                if(v96 > v86){
-                    v96 = v86;
-                    d96 = d86;
-                }
-                if(v96 > v95){
-                    v96 = v95;
-                    d96 = d95;
-                }
-                if(v96 > v87){
-                    v96 = v87;
-                    d96 = d87;
-                }
-                v96 += p96;
-            }
-            if(rc.onTheMap(l30)){
-                p30 = rc.senseRubble(l30) + 10.0;
-                v30 -= p30;
-                if(v30 > v41){
-                    v30 = v41;
-                    d30 = d41;
-                }
-                if(v30 > v31){
-                    v30 = v31;
-                    d30 = d31;
-                }
-                if(v30 > v40){
-                    v30 = v40;
-                    d30 = d40;
-                }
-                if(v30 > v21){
-                    v30 = v21;
-                    d30 = d21;
-                }
-                v30 += p30;
-            }
-            if(rc.onTheMap(l70)){
-                p70 = rc.senseRubble(l70) + 10.0;
-                v70 -= p70;
-                if(v70 > v61){
-                    v70 = v61;
-                    d70 = d61;
-                }
-                if(v70 > v71){
-                    v70 = v71;
-                    d70 = d71;
-                }
-                if(v70 > v60){
-                    v70 = v60;
-                    d70 = d60;
-                }
-                if(v70 > v81){
-                    v70 = v81;
-                    d70 = d81;
-                }
-                v70 += p70;
-            }
-            if(rc.onTheMap(l78)){
-                p78 = rc.senseRubble(l78) + 10.0;
-                v78 -= p78;
-                if(v78 > v67){
-                    v78 = v67;
-                    d78 = d67;
-                }
-                if(v78 > v77){
-                    v78 = v77;
-                    d78 = d77;
-                }
-                if(v78 > v68){
-                    v78 = v68;
-                    d78 = d68;
-                }
-                if(v78 > v87){
-                    v78 = v87;
-                    d78 = d87;
-                }
-                v78 += p78;
-            }
             System.out.println("Ran BFS: " + Clock.getBytecodesLeft());
             int dx = target.x - l54.x;
             int dy = target.y - l54.y;
             switch (dx) {
-                case -4:
-                    switch (dy){
-                        case -2:
-                            return d12;
-                        case -1:
-                            return d13;
-                        case 0:
-                            return d14;
-                    }
-                    break;
                 case -3:
                     switch (dy){
-                        case -3:
-                            return d21;
                         case -2:
                             return d22;
                         case -1:
@@ -10051,8 +6942,6 @@ public class BFS20 extends BFS{
                     break;
                 case -2:
                     switch (dy){
-                        case -4:
-                            return d30;
                         case -3:
                             return d31;
                         case -2:
@@ -10069,8 +6958,6 @@ public class BFS20 extends BFS{
                     break;
                 case -1:
                     switch (dy){
-                        case -4:
-                            return d40;
                         case -3:
                             return d41;
                         case -2:
@@ -10087,8 +6974,6 @@ public class BFS20 extends BFS{
                     break;
                 case 0:
                     switch (dy){
-                        case -4:
-                            return d50;
                         case -3:
                             return d51;
                         case -2:
@@ -10103,14 +6988,10 @@ public class BFS20 extends BFS{
                             return d56;
                         case 3:
                             return d57;
-                        case 4:
-                            return d58;
                     }
                     break;
                 case 1:
                     switch (dy){
-                        case -4:
-                            return d60;
                         case -3:
                             return d61;
                         case -2:
@@ -10125,14 +7006,10 @@ public class BFS20 extends BFS{
                             return d66;
                         case 3:
                             return d67;
-                        case 4:
-                            return d68;
                     }
                     break;
                 case 2:
                     switch (dy){
-                        case -4:
-                            return d70;
                         case -3:
                             return d71;
                         case -2:
@@ -10147,14 +7024,10 @@ public class BFS20 extends BFS{
                             return d76;
                         case 3:
                             return d77;
-                        case 4:
-                            return d78;
                     }
                     break;
                 case 3:
                     switch (dy){
-                        case -3:
-                            return d81;
                         case -2:
                             return d82;
                         case -1:
@@ -10165,22 +7038,6 @@ public class BFS20 extends BFS{
                             return d85;
                         case 2:
                             return d86;
-                        case 3:
-                            return d87;
-                    }
-                    break;
-                case 4:
-                    switch (dy){
-                        case -2:
-                            return d92;
-                        case -1:
-                            return d93;
-                        case 0:
-                            return d94;
-                        case 1:
-                            return d95;
-                        case 2:
-                            return d96;
                     }
                     break;
             }
@@ -10209,21 +7066,76 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d46;
                 System.out.println("Best end location: " + l46.toString());}
+            currScore = (initialDist - l32.distanceSquaredTo(target)) / v32;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d32;
+                System.out.println("Best end location: " + l32.toString());}
             currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
             if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d36;
                 System.out.println("Best end location: " + l36.toString());}
+            currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d72;
+                System.out.println("Best end location: " + l72.toString());}
+            currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d76;
+                System.out.println("Best end location: " + l76.toString());}
             currScore = (initialDist - l24.distanceSquaredTo(target)) / v24;
             if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d24;
                 System.out.println("Best end location: " + l24.toString());}
+            currScore = (initialDist - l84.distanceSquaredTo(target)) / v84;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d84;
+                System.out.println("Best end location: " + l84.toString());}
+            currScore = (initialDist - l51.distanceSquaredTo(target)) / v51;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d51;
+                System.out.println("Best end location: " + l51.toString());}
             currScore = (initialDist - l57.distanceSquaredTo(target)) / v57;
             if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d57;
                 System.out.println("Best end location: " + l57.toString());}
+            currScore = (initialDist - l23.distanceSquaredTo(target)) / v23;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d23;
+                System.out.println("Best end location: " + l23.toString());}
+            currScore = (initialDist - l83.distanceSquaredTo(target)) / v83;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d83;
+                System.out.println("Best end location: " + l83.toString());}
+            currScore = (initialDist - l85.distanceSquaredTo(target)) / v85;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d85;
+                System.out.println("Best end location: " + l85.toString());}
+            currScore = (initialDist - l41.distanceSquaredTo(target)) / v41;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d41;
+                System.out.println("Best end location: " + l41.toString());}
+            currScore = (initialDist - l61.distanceSquaredTo(target)) / v61;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d61;
+                System.out.println("Best end location: " + l61.toString());}
+            currScore = (initialDist - l67.distanceSquaredTo(target)) / v67;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d67;
+                System.out.println("Best end location: " + l67.toString());}
             currScore = (initialDist - l22.distanceSquaredTo(target)) / v22;
             if(currScore > bestScore){
                 bestScore = currScore;
@@ -10254,101 +7166,6 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d77;
                 System.out.println("Best end location: " + l77.toString());}
-            currScore = (initialDist - l21.distanceSquaredTo(target)) / v21;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d21;
-                System.out.println("Best end location: " + l21.toString());}
-            currScore = (initialDist - l81.distanceSquaredTo(target)) / v81;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d81;
-                System.out.println("Best end location: " + l81.toString());}
-            currScore = (initialDist - l87.distanceSquaredTo(target)) / v87;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d87;
-                System.out.println("Best end location: " + l87.toString());}
-            currScore = (initialDist - l14.distanceSquaredTo(target)) / v14;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d14;
-                System.out.println("Best end location: " + l14.toString());}
-            currScore = (initialDist - l94.distanceSquaredTo(target)) / v94;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d94;
-                System.out.println("Best end location: " + l94.toString());}
-            currScore = (initialDist - l50.distanceSquaredTo(target)) / v50;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d50;
-                System.out.println("Best end location: " + l50.toString());}
-            currScore = (initialDist - l58.distanceSquaredTo(target)) / v58;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d58;
-                System.out.println("Best end location: " + l58.toString());}
-            currScore = (initialDist - l13.distanceSquaredTo(target)) / v13;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d13;
-                System.out.println("Best end location: " + l13.toString());}
-            currScore = (initialDist - l93.distanceSquaredTo(target)) / v93;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d93;
-                System.out.println("Best end location: " + l93.toString());}
-            currScore = (initialDist - l95.distanceSquaredTo(target)) / v95;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d95;
-                System.out.println("Best end location: " + l95.toString());}
-            currScore = (initialDist - l40.distanceSquaredTo(target)) / v40;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d40;
-                System.out.println("Best end location: " + l40.toString());}
-            currScore = (initialDist - l60.distanceSquaredTo(target)) / v60;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d60;
-                System.out.println("Best end location: " + l60.toString());}
-            currScore = (initialDist - l68.distanceSquaredTo(target)) / v68;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d68;
-                System.out.println("Best end location: " + l68.toString());}
-            currScore = (initialDist - l12.distanceSquaredTo(target)) / v12;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d12;
-                System.out.println("Best end location: " + l12.toString());}
-            currScore = (initialDist - l92.distanceSquaredTo(target)) / v92;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d92;
-                System.out.println("Best end location: " + l92.toString());}
-            currScore = (initialDist - l96.distanceSquaredTo(target)) / v96;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d96;
-                System.out.println("Best end location: " + l96.toString());}
-            currScore = (initialDist - l30.distanceSquaredTo(target)) / v30;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d30;
-                System.out.println("Best end location: " + l30.toString());}
-            currScore = (initialDist - l70.distanceSquaredTo(target)) / v70;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d70;
-                System.out.println("Best end location: " + l70.toString());}
-            currScore = (initialDist - l78.distanceSquaredTo(target)) / v78;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d78;
-                System.out.println("Best end location: " + l78.toString());}
             return ans;
         } catch (Exception e){
             e.printStackTrace();
@@ -11088,391 +7905,12 @@ public class BFS20 extends BFS{
                 }
                 v71 += p71;
             }
-            if(rc.onTheMap(l21)){
-                p21 = rc.senseRubble(l21) + 10.0;
-                v21 -= p21;
-                if(v21 > v32){
-                    v21 = v32;
-                    d21 = d32;
-                }
-                if(v21 > v22){
-                    v21 = v22;
-                    d21 = d22;
-                }
-                if(v21 > v31){
-                    v21 = v31;
-                    d21 = d31;
-                }
-                v21 += p21;
-            }
-            if(rc.onTheMap(l27)){
-                p27 = rc.senseRubble(l27) + 10.0;
-                v27 -= p27;
-                if(v27 > v36){
-                    v27 = v36;
-                    d27 = d36;
-                }
-                if(v27 > v37){
-                    v27 = v37;
-                    d27 = d37;
-                }
-                if(v27 > v26){
-                    v27 = v26;
-                    d27 = d26;
-                }
-                v27 += p27;
-            }
-            if(rc.onTheMap(l81)){
-                p81 = rc.senseRubble(l81) + 10.0;
-                v81 -= p81;
-                if(v81 > v72){
-                    v81 = v72;
-                    d81 = d72;
-                }
-                if(v81 > v71){
-                    v81 = v71;
-                    d81 = d71;
-                }
-                if(v81 > v82){
-                    v81 = v82;
-                    d81 = d82;
-                }
-                v81 += p81;
-            }
-            if(rc.onTheMap(l14)){
-                p14 = rc.senseRubble(l14) + 10.0;
-                v14 -= p14;
-                if(v14 > v24){
-                    v14 = v24;
-                    d14 = d24;
-                }
-                if(v14 > v25){
-                    v14 = v25;
-                    d14 = d25;
-                }
-                if(v14 > v23){
-                    v14 = v23;
-                    d14 = d23;
-                }
-                v14 += p14;
-            }
-            if(rc.onTheMap(l94)){
-                p94 = rc.senseRubble(l94) + 10.0;
-                v94 -= p94;
-                if(v94 > v84){
-                    v94 = v84;
-                    d94 = d84;
-                }
-                if(v94 > v83){
-                    v94 = v83;
-                    d94 = d83;
-                }
-                v94 += p94;
-            }
-            if(rc.onTheMap(l50)){
-                p50 = rc.senseRubble(l50) + 10.0;
-                v50 -= p50;
-                if(v50 > v51){
-                    v50 = v51;
-                    d50 = d51;
-                }
-                if(v50 > v41){
-                    v50 = v41;
-                    d50 = d41;
-                }
-                if(v50 > v61){
-                    v50 = v61;
-                    d50 = d61;
-                }
-                v50 += p50;
-            }
-            if(rc.onTheMap(l58)){
-                p58 = rc.senseRubble(l58) + 10.0;
-                v58 -= p58;
-                if(v58 > v57){
-                    v58 = v57;
-                    d58 = d57;
-                }
-                if(v58 > v47){
-                    v58 = v47;
-                    d58 = d47;
-                }
-                v58 += p58;
-            }
-            if(rc.onTheMap(l13)){
-                p13 = rc.senseRubble(l13) + 10.0;
-                v13 -= p13;
-                if(v13 > v24){
-                    v13 = v24;
-                    d13 = d24;
-                }
-                if(v13 > v23){
-                    v13 = v23;
-                    d13 = d23;
-                }
-                if(v13 > v22){
-                    v13 = v22;
-                    d13 = d22;
-                }
-                if(v13 > v14){
-                    v13 = v14;
-                    d13 = d14;
-                }
-                v13 += p13;
-            }
-            if(rc.onTheMap(l15)){
-                p15 = rc.senseRubble(l15) + 10.0;
-                v15 -= p15;
-                if(v15 > v24){
-                    v15 = v24;
-                    d15 = d24;
-                }
-                if(v15 > v25){
-                    v15 = v25;
-                    d15 = d25;
-                }
-                if(v15 > v26){
-                    v15 = v26;
-                    d15 = d26;
-                }
-                if(v15 > v14){
-                    v15 = v14;
-                    d15 = d14;
-                }
-                v15 += p15;
-            }
-            if(rc.onTheMap(l93)){
-                p93 = rc.senseRubble(l93) + 10.0;
-                v93 -= p93;
-                if(v93 > v84){
-                    v93 = v84;
-                    d93 = d84;
-                }
-                if(v93 > v83){
-                    v93 = v83;
-                    d93 = d83;
-                }
-                if(v93 > v82){
-                    v93 = v82;
-                    d93 = d82;
-                }
-                if(v93 > v94){
-                    v93 = v94;
-                    d93 = d94;
-                }
-                v93 += p93;
-            }
-            if(rc.onTheMap(l40)){
-                p40 = rc.senseRubble(l40) + 10.0;
-                v40 -= p40;
-                if(v40 > v51){
-                    v40 = v51;
-                    d40 = d51;
-                }
-                if(v40 > v41){
-                    v40 = v41;
-                    d40 = d41;
-                }
-                if(v40 > v31){
-                    v40 = v31;
-                    d40 = d31;
-                }
-                if(v40 > v50){
-                    v40 = v50;
-                    d40 = d50;
-                }
-                v40 += p40;
-            }
-            if(rc.onTheMap(l48)){
-                p48 = rc.senseRubble(l48) + 10.0;
-                v48 -= p48;
-                if(v48 > v57){
-                    v48 = v57;
-                    d48 = d57;
-                }
-                if(v48 > v47){
-                    v48 = v47;
-                    d48 = d47;
-                }
-                if(v48 > v37){
-                    v48 = v37;
-                    d48 = d37;
-                }
-                if(v48 > v58){
-                    v48 = v58;
-                    d48 = d58;
-                }
-                v48 += p48;
-            }
-            if(rc.onTheMap(l60)){
-                p60 = rc.senseRubble(l60) + 10.0;
-                v60 -= p60;
-                if(v60 > v51){
-                    v60 = v51;
-                    d60 = d51;
-                }
-                if(v60 > v61){
-                    v60 = v61;
-                    d60 = d61;
-                }
-                if(v60 > v71){
-                    v60 = v71;
-                    d60 = d71;
-                }
-                if(v60 > v50){
-                    v60 = v50;
-                    d60 = d50;
-                }
-                v60 += p60;
-            }
-            if(rc.onTheMap(l12)){
-                p12 = rc.senseRubble(l12) + 10.0;
-                v12 -= p12;
-                if(v12 > v23){
-                    v12 = v23;
-                    d12 = d23;
-                }
-                if(v12 > v22){
-                    v12 = v22;
-                    d12 = d22;
-                }
-                if(v12 > v13){
-                    v12 = v13;
-                    d12 = d13;
-                }
-                if(v12 > v21){
-                    v12 = v21;
-                    d12 = d21;
-                }
-                v12 += p12;
-            }
-            if(rc.onTheMap(l16)){
-                p16 = rc.senseRubble(l16) + 10.0;
-                v16 -= p16;
-                if(v16 > v25){
-                    v16 = v25;
-                    d16 = d25;
-                }
-                if(v16 > v26){
-                    v16 = v26;
-                    d16 = d26;
-                }
-                if(v16 > v15){
-                    v16 = v15;
-                    d16 = d15;
-                }
-                if(v16 > v27){
-                    v16 = v27;
-                    d16 = d27;
-                }
-                v16 += p16;
-            }
-            if(rc.onTheMap(l92)){
-                p92 = rc.senseRubble(l92) + 10.0;
-                v92 -= p92;
-                if(v92 > v83){
-                    v92 = v83;
-                    d92 = d83;
-                }
-                if(v92 > v82){
-                    v92 = v82;
-                    d92 = d82;
-                }
-                if(v92 > v93){
-                    v92 = v93;
-                    d92 = d93;
-                }
-                if(v92 > v81){
-                    v92 = v81;
-                    d92 = d81;
-                }
-                v92 += p92;
-            }
-            if(rc.onTheMap(l30)){
-                p30 = rc.senseRubble(l30) + 10.0;
-                v30 -= p30;
-                if(v30 > v41){
-                    v30 = v41;
-                    d30 = d41;
-                }
-                if(v30 > v31){
-                    v30 = v31;
-                    d30 = d31;
-                }
-                if(v30 > v40){
-                    v30 = v40;
-                    d30 = d40;
-                }
-                if(v30 > v21){
-                    v30 = v21;
-                    d30 = d21;
-                }
-                v30 += p30;
-            }
-            if(rc.onTheMap(l38)){
-                p38 = rc.senseRubble(l38) + 10.0;
-                v38 -= p38;
-                if(v38 > v47){
-                    v38 = v47;
-                    d38 = d47;
-                }
-                if(v38 > v37){
-                    v38 = v37;
-                    d38 = d37;
-                }
-                if(v38 > v48){
-                    v38 = v48;
-                    d38 = d48;
-                }
-                if(v38 > v27){
-                    v38 = v27;
-                    d38 = d27;
-                }
-                v38 += p38;
-            }
-            if(rc.onTheMap(l70)){
-                p70 = rc.senseRubble(l70) + 10.0;
-                v70 -= p70;
-                if(v70 > v61){
-                    v70 = v61;
-                    d70 = d61;
-                }
-                if(v70 > v71){
-                    v70 = v71;
-                    d70 = d71;
-                }
-                if(v70 > v60){
-                    v70 = v60;
-                    d70 = d60;
-                }
-                if(v70 > v81){
-                    v70 = v81;
-                    d70 = d81;
-                }
-                v70 += p70;
-            }
             System.out.println("Ran BFS: " + Clock.getBytecodesLeft());
             int dx = target.x - l54.x;
             int dy = target.y - l54.y;
             switch (dx) {
-                case -4:
-                    switch (dy){
-                        case -2:
-                            return d12;
-                        case -1:
-                            return d13;
-                        case 0:
-                            return d14;
-                        case 1:
-                            return d15;
-                        case 2:
-                            return d16;
-                    }
-                    break;
                 case -3:
                     switch (dy){
-                        case -3:
-                            return d21;
                         case -2:
                             return d22;
                         case -1:
@@ -11483,14 +7921,10 @@ public class BFS20 extends BFS{
                             return d25;
                         case 2:
                             return d26;
-                        case 3:
-                            return d27;
                     }
                     break;
                 case -2:
                     switch (dy){
-                        case -4:
-                            return d30;
                         case -3:
                             return d31;
                         case -2:
@@ -11505,14 +7939,10 @@ public class BFS20 extends BFS{
                             return d36;
                         case 3:
                             return d37;
-                        case 4:
-                            return d38;
                     }
                     break;
                 case -1:
                     switch (dy){
-                        case -4:
-                            return d40;
                         case -3:
                             return d41;
                         case -2:
@@ -11527,14 +7957,10 @@ public class BFS20 extends BFS{
                             return d46;
                         case 3:
                             return d47;
-                        case 4:
-                            return d48;
                     }
                     break;
                 case 0:
                     switch (dy){
-                        case -4:
-                            return d50;
                         case -3:
                             return d51;
                         case -2:
@@ -11549,14 +7975,10 @@ public class BFS20 extends BFS{
                             return d56;
                         case 3:
                             return d57;
-                        case 4:
-                            return d58;
                     }
                     break;
                 case 1:
                     switch (dy){
-                        case -4:
-                            return d60;
                         case -3:
                             return d61;
                         case -2:
@@ -11573,8 +7995,6 @@ public class BFS20 extends BFS{
                     break;
                 case 2:
                     switch (dy){
-                        case -4:
-                            return d70;
                         case -3:
                             return d71;
                         case -2:
@@ -11591,24 +8011,12 @@ public class BFS20 extends BFS{
                     break;
                 case 3:
                     switch (dy){
-                        case -3:
-                            return d81;
                         case -2:
                             return d82;
                         case -1:
                             return d83;
                         case 0:
                             return d84;
-                    }
-                    break;
-                case 4:
-                    switch (dy){
-                        case -2:
-                            return d92;
-                        case -1:
-                            return d93;
-                        case 0:
-                            return d94;
                     }
                     break;
             }
@@ -11637,21 +8045,76 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d66;
                 System.out.println("Best end location: " + l66.toString());}
+            currScore = (initialDist - l32.distanceSquaredTo(target)) / v32;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d32;
+                System.out.println("Best end location: " + l32.toString());}
+            currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d36;
+                System.out.println("Best end location: " + l36.toString());}
+            currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d72;
+                System.out.println("Best end location: " + l72.toString());}
             currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
             if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d76;
                 System.out.println("Best end location: " + l76.toString());}
+            currScore = (initialDist - l24.distanceSquaredTo(target)) / v24;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d24;
+                System.out.println("Best end location: " + l24.toString());}
             currScore = (initialDist - l84.distanceSquaredTo(target)) / v84;
             if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d84;
                 System.out.println("Best end location: " + l84.toString());}
+            currScore = (initialDist - l51.distanceSquaredTo(target)) / v51;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d51;
+                System.out.println("Best end location: " + l51.toString());}
             currScore = (initialDist - l57.distanceSquaredTo(target)) / v57;
             if(currScore > bestScore){
                 bestScore = currScore;
                 ans = d57;
                 System.out.println("Best end location: " + l57.toString());}
+            currScore = (initialDist - l23.distanceSquaredTo(target)) / v23;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d23;
+                System.out.println("Best end location: " + l23.toString());}
+            currScore = (initialDist - l25.distanceSquaredTo(target)) / v25;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d25;
+                System.out.println("Best end location: " + l25.toString());}
+            currScore = (initialDist - l83.distanceSquaredTo(target)) / v83;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d83;
+                System.out.println("Best end location: " + l83.toString());}
+            currScore = (initialDist - l41.distanceSquaredTo(target)) / v41;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d41;
+                System.out.println("Best end location: " + l41.toString());}
+            currScore = (initialDist - l47.distanceSquaredTo(target)) / v47;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d47;
+                System.out.println("Best end location: " + l47.toString());}
+            currScore = (initialDist - l61.distanceSquaredTo(target)) / v61;
+            if(currScore > bestScore){
+                bestScore = currScore;
+                ans = d61;
+                System.out.println("Best end location: " + l61.toString());}
             currScore = (initialDist - l22.distanceSquaredTo(target)) / v22;
             if(currScore > bestScore){
                 bestScore = currScore;
@@ -11682,101 +8145,6 @@ public class BFS20 extends BFS{
                 bestScore = currScore;
                 ans = d71;
                 System.out.println("Best end location: " + l71.toString());}
-            currScore = (initialDist - l21.distanceSquaredTo(target)) / v21;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d21;
-                System.out.println("Best end location: " + l21.toString());}
-            currScore = (initialDist - l27.distanceSquaredTo(target)) / v27;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d27;
-                System.out.println("Best end location: " + l27.toString());}
-            currScore = (initialDist - l81.distanceSquaredTo(target)) / v81;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d81;
-                System.out.println("Best end location: " + l81.toString());}
-            currScore = (initialDist - l14.distanceSquaredTo(target)) / v14;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d14;
-                System.out.println("Best end location: " + l14.toString());}
-            currScore = (initialDist - l94.distanceSquaredTo(target)) / v94;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d94;
-                System.out.println("Best end location: " + l94.toString());}
-            currScore = (initialDist - l50.distanceSquaredTo(target)) / v50;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d50;
-                System.out.println("Best end location: " + l50.toString());}
-            currScore = (initialDist - l58.distanceSquaredTo(target)) / v58;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d58;
-                System.out.println("Best end location: " + l58.toString());}
-            currScore = (initialDist - l13.distanceSquaredTo(target)) / v13;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d13;
-                System.out.println("Best end location: " + l13.toString());}
-            currScore = (initialDist - l15.distanceSquaredTo(target)) / v15;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d15;
-                System.out.println("Best end location: " + l15.toString());}
-            currScore = (initialDist - l93.distanceSquaredTo(target)) / v93;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d93;
-                System.out.println("Best end location: " + l93.toString());}
-            currScore = (initialDist - l40.distanceSquaredTo(target)) / v40;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d40;
-                System.out.println("Best end location: " + l40.toString());}
-            currScore = (initialDist - l48.distanceSquaredTo(target)) / v48;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d48;
-                System.out.println("Best end location: " + l48.toString());}
-            currScore = (initialDist - l60.distanceSquaredTo(target)) / v60;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d60;
-                System.out.println("Best end location: " + l60.toString());}
-            currScore = (initialDist - l12.distanceSquaredTo(target)) / v12;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d12;
-                System.out.println("Best end location: " + l12.toString());}
-            currScore = (initialDist - l16.distanceSquaredTo(target)) / v16;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d16;
-                System.out.println("Best end location: " + l16.toString());}
-            currScore = (initialDist - l92.distanceSquaredTo(target)) / v92;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d92;
-                System.out.println("Best end location: " + l92.toString());}
-            currScore = (initialDist - l30.distanceSquaredTo(target)) / v30;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d30;
-                System.out.println("Best end location: " + l30.toString());}
-            currScore = (initialDist - l38.distanceSquaredTo(target)) / v38;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d38;
-                System.out.println("Best end location: " + l38.toString());}
-            currScore = (initialDist - l70.distanceSquaredTo(target)) / v70;
-            if(currScore > bestScore){
-                bestScore = currScore;
-                ans = d70;
-                System.out.println("Best end location: " + l70.toString());}
             return ans;
         } catch (Exception e){
             e.printStackTrace();

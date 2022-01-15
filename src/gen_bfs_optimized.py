@@ -1,8 +1,8 @@
-RADIUS_SQUARED = 20
-CLASS_NAME = "BFS20"
+RADIUS_SQUARED = 13
+CLASS_NAME = "BFS13"
 OUTPUT_FILENAME = "bfs_code.txt"
 # OUTPUT_FILENAME = "sprintbot/BFS20.java"
-PACKAGE_NAME = "sprintbot"
+PACKAGE_NAME = "bfstesting"
 start_loc = (5, 4)  # you may need to increase these vals if the RADIUS_SQUARED is increased from 20
 THRESHOLD_KEEP_ALL_DIRECTIONS = 8
 
@@ -14,6 +14,7 @@ DIR_DICT = {(-1, 1): "NORTHWEST",
             (0, -1): "SOUTH",
             (-1, -1): "SOUTHWEST",
             (-1, 0): "WEST"}
+
 
 def get_neighbor_locs(loc, order=None):
     neighbors = []
@@ -46,6 +47,7 @@ def distSquared(loca, locb):
     dy = loca[1] - locb[1]
     return dx ** 2 + dy ** 2
 
+
 def valid_point(start_loc, point, target_dir):
     if distSquared(start_loc, point) <= THRESHOLD_KEEP_ALL_DIRECTIONS:
         return True
@@ -53,22 +55,22 @@ def valid_point(start_loc, point, target_dir):
     dy = point[1] - start_loc[1]
     # Say target_dir is [0, 1] (north)
     # Then we want to remove points that are (relatively) facing south
-    if target_dir == [0,1]: # North
+    if target_dir == [0, 1]:  # North
         return dy >= 0 or abs(dx) > abs(dy)
-    if target_dir == [0,-1]: # South
+    if target_dir == [0, -1]:  # South
         return dy <= 0 or abs(dx) > abs(dy)
-    if target_dir == [1,0]: # East
+    if target_dir == [1, 0]:  # East
         return dx >= 0 or abs(dy) > abs(dx)
-    if target_dir == [-1,0]: # West
+    if target_dir == [-1, 0]:  # West
         return dx <= 0 or abs(dy) > abs(dx)
 
-    if target_dir == [1,1]: # Northeast
+    if target_dir == [1, 1]:  # Northeast
         return dx >= 0 or dy >= 0
-    if target_dir == [-1,1]: # Northwest
+    if target_dir == [-1, 1]:  # Northwest
         return dx <= 0 or dy >= 0
-    if target_dir == [1,-1]: # Southeast
+    if target_dir == [1, -1]:  # Southeast
         return dx >= 0 or dy <= 0
-    if target_dir == [-1,-1]: # Southwest
+    if target_dir == [-1, -1]:  # Southwest
         return dx <= 0 or dy <= 0
 
     return True
@@ -77,6 +79,7 @@ def valid_point(start_loc, point, target_dir):
 def get_dirs(target_dir):
     dirs = [(-1, 0), (-1, -1), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1)]
     return sorted(dirs, key=lambda d: distSquared(d, target_dir))
+
 
 def get_order(target_dir):
     move_arr = []
@@ -98,7 +101,7 @@ def get_order(target_dir):
                 x_move, y_move = x_dir*dx, y_dir*dy
                 new_loc = (start_loc[0]+x_move, start_loc[1]+y_move)
 
-                if not valid_point(start_loc, new_loc, target_dir): # Remove points that prolly won't matter
+                if not valid_point(start_loc, new_loc, target_dir):  # Remove points that prolly won't matter
                     continue
 
                 if new_loc not in order:
@@ -140,7 +143,8 @@ def gen_code(f, methodname, target_dir):
     # section 3
     f.write("Direction " + methodname + "(MapLocation target) throws GameActionException{\n")
     f.write("System.out.println(\"Starting BFS Method: \" + Clock.getBytecodesLeft());\n")
-    f.write("try{ \n")
+    f.write("try{ ")
+    f.write("double sum;")
     for i in range(1, len(order)):
         x, y = order[i]
         f.write("if(rc.onTheMap(l{}{})){{\n".format(x, y))
@@ -175,7 +179,6 @@ def gen_code(f, methodname, target_dir):
             # if True:
             f.write("}\n")
         f.write("}\n")
-
 
     # section 4 (try catch section to check if we have just explored the target)
     f.write("System.out.println(\"Ran BFS: \" + Clock.getBytecodesLeft());\n")
@@ -212,13 +215,10 @@ def gen_code(f, methodname, target_dir):
         # f.write("currScore = (initialDist - l{}{}.distanceSquaredTo(target)) / tempDist;\n".format(e_x, e_y))
         f.write("currScore = (initialDist - l{}{}.distanceSquaredTo(target)) / v{}{};\n".format(e_x, e_y, e_x, e_y))
         # f.write("if(currScore < bestScore){\n")
-        # f.write("if(currScore > bestScore){\n")
-        f.write("switch(currScore > bestScore){\n")
-        f.write("case true:\n")
+        f.write("if(currScore > bestScore){\n")
         f.write("bestScore = currScore;\n")
         f.write("ans = d{}{};\n".format(e_x, e_y))
-        f.write("System.out.println(\"Best end location: \" + l{}{}.toString());\n".format(e_x, e_y))
-        f.write("break;\n")
+        f.write("System.out.println(\"Best end location: \" + l{}{}.toString());".format(e_x, e_y))
         f.write("}\n")
 
     f.write("return ans;\n")
@@ -231,6 +231,7 @@ def gen_code(f, methodname, target_dir):
 
     # print(order)
     # print((5, 4) in order)
+
 
 extra_code_commented = """
     public Direction getBestDir(MapLocation target) throws GameActionException {
@@ -294,7 +295,6 @@ extra_code = """
         }
         this.vars_are_reset = false;
         return output;
-
 //        return runBFS(target);
 //        System.out.println("ERROR DIRECTION UNKNOWN");
 //        return null;
@@ -305,12 +305,15 @@ f = open(OUTPUT_FILENAME, "w")
 
 f.write("package {};\n".format(PACKAGE_NAME))
 f.write("import battlecode.common.*;\n")
-f.write("public class {}{{\n".format(CLASS_NAME))
-f.write("RobotController rc;\nRobot robot;\n")
-f.write("boolean vars_are_reset = false;\n")
+f.write("public class {} extends BFS{{\n".format(CLASS_NAME))
+# f.write("RobotController rc;\nRobot robot;\n")
+# f.write("boolean vars_are_reset = false;\n")
 
 f.write("{}(RobotController rc, Robot robot){{\n".format(CLASS_NAME))
-f.write("this.rc = rc;\nthis.robot=robot;\nthis.vars_are_reset=false;\n}\n")
+f.write("super(rc, robot);\n")
+f.write("}\n")
+
+# f.write("this.rc = rc;\nthis.robot=robot;\nthis.vars_are_reset=false;\n}\n")
 
 # section 1
 full_order, _ = get_order([0, 0])
