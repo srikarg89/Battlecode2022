@@ -9,7 +9,7 @@ public class Robot {
     // Robot properties
     RobotController rc;
     Navigation nav;
-    BFS20 bfs;
+    BFS bfs;
     BFSOld bfsold;
     Comms comms;
     MapLocation myLoc;
@@ -41,8 +41,14 @@ public class Robot {
         mapWidth = rc.getMapWidth();
         mapHeight = rc.getMapHeight();
         nav = new Navigation(rc, this);
-        bfs = new BFS20(rc, this);
-        bfsold = new BFSOld(rc, this);
+        if(this.myType == RobotType.MINER){
+            bfs = new BFS13(rc, this);
+        }
+        else{
+            bfs = new BFS20(rc, this);
+        }
+//        bfs = new BFS20(rc, this);
+//        bfsold = new BFSOld(rc, this);
         comms = new Comms(rc, this);
         if(myType != RobotType.ARCHON){
             comms.findFriendlyArchons();

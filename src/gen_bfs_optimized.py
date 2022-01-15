@@ -305,12 +305,15 @@ f = open(OUTPUT_FILENAME, "w")
 
 f.write("package {};\n".format(PACKAGE_NAME))
 f.write("import battlecode.common.*;\n")
-f.write("public class {}{{\n".format(CLASS_NAME))
-f.write("RobotController rc;\nRobot robot;\n")
-f.write("boolean vars_are_reset = false;\n")
+f.write("public class {} extends BFS{{\n".format(CLASS_NAME))
+# f.write("RobotController rc;\nRobot robot;\n")
+# f.write("boolean vars_are_reset = false;\n")
 
 f.write("{}(RobotController rc, Robot robot){{\n".format(CLASS_NAME))
-f.write("this.rc = rc;\nthis.robot=robot;\nthis.vars_are_reset=false;\n}\n")
+f.write("super(rc, robot);\n")
+f.write("}\n")
+
+# f.write("this.rc = rc;\nthis.robot=robot;\nthis.vars_are_reset=false;\n}\n")
 
 # section 1
 full_order, _ = get_order([0, 0])

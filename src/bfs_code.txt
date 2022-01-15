@@ -1,13 +1,8 @@
-package bfstestingbot;
+package bfstesting;
 import battlecode.common.*;
-public class BFS13{
-RobotController rc;
-Robot robot;
-boolean vars_are_reset = false;
+public class BFS13 extends BFS{
 BFS13(RobotController rc, Robot robot){
-this.rc = rc;
-this.robot=robot;
-this.vars_are_reset=false;
+super(rc, robot);
 }
 static MapLocation l54;
 static double v54;
@@ -465,8 +460,7 @@ System.out.println("Finished Initializing Variables: " + Clock.getBytecodesLeft(
 
 Direction runBFSNorth(MapLocation target) throws GameActionException{
 System.out.println("Starting BFS Method: " + Clock.getBytecodesLeft());
-try{ 
-if(rc.onTheMap(l44)){
+try{ double sum;if(rc.onTheMap(l44)){
 if(!rc.isLocationOccupied(l44)){
 p44 = rc.senseRubble(l44) + 10.0;
 v44 -= p44;
@@ -1296,181 +1290,115 @@ double bestScore = 0;
 double initialDist = robot.myLoc.distanceSquaredTo(target);
 double currScore;
 currScore = (initialDist - l52.distanceSquaredTo(target)) / v52;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d52;
-System.out.println("Best end location: " + l52.toString());
-break;
-}
+System.out.println("Best end location: " + l52.toString());}
 currScore = (initialDist - l42.distanceSquaredTo(target)) / v42;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d42;
-System.out.println("Best end location: " + l42.toString());
-break;
-}
+System.out.println("Best end location: " + l42.toString());}
 currScore = (initialDist - l62.distanceSquaredTo(target)) / v62;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d62;
-System.out.println("Best end location: " + l62.toString());
-break;
-}
+System.out.println("Best end location: " + l62.toString());}
 currScore = (initialDist - l32.distanceSquaredTo(target)) / v32;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d32;
-System.out.println("Best end location: " + l32.toString());
-break;
-}
+System.out.println("Best end location: " + l32.toString());}
 currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d36;
-System.out.println("Best end location: " + l36.toString());
-break;
-}
+System.out.println("Best end location: " + l36.toString());}
 currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d72;
-System.out.println("Best end location: " + l72.toString());
-break;
-}
+System.out.println("Best end location: " + l72.toString());}
 currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d76;
-System.out.println("Best end location: " + l76.toString());
-break;
-}
+System.out.println("Best end location: " + l76.toString());}
 currScore = (initialDist - l24.distanceSquaredTo(target)) / v24;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d24;
-System.out.println("Best end location: " + l24.toString());
-break;
-}
+System.out.println("Best end location: " + l24.toString());}
 currScore = (initialDist - l84.distanceSquaredTo(target)) / v84;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d84;
-System.out.println("Best end location: " + l84.toString());
-break;
-}
+System.out.println("Best end location: " + l84.toString());}
 currScore = (initialDist - l57.distanceSquaredTo(target)) / v57;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d57;
-System.out.println("Best end location: " + l57.toString());
-break;
-}
+System.out.println("Best end location: " + l57.toString());}
 currScore = (initialDist - l23.distanceSquaredTo(target)) / v23;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d23;
-System.out.println("Best end location: " + l23.toString());
-break;
-}
+System.out.println("Best end location: " + l23.toString());}
 currScore = (initialDist - l25.distanceSquaredTo(target)) / v25;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d25;
-System.out.println("Best end location: " + l25.toString());
-break;
-}
+System.out.println("Best end location: " + l25.toString());}
 currScore = (initialDist - l83.distanceSquaredTo(target)) / v83;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d83;
-System.out.println("Best end location: " + l83.toString());
-break;
-}
+System.out.println("Best end location: " + l83.toString());}
 currScore = (initialDist - l85.distanceSquaredTo(target)) / v85;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d85;
-System.out.println("Best end location: " + l85.toString());
-break;
-}
+System.out.println("Best end location: " + l85.toString());}
 currScore = (initialDist - l47.distanceSquaredTo(target)) / v47;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d47;
-System.out.println("Best end location: " + l47.toString());
-break;
-}
+System.out.println("Best end location: " + l47.toString());}
 currScore = (initialDist - l67.distanceSquaredTo(target)) / v67;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d67;
-System.out.println("Best end location: " + l67.toString());
-break;
-}
+System.out.println("Best end location: " + l67.toString());}
 currScore = (initialDist - l22.distanceSquaredTo(target)) / v22;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d22;
-System.out.println("Best end location: " + l22.toString());
-break;
-}
+System.out.println("Best end location: " + l22.toString());}
 currScore = (initialDist - l26.distanceSquaredTo(target)) / v26;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d26;
-System.out.println("Best end location: " + l26.toString());
-break;
-}
+System.out.println("Best end location: " + l26.toString());}
 currScore = (initialDist - l82.distanceSquaredTo(target)) / v82;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d82;
-System.out.println("Best end location: " + l82.toString());
-break;
-}
+System.out.println("Best end location: " + l82.toString());}
 currScore = (initialDist - l86.distanceSquaredTo(target)) / v86;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d86;
-System.out.println("Best end location: " + l86.toString());
-break;
-}
+System.out.println("Best end location: " + l86.toString());}
 currScore = (initialDist - l37.distanceSquaredTo(target)) / v37;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d37;
-System.out.println("Best end location: " + l37.toString());
-break;
-}
+System.out.println("Best end location: " + l37.toString());}
 currScore = (initialDist - l77.distanceSquaredTo(target)) / v77;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d77;
-System.out.println("Best end location: " + l77.toString());
-break;
-}
+System.out.println("Best end location: " + l77.toString());}
 return ans;
 } catch (Exception e){
 e.printStackTrace();
@@ -1478,8 +1406,7 @@ e.printStackTrace();
 }
 Direction runBFSSouth(MapLocation target) throws GameActionException{
 System.out.println("Starting BFS Method: " + Clock.getBytecodesLeft());
-try{ 
-if(rc.onTheMap(l44)){
+try{ double sum;if(rc.onTheMap(l44)){
 if(!rc.isLocationOccupied(l44)){
 p44 = rc.senseRubble(l44) + 10.0;
 v44 -= p44;
@@ -2309,181 +2236,115 @@ double bestScore = 0;
 double initialDist = robot.myLoc.distanceSquaredTo(target);
 double currScore;
 currScore = (initialDist - l56.distanceSquaredTo(target)) / v56;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d56;
-System.out.println("Best end location: " + l56.toString());
-break;
-}
+System.out.println("Best end location: " + l56.toString());}
 currScore = (initialDist - l46.distanceSquaredTo(target)) / v46;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d46;
-System.out.println("Best end location: " + l46.toString());
-break;
-}
+System.out.println("Best end location: " + l46.toString());}
 currScore = (initialDist - l66.distanceSquaredTo(target)) / v66;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d66;
-System.out.println("Best end location: " + l66.toString());
-break;
-}
+System.out.println("Best end location: " + l66.toString());}
 currScore = (initialDist - l32.distanceSquaredTo(target)) / v32;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d32;
-System.out.println("Best end location: " + l32.toString());
-break;
-}
+System.out.println("Best end location: " + l32.toString());}
 currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d36;
-System.out.println("Best end location: " + l36.toString());
-break;
-}
+System.out.println("Best end location: " + l36.toString());}
 currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d72;
-System.out.println("Best end location: " + l72.toString());
-break;
-}
+System.out.println("Best end location: " + l72.toString());}
 currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d76;
-System.out.println("Best end location: " + l76.toString());
-break;
-}
+System.out.println("Best end location: " + l76.toString());}
 currScore = (initialDist - l24.distanceSquaredTo(target)) / v24;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d24;
-System.out.println("Best end location: " + l24.toString());
-break;
-}
+System.out.println("Best end location: " + l24.toString());}
 currScore = (initialDist - l84.distanceSquaredTo(target)) / v84;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d84;
-System.out.println("Best end location: " + l84.toString());
-break;
-}
+System.out.println("Best end location: " + l84.toString());}
 currScore = (initialDist - l51.distanceSquaredTo(target)) / v51;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d51;
-System.out.println("Best end location: " + l51.toString());
-break;
-}
+System.out.println("Best end location: " + l51.toString());}
 currScore = (initialDist - l23.distanceSquaredTo(target)) / v23;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d23;
-System.out.println("Best end location: " + l23.toString());
-break;
-}
+System.out.println("Best end location: " + l23.toString());}
 currScore = (initialDist - l25.distanceSquaredTo(target)) / v25;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d25;
-System.out.println("Best end location: " + l25.toString());
-break;
-}
+System.out.println("Best end location: " + l25.toString());}
 currScore = (initialDist - l83.distanceSquaredTo(target)) / v83;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d83;
-System.out.println("Best end location: " + l83.toString());
-break;
-}
+System.out.println("Best end location: " + l83.toString());}
 currScore = (initialDist - l85.distanceSquaredTo(target)) / v85;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d85;
-System.out.println("Best end location: " + l85.toString());
-break;
-}
+System.out.println("Best end location: " + l85.toString());}
 currScore = (initialDist - l41.distanceSquaredTo(target)) / v41;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d41;
-System.out.println("Best end location: " + l41.toString());
-break;
-}
+System.out.println("Best end location: " + l41.toString());}
 currScore = (initialDist - l61.distanceSquaredTo(target)) / v61;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d61;
-System.out.println("Best end location: " + l61.toString());
-break;
-}
+System.out.println("Best end location: " + l61.toString());}
 currScore = (initialDist - l22.distanceSquaredTo(target)) / v22;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d22;
-System.out.println("Best end location: " + l22.toString());
-break;
-}
+System.out.println("Best end location: " + l22.toString());}
 currScore = (initialDist - l26.distanceSquaredTo(target)) / v26;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d26;
-System.out.println("Best end location: " + l26.toString());
-break;
-}
+System.out.println("Best end location: " + l26.toString());}
 currScore = (initialDist - l82.distanceSquaredTo(target)) / v82;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d82;
-System.out.println("Best end location: " + l82.toString());
-break;
-}
+System.out.println("Best end location: " + l82.toString());}
 currScore = (initialDist - l86.distanceSquaredTo(target)) / v86;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d86;
-System.out.println("Best end location: " + l86.toString());
-break;
-}
+System.out.println("Best end location: " + l86.toString());}
 currScore = (initialDist - l31.distanceSquaredTo(target)) / v31;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d31;
-System.out.println("Best end location: " + l31.toString());
-break;
-}
+System.out.println("Best end location: " + l31.toString());}
 currScore = (initialDist - l71.distanceSquaredTo(target)) / v71;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d71;
-System.out.println("Best end location: " + l71.toString());
-break;
-}
+System.out.println("Best end location: " + l71.toString());}
 return ans;
 } catch (Exception e){
 e.printStackTrace();
@@ -2491,8 +2352,7 @@ e.printStackTrace();
 }
 Direction runBFSEast(MapLocation target) throws GameActionException{
 System.out.println("Starting BFS Method: " + Clock.getBytecodesLeft());
-try{ 
-if(rc.onTheMap(l44)){
+try{ double sum;if(rc.onTheMap(l44)){
 if(!rc.isLocationOccupied(l44)){
 p44 = rc.senseRubble(l44) + 10.0;
 v44 -= p44;
@@ -3318,181 +3178,115 @@ double bestScore = 0;
 double initialDist = robot.myLoc.distanceSquaredTo(target);
 double currScore;
 currScore = (initialDist - l34.distanceSquaredTo(target)) / v34;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d34;
-System.out.println("Best end location: " + l34.toString());
-break;
-}
+System.out.println("Best end location: " + l34.toString());}
 currScore = (initialDist - l33.distanceSquaredTo(target)) / v33;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d33;
-System.out.println("Best end location: " + l33.toString());
-break;
-}
+System.out.println("Best end location: " + l33.toString());}
 currScore = (initialDist - l35.distanceSquaredTo(target)) / v35;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d35;
-System.out.println("Best end location: " + l35.toString());
-break;
-}
+System.out.println("Best end location: " + l35.toString());}
 currScore = (initialDist - l32.distanceSquaredTo(target)) / v32;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d32;
-System.out.println("Best end location: " + l32.toString());
-break;
-}
+System.out.println("Best end location: " + l32.toString());}
 currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d36;
-System.out.println("Best end location: " + l36.toString());
-break;
-}
+System.out.println("Best end location: " + l36.toString());}
 currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d72;
-System.out.println("Best end location: " + l72.toString());
-break;
-}
+System.out.println("Best end location: " + l72.toString());}
 currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d76;
-System.out.println("Best end location: " + l76.toString());
-break;
-}
+System.out.println("Best end location: " + l76.toString());}
 currScore = (initialDist - l84.distanceSquaredTo(target)) / v84;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d84;
-System.out.println("Best end location: " + l84.toString());
-break;
-}
+System.out.println("Best end location: " + l84.toString());}
 currScore = (initialDist - l51.distanceSquaredTo(target)) / v51;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d51;
-System.out.println("Best end location: " + l51.toString());
-break;
-}
+System.out.println("Best end location: " + l51.toString());}
 currScore = (initialDist - l57.distanceSquaredTo(target)) / v57;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d57;
-System.out.println("Best end location: " + l57.toString());
-break;
-}
+System.out.println("Best end location: " + l57.toString());}
 currScore = (initialDist - l83.distanceSquaredTo(target)) / v83;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d83;
-System.out.println("Best end location: " + l83.toString());
-break;
-}
+System.out.println("Best end location: " + l83.toString());}
 currScore = (initialDist - l85.distanceSquaredTo(target)) / v85;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d85;
-System.out.println("Best end location: " + l85.toString());
-break;
-}
+System.out.println("Best end location: " + l85.toString());}
 currScore = (initialDist - l41.distanceSquaredTo(target)) / v41;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d41;
-System.out.println("Best end location: " + l41.toString());
-break;
-}
+System.out.println("Best end location: " + l41.toString());}
 currScore = (initialDist - l47.distanceSquaredTo(target)) / v47;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d47;
-System.out.println("Best end location: " + l47.toString());
-break;
-}
+System.out.println("Best end location: " + l47.toString());}
 currScore = (initialDist - l61.distanceSquaredTo(target)) / v61;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d61;
-System.out.println("Best end location: " + l61.toString());
-break;
-}
+System.out.println("Best end location: " + l61.toString());}
 currScore = (initialDist - l67.distanceSquaredTo(target)) / v67;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d67;
-System.out.println("Best end location: " + l67.toString());
-break;
-}
+System.out.println("Best end location: " + l67.toString());}
 currScore = (initialDist - l82.distanceSquaredTo(target)) / v82;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d82;
-System.out.println("Best end location: " + l82.toString());
-break;
-}
+System.out.println("Best end location: " + l82.toString());}
 currScore = (initialDist - l86.distanceSquaredTo(target)) / v86;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d86;
-System.out.println("Best end location: " + l86.toString());
-break;
-}
+System.out.println("Best end location: " + l86.toString());}
 currScore = (initialDist - l31.distanceSquaredTo(target)) / v31;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d31;
-System.out.println("Best end location: " + l31.toString());
-break;
-}
+System.out.println("Best end location: " + l31.toString());}
 currScore = (initialDist - l37.distanceSquaredTo(target)) / v37;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d37;
-System.out.println("Best end location: " + l37.toString());
-break;
-}
+System.out.println("Best end location: " + l37.toString());}
 currScore = (initialDist - l71.distanceSquaredTo(target)) / v71;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d71;
-System.out.println("Best end location: " + l71.toString());
-break;
-}
+System.out.println("Best end location: " + l71.toString());}
 currScore = (initialDist - l77.distanceSquaredTo(target)) / v77;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d77;
-System.out.println("Best end location: " + l77.toString());
-break;
-}
+System.out.println("Best end location: " + l77.toString());}
 return ans;
 } catch (Exception e){
 e.printStackTrace();
@@ -3500,8 +3294,7 @@ e.printStackTrace();
 }
 Direction runBFSWest(MapLocation target) throws GameActionException{
 System.out.println("Starting BFS Method: " + Clock.getBytecodesLeft());
-try{ 
-if(rc.onTheMap(l44)){
+try{ double sum;if(rc.onTheMap(l44)){
 if(!rc.isLocationOccupied(l44)){
 p44 = rc.senseRubble(l44) + 10.0;
 v44 -= p44;
@@ -4327,181 +4120,115 @@ double bestScore = 0;
 double initialDist = robot.myLoc.distanceSquaredTo(target);
 double currScore;
 currScore = (initialDist - l74.distanceSquaredTo(target)) / v74;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d74;
-System.out.println("Best end location: " + l74.toString());
-break;
-}
+System.out.println("Best end location: " + l74.toString());}
 currScore = (initialDist - l73.distanceSquaredTo(target)) / v73;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d73;
-System.out.println("Best end location: " + l73.toString());
-break;
-}
+System.out.println("Best end location: " + l73.toString());}
 currScore = (initialDist - l75.distanceSquaredTo(target)) / v75;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d75;
-System.out.println("Best end location: " + l75.toString());
-break;
-}
+System.out.println("Best end location: " + l75.toString());}
 currScore = (initialDist - l32.distanceSquaredTo(target)) / v32;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d32;
-System.out.println("Best end location: " + l32.toString());
-break;
-}
+System.out.println("Best end location: " + l32.toString());}
 currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d36;
-System.out.println("Best end location: " + l36.toString());
-break;
-}
+System.out.println("Best end location: " + l36.toString());}
 currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d72;
-System.out.println("Best end location: " + l72.toString());
-break;
-}
+System.out.println("Best end location: " + l72.toString());}
 currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d76;
-System.out.println("Best end location: " + l76.toString());
-break;
-}
+System.out.println("Best end location: " + l76.toString());}
 currScore = (initialDist - l24.distanceSquaredTo(target)) / v24;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d24;
-System.out.println("Best end location: " + l24.toString());
-break;
-}
+System.out.println("Best end location: " + l24.toString());}
 currScore = (initialDist - l51.distanceSquaredTo(target)) / v51;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d51;
-System.out.println("Best end location: " + l51.toString());
-break;
-}
+System.out.println("Best end location: " + l51.toString());}
 currScore = (initialDist - l57.distanceSquaredTo(target)) / v57;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d57;
-System.out.println("Best end location: " + l57.toString());
-break;
-}
+System.out.println("Best end location: " + l57.toString());}
 currScore = (initialDist - l23.distanceSquaredTo(target)) / v23;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d23;
-System.out.println("Best end location: " + l23.toString());
-break;
-}
+System.out.println("Best end location: " + l23.toString());}
 currScore = (initialDist - l25.distanceSquaredTo(target)) / v25;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d25;
-System.out.println("Best end location: " + l25.toString());
-break;
-}
+System.out.println("Best end location: " + l25.toString());}
 currScore = (initialDist - l41.distanceSquaredTo(target)) / v41;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d41;
-System.out.println("Best end location: " + l41.toString());
-break;
-}
+System.out.println("Best end location: " + l41.toString());}
 currScore = (initialDist - l47.distanceSquaredTo(target)) / v47;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d47;
-System.out.println("Best end location: " + l47.toString());
-break;
-}
+System.out.println("Best end location: " + l47.toString());}
 currScore = (initialDist - l61.distanceSquaredTo(target)) / v61;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d61;
-System.out.println("Best end location: " + l61.toString());
-break;
-}
+System.out.println("Best end location: " + l61.toString());}
 currScore = (initialDist - l67.distanceSquaredTo(target)) / v67;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d67;
-System.out.println("Best end location: " + l67.toString());
-break;
-}
+System.out.println("Best end location: " + l67.toString());}
 currScore = (initialDist - l22.distanceSquaredTo(target)) / v22;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d22;
-System.out.println("Best end location: " + l22.toString());
-break;
-}
+System.out.println("Best end location: " + l22.toString());}
 currScore = (initialDist - l26.distanceSquaredTo(target)) / v26;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d26;
-System.out.println("Best end location: " + l26.toString());
-break;
-}
+System.out.println("Best end location: " + l26.toString());}
 currScore = (initialDist - l31.distanceSquaredTo(target)) / v31;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d31;
-System.out.println("Best end location: " + l31.toString());
-break;
-}
+System.out.println("Best end location: " + l31.toString());}
 currScore = (initialDist - l37.distanceSquaredTo(target)) / v37;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d37;
-System.out.println("Best end location: " + l37.toString());
-break;
-}
+System.out.println("Best end location: " + l37.toString());}
 currScore = (initialDist - l71.distanceSquaredTo(target)) / v71;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d71;
-System.out.println("Best end location: " + l71.toString());
-break;
-}
+System.out.println("Best end location: " + l71.toString());}
 currScore = (initialDist - l77.distanceSquaredTo(target)) / v77;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d77;
-System.out.println("Best end location: " + l77.toString());
-break;
-}
+System.out.println("Best end location: " + l77.toString());}
 return ans;
 } catch (Exception e){
 e.printStackTrace();
@@ -4509,8 +4236,7 @@ e.printStackTrace();
 }
 Direction runBFSNortheast(MapLocation target) throws GameActionException{
 System.out.println("Starting BFS Method: " + Clock.getBytecodesLeft());
-try{ 
-if(rc.onTheMap(l44)){
+try{ double sum;if(rc.onTheMap(l44)){
 if(!rc.isLocationOccupied(l44)){
 p44 = rc.senseRubble(l44) + 10.0;
 v44 -= p44;
@@ -5363,197 +5089,125 @@ double bestScore = 0;
 double initialDist = robot.myLoc.distanceSquaredTo(target);
 double currScore;
 currScore = (initialDist - l34.distanceSquaredTo(target)) / v34;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d34;
-System.out.println("Best end location: " + l34.toString());
-break;
-}
+System.out.println("Best end location: " + l34.toString());}
 currScore = (initialDist - l52.distanceSquaredTo(target)) / v52;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d52;
-System.out.println("Best end location: " + l52.toString());
-break;
-}
+System.out.println("Best end location: " + l52.toString());}
 currScore = (initialDist - l33.distanceSquaredTo(target)) / v33;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d33;
-System.out.println("Best end location: " + l33.toString());
-break;
-}
+System.out.println("Best end location: " + l33.toString());}
 currScore = (initialDist - l42.distanceSquaredTo(target)) / v42;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d42;
-System.out.println("Best end location: " + l42.toString());
-break;
-}
+System.out.println("Best end location: " + l42.toString());}
 currScore = (initialDist - l32.distanceSquaredTo(target)) / v32;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d32;
-System.out.println("Best end location: " + l32.toString());
-break;
-}
+System.out.println("Best end location: " + l32.toString());}
 currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d36;
-System.out.println("Best end location: " + l36.toString());
-break;
-}
+System.out.println("Best end location: " + l36.toString());}
 currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d72;
-System.out.println("Best end location: " + l72.toString());
-break;
-}
+System.out.println("Best end location: " + l72.toString());}
 currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d76;
-System.out.println("Best end location: " + l76.toString());
-break;
-}
+System.out.println("Best end location: " + l76.toString());}
 currScore = (initialDist - l24.distanceSquaredTo(target)) / v24;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d24;
-System.out.println("Best end location: " + l24.toString());
-break;
-}
+System.out.println("Best end location: " + l24.toString());}
 currScore = (initialDist - l84.distanceSquaredTo(target)) / v84;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d84;
-System.out.println("Best end location: " + l84.toString());
-break;
-}
+System.out.println("Best end location: " + l84.toString());}
 currScore = (initialDist - l51.distanceSquaredTo(target)) / v51;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d51;
-System.out.println("Best end location: " + l51.toString());
-break;
-}
+System.out.println("Best end location: " + l51.toString());}
 currScore = (initialDist - l57.distanceSquaredTo(target)) / v57;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d57;
-System.out.println("Best end location: " + l57.toString());
-break;
-}
+System.out.println("Best end location: " + l57.toString());}
 currScore = (initialDist - l25.distanceSquaredTo(target)) / v25;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d25;
-System.out.println("Best end location: " + l25.toString());
-break;
-}
+System.out.println("Best end location: " + l25.toString());}
 currScore = (initialDist - l83.distanceSquaredTo(target)) / v83;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d83;
-System.out.println("Best end location: " + l83.toString());
-break;
-}
+System.out.println("Best end location: " + l83.toString());}
 currScore = (initialDist - l85.distanceSquaredTo(target)) / v85;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d85;
-System.out.println("Best end location: " + l85.toString());
-break;
-}
+System.out.println("Best end location: " + l85.toString());}
 currScore = (initialDist - l47.distanceSquaredTo(target)) / v47;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d47;
-System.out.println("Best end location: " + l47.toString());
-break;
-}
+System.out.println("Best end location: " + l47.toString());}
 currScore = (initialDist - l61.distanceSquaredTo(target)) / v61;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d61;
-System.out.println("Best end location: " + l61.toString());
-break;
-}
+System.out.println("Best end location: " + l61.toString());}
 currScore = (initialDist - l67.distanceSquaredTo(target)) / v67;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d67;
-System.out.println("Best end location: " + l67.toString());
-break;
-}
+System.out.println("Best end location: " + l67.toString());}
 currScore = (initialDist - l26.distanceSquaredTo(target)) / v26;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d26;
-System.out.println("Best end location: " + l26.toString());
-break;
-}
+System.out.println("Best end location: " + l26.toString());}
 currScore = (initialDist - l82.distanceSquaredTo(target)) / v82;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d82;
-System.out.println("Best end location: " + l82.toString());
-break;
-}
+System.out.println("Best end location: " + l82.toString());}
 currScore = (initialDist - l86.distanceSquaredTo(target)) / v86;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d86;
-System.out.println("Best end location: " + l86.toString());
-break;
-}
+System.out.println("Best end location: " + l86.toString());}
 currScore = (initialDist - l37.distanceSquaredTo(target)) / v37;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d37;
-System.out.println("Best end location: " + l37.toString());
-break;
-}
+System.out.println("Best end location: " + l37.toString());}
 currScore = (initialDist - l71.distanceSquaredTo(target)) / v71;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d71;
-System.out.println("Best end location: " + l71.toString());
-break;
-}
+System.out.println("Best end location: " + l71.toString());}
 currScore = (initialDist - l77.distanceSquaredTo(target)) / v77;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d77;
-System.out.println("Best end location: " + l77.toString());
-break;
-}
+System.out.println("Best end location: " + l77.toString());}
 return ans;
 } catch (Exception e){
 e.printStackTrace();
@@ -5561,8 +5215,7 @@ e.printStackTrace();
 }
 Direction runBFSNorthwest(MapLocation target) throws GameActionException{
 System.out.println("Starting BFS Method: " + Clock.getBytecodesLeft());
-try{ 
-if(rc.onTheMap(l44)){
+try{ double sum;if(rc.onTheMap(l44)){
 if(!rc.isLocationOccupied(l44)){
 p44 = rc.senseRubble(l44) + 10.0;
 v44 -= p44;
@@ -6415,197 +6068,125 @@ double bestScore = 0;
 double initialDist = robot.myLoc.distanceSquaredTo(target);
 double currScore;
 currScore = (initialDist - l74.distanceSquaredTo(target)) / v74;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d74;
-System.out.println("Best end location: " + l74.toString());
-break;
-}
+System.out.println("Best end location: " + l74.toString());}
 currScore = (initialDist - l52.distanceSquaredTo(target)) / v52;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d52;
-System.out.println("Best end location: " + l52.toString());
-break;
-}
+System.out.println("Best end location: " + l52.toString());}
 currScore = (initialDist - l73.distanceSquaredTo(target)) / v73;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d73;
-System.out.println("Best end location: " + l73.toString());
-break;
-}
+System.out.println("Best end location: " + l73.toString());}
 currScore = (initialDist - l62.distanceSquaredTo(target)) / v62;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d62;
-System.out.println("Best end location: " + l62.toString());
-break;
-}
+System.out.println("Best end location: " + l62.toString());}
 currScore = (initialDist - l32.distanceSquaredTo(target)) / v32;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d32;
-System.out.println("Best end location: " + l32.toString());
-break;
-}
+System.out.println("Best end location: " + l32.toString());}
 currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d36;
-System.out.println("Best end location: " + l36.toString());
-break;
-}
+System.out.println("Best end location: " + l36.toString());}
 currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d72;
-System.out.println("Best end location: " + l72.toString());
-break;
-}
+System.out.println("Best end location: " + l72.toString());}
 currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d76;
-System.out.println("Best end location: " + l76.toString());
-break;
-}
+System.out.println("Best end location: " + l76.toString());}
 currScore = (initialDist - l24.distanceSquaredTo(target)) / v24;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d24;
-System.out.println("Best end location: " + l24.toString());
-break;
-}
+System.out.println("Best end location: " + l24.toString());}
 currScore = (initialDist - l84.distanceSquaredTo(target)) / v84;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d84;
-System.out.println("Best end location: " + l84.toString());
-break;
-}
+System.out.println("Best end location: " + l84.toString());}
 currScore = (initialDist - l51.distanceSquaredTo(target)) / v51;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d51;
-System.out.println("Best end location: " + l51.toString());
-break;
-}
+System.out.println("Best end location: " + l51.toString());}
 currScore = (initialDist - l57.distanceSquaredTo(target)) / v57;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d57;
-System.out.println("Best end location: " + l57.toString());
-break;
-}
+System.out.println("Best end location: " + l57.toString());}
 currScore = (initialDist - l23.distanceSquaredTo(target)) / v23;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d23;
-System.out.println("Best end location: " + l23.toString());
-break;
-}
+System.out.println("Best end location: " + l23.toString());}
 currScore = (initialDist - l25.distanceSquaredTo(target)) / v25;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d25;
-System.out.println("Best end location: " + l25.toString());
-break;
-}
+System.out.println("Best end location: " + l25.toString());}
 currScore = (initialDist - l85.distanceSquaredTo(target)) / v85;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d85;
-System.out.println("Best end location: " + l85.toString());
-break;
-}
+System.out.println("Best end location: " + l85.toString());}
 currScore = (initialDist - l41.distanceSquaredTo(target)) / v41;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d41;
-System.out.println("Best end location: " + l41.toString());
-break;
-}
+System.out.println("Best end location: " + l41.toString());}
 currScore = (initialDist - l47.distanceSquaredTo(target)) / v47;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d47;
-System.out.println("Best end location: " + l47.toString());
-break;
-}
+System.out.println("Best end location: " + l47.toString());}
 currScore = (initialDist - l67.distanceSquaredTo(target)) / v67;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d67;
-System.out.println("Best end location: " + l67.toString());
-break;
-}
+System.out.println("Best end location: " + l67.toString());}
 currScore = (initialDist - l22.distanceSquaredTo(target)) / v22;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d22;
-System.out.println("Best end location: " + l22.toString());
-break;
-}
+System.out.println("Best end location: " + l22.toString());}
 currScore = (initialDist - l26.distanceSquaredTo(target)) / v26;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d26;
-System.out.println("Best end location: " + l26.toString());
-break;
-}
+System.out.println("Best end location: " + l26.toString());}
 currScore = (initialDist - l86.distanceSquaredTo(target)) / v86;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d86;
-System.out.println("Best end location: " + l86.toString());
-break;
-}
+System.out.println("Best end location: " + l86.toString());}
 currScore = (initialDist - l31.distanceSquaredTo(target)) / v31;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d31;
-System.out.println("Best end location: " + l31.toString());
-break;
-}
+System.out.println("Best end location: " + l31.toString());}
 currScore = (initialDist - l37.distanceSquaredTo(target)) / v37;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d37;
-System.out.println("Best end location: " + l37.toString());
-break;
-}
+System.out.println("Best end location: " + l37.toString());}
 currScore = (initialDist - l77.distanceSquaredTo(target)) / v77;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d77;
-System.out.println("Best end location: " + l77.toString());
-break;
-}
+System.out.println("Best end location: " + l77.toString());}
 return ans;
 } catch (Exception e){
 e.printStackTrace();
@@ -6613,8 +6194,7 @@ e.printStackTrace();
 }
 Direction runBFSSoutheast(MapLocation target) throws GameActionException{
 System.out.println("Starting BFS Method: " + Clock.getBytecodesLeft());
-try{ 
-if(rc.onTheMap(l44)){
+try{ double sum;if(rc.onTheMap(l44)){
 if(!rc.isLocationOccupied(l44)){
 p44 = rc.senseRubble(l44) + 10.0;
 v44 -= p44;
@@ -7467,197 +7047,125 @@ double bestScore = 0;
 double initialDist = robot.myLoc.distanceSquaredTo(target);
 double currScore;
 currScore = (initialDist - l34.distanceSquaredTo(target)) / v34;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d34;
-System.out.println("Best end location: " + l34.toString());
-break;
-}
+System.out.println("Best end location: " + l34.toString());}
 currScore = (initialDist - l56.distanceSquaredTo(target)) / v56;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d56;
-System.out.println("Best end location: " + l56.toString());
-break;
-}
+System.out.println("Best end location: " + l56.toString());}
 currScore = (initialDist - l35.distanceSquaredTo(target)) / v35;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d35;
-System.out.println("Best end location: " + l35.toString());
-break;
-}
+System.out.println("Best end location: " + l35.toString());}
 currScore = (initialDist - l46.distanceSquaredTo(target)) / v46;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d46;
-System.out.println("Best end location: " + l46.toString());
-break;
-}
+System.out.println("Best end location: " + l46.toString());}
 currScore = (initialDist - l32.distanceSquaredTo(target)) / v32;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d32;
-System.out.println("Best end location: " + l32.toString());
-break;
-}
+System.out.println("Best end location: " + l32.toString());}
 currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d36;
-System.out.println("Best end location: " + l36.toString());
-break;
-}
+System.out.println("Best end location: " + l36.toString());}
 currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d72;
-System.out.println("Best end location: " + l72.toString());
-break;
-}
+System.out.println("Best end location: " + l72.toString());}
 currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d76;
-System.out.println("Best end location: " + l76.toString());
-break;
-}
+System.out.println("Best end location: " + l76.toString());}
 currScore = (initialDist - l24.distanceSquaredTo(target)) / v24;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d24;
-System.out.println("Best end location: " + l24.toString());
-break;
-}
+System.out.println("Best end location: " + l24.toString());}
 currScore = (initialDist - l84.distanceSquaredTo(target)) / v84;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d84;
-System.out.println("Best end location: " + l84.toString());
-break;
-}
+System.out.println("Best end location: " + l84.toString());}
 currScore = (initialDist - l51.distanceSquaredTo(target)) / v51;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d51;
-System.out.println("Best end location: " + l51.toString());
-break;
-}
+System.out.println("Best end location: " + l51.toString());}
 currScore = (initialDist - l57.distanceSquaredTo(target)) / v57;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d57;
-System.out.println("Best end location: " + l57.toString());
-break;
-}
+System.out.println("Best end location: " + l57.toString());}
 currScore = (initialDist - l23.distanceSquaredTo(target)) / v23;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d23;
-System.out.println("Best end location: " + l23.toString());
-break;
-}
+System.out.println("Best end location: " + l23.toString());}
 currScore = (initialDist - l83.distanceSquaredTo(target)) / v83;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d83;
-System.out.println("Best end location: " + l83.toString());
-break;
-}
+System.out.println("Best end location: " + l83.toString());}
 currScore = (initialDist - l85.distanceSquaredTo(target)) / v85;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d85;
-System.out.println("Best end location: " + l85.toString());
-break;
-}
+System.out.println("Best end location: " + l85.toString());}
 currScore = (initialDist - l41.distanceSquaredTo(target)) / v41;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d41;
-System.out.println("Best end location: " + l41.toString());
-break;
-}
+System.out.println("Best end location: " + l41.toString());}
 currScore = (initialDist - l61.distanceSquaredTo(target)) / v61;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d61;
-System.out.println("Best end location: " + l61.toString());
-break;
-}
+System.out.println("Best end location: " + l61.toString());}
 currScore = (initialDist - l67.distanceSquaredTo(target)) / v67;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d67;
-System.out.println("Best end location: " + l67.toString());
-break;
-}
+System.out.println("Best end location: " + l67.toString());}
 currScore = (initialDist - l22.distanceSquaredTo(target)) / v22;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d22;
-System.out.println("Best end location: " + l22.toString());
-break;
-}
+System.out.println("Best end location: " + l22.toString());}
 currScore = (initialDist - l82.distanceSquaredTo(target)) / v82;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d82;
-System.out.println("Best end location: " + l82.toString());
-break;
-}
+System.out.println("Best end location: " + l82.toString());}
 currScore = (initialDist - l86.distanceSquaredTo(target)) / v86;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d86;
-System.out.println("Best end location: " + l86.toString());
-break;
-}
+System.out.println("Best end location: " + l86.toString());}
 currScore = (initialDist - l31.distanceSquaredTo(target)) / v31;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d31;
-System.out.println("Best end location: " + l31.toString());
-break;
-}
+System.out.println("Best end location: " + l31.toString());}
 currScore = (initialDist - l71.distanceSquaredTo(target)) / v71;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d71;
-System.out.println("Best end location: " + l71.toString());
-break;
-}
+System.out.println("Best end location: " + l71.toString());}
 currScore = (initialDist - l77.distanceSquaredTo(target)) / v77;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d77;
-System.out.println("Best end location: " + l77.toString());
-break;
-}
+System.out.println("Best end location: " + l77.toString());}
 return ans;
 } catch (Exception e){
 e.printStackTrace();
@@ -7665,8 +7173,7 @@ e.printStackTrace();
 }
 Direction runBFSSouthwest(MapLocation target) throws GameActionException{
 System.out.println("Starting BFS Method: " + Clock.getBytecodesLeft());
-try{ 
-if(rc.onTheMap(l44)){
+try{ double sum;if(rc.onTheMap(l44)){
 if(!rc.isLocationOccupied(l44)){
 p44 = rc.senseRubble(l44) + 10.0;
 v44 -= p44;
@@ -8519,197 +8026,125 @@ double bestScore = 0;
 double initialDist = robot.myLoc.distanceSquaredTo(target);
 double currScore;
 currScore = (initialDist - l74.distanceSquaredTo(target)) / v74;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d74;
-System.out.println("Best end location: " + l74.toString());
-break;
-}
+System.out.println("Best end location: " + l74.toString());}
 currScore = (initialDist - l56.distanceSquaredTo(target)) / v56;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d56;
-System.out.println("Best end location: " + l56.toString());
-break;
-}
+System.out.println("Best end location: " + l56.toString());}
 currScore = (initialDist - l75.distanceSquaredTo(target)) / v75;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d75;
-System.out.println("Best end location: " + l75.toString());
-break;
-}
+System.out.println("Best end location: " + l75.toString());}
 currScore = (initialDist - l66.distanceSquaredTo(target)) / v66;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d66;
-System.out.println("Best end location: " + l66.toString());
-break;
-}
+System.out.println("Best end location: " + l66.toString());}
 currScore = (initialDist - l32.distanceSquaredTo(target)) / v32;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d32;
-System.out.println("Best end location: " + l32.toString());
-break;
-}
+System.out.println("Best end location: " + l32.toString());}
 currScore = (initialDist - l36.distanceSquaredTo(target)) / v36;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d36;
-System.out.println("Best end location: " + l36.toString());
-break;
-}
+System.out.println("Best end location: " + l36.toString());}
 currScore = (initialDist - l72.distanceSquaredTo(target)) / v72;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d72;
-System.out.println("Best end location: " + l72.toString());
-break;
-}
+System.out.println("Best end location: " + l72.toString());}
 currScore = (initialDist - l76.distanceSquaredTo(target)) / v76;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d76;
-System.out.println("Best end location: " + l76.toString());
-break;
-}
+System.out.println("Best end location: " + l76.toString());}
 currScore = (initialDist - l24.distanceSquaredTo(target)) / v24;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d24;
-System.out.println("Best end location: " + l24.toString());
-break;
-}
+System.out.println("Best end location: " + l24.toString());}
 currScore = (initialDist - l84.distanceSquaredTo(target)) / v84;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d84;
-System.out.println("Best end location: " + l84.toString());
-break;
-}
+System.out.println("Best end location: " + l84.toString());}
 currScore = (initialDist - l51.distanceSquaredTo(target)) / v51;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d51;
-System.out.println("Best end location: " + l51.toString());
-break;
-}
+System.out.println("Best end location: " + l51.toString());}
 currScore = (initialDist - l57.distanceSquaredTo(target)) / v57;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d57;
-System.out.println("Best end location: " + l57.toString());
-break;
-}
+System.out.println("Best end location: " + l57.toString());}
 currScore = (initialDist - l23.distanceSquaredTo(target)) / v23;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d23;
-System.out.println("Best end location: " + l23.toString());
-break;
-}
+System.out.println("Best end location: " + l23.toString());}
 currScore = (initialDist - l25.distanceSquaredTo(target)) / v25;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d25;
-System.out.println("Best end location: " + l25.toString());
-break;
-}
+System.out.println("Best end location: " + l25.toString());}
 currScore = (initialDist - l83.distanceSquaredTo(target)) / v83;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d83;
-System.out.println("Best end location: " + l83.toString());
-break;
-}
+System.out.println("Best end location: " + l83.toString());}
 currScore = (initialDist - l41.distanceSquaredTo(target)) / v41;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d41;
-System.out.println("Best end location: " + l41.toString());
-break;
-}
+System.out.println("Best end location: " + l41.toString());}
 currScore = (initialDist - l47.distanceSquaredTo(target)) / v47;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d47;
-System.out.println("Best end location: " + l47.toString());
-break;
-}
+System.out.println("Best end location: " + l47.toString());}
 currScore = (initialDist - l61.distanceSquaredTo(target)) / v61;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d61;
-System.out.println("Best end location: " + l61.toString());
-break;
-}
+System.out.println("Best end location: " + l61.toString());}
 currScore = (initialDist - l22.distanceSquaredTo(target)) / v22;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d22;
-System.out.println("Best end location: " + l22.toString());
-break;
-}
+System.out.println("Best end location: " + l22.toString());}
 currScore = (initialDist - l26.distanceSquaredTo(target)) / v26;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d26;
-System.out.println("Best end location: " + l26.toString());
-break;
-}
+System.out.println("Best end location: " + l26.toString());}
 currScore = (initialDist - l82.distanceSquaredTo(target)) / v82;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d82;
-System.out.println("Best end location: " + l82.toString());
-break;
-}
+System.out.println("Best end location: " + l82.toString());}
 currScore = (initialDist - l31.distanceSquaredTo(target)) / v31;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d31;
-System.out.println("Best end location: " + l31.toString());
-break;
-}
+System.out.println("Best end location: " + l31.toString());}
 currScore = (initialDist - l37.distanceSquaredTo(target)) / v37;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d37;
-System.out.println("Best end location: " + l37.toString());
-break;
-}
+System.out.println("Best end location: " + l37.toString());}
 currScore = (initialDist - l71.distanceSquaredTo(target)) / v71;
-switch(currScore > bestScore){
-case true:
+if(currScore > bestScore){
 bestScore = currScore;
 ans = d71;
-System.out.println("Best end location: " + l71.toString());
-break;
-}
+System.out.println("Best end location: " + l71.toString());}
 return ans;
 } catch (Exception e){
 e.printStackTrace();
@@ -8751,7 +8186,6 @@ e.printStackTrace();
         }
         this.vars_are_reset = false;
         return output;
-
 //        return runBFS(target);
 //        System.out.println("ERROR DIRECTION UNKNOWN");
 //        return null;

@@ -115,7 +115,7 @@ public class Navigation {
             // Reset pathfinding vars
             currentTarget = target;
         }
-        Direction toGo = robot.bfsold.getBestDir(target);
+        Direction toGo = robot.bfs.getBestDir(target);
         if (toGo == null) {
             return false;
         }
