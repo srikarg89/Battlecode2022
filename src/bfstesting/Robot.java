@@ -41,7 +41,7 @@ public class Robot {
         mapWidth = rc.getMapWidth();
         mapHeight = rc.getMapHeight();
         nav = new Navigation(rc, this);
-        if(this.myType == RobotType.MINER){
+        if(this.myType.equals(RobotType.MINER)){
             bfs = new BFS13(rc, this);
         }
         else{
