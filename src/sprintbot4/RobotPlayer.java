@@ -1,4 +1,4 @@
-package sprintbot3;
+package sprintbot4;
 
 import battlecode.common.Clock;
 import battlecode.common.GameActionException;
@@ -24,7 +24,7 @@ public strictfp class RobotPlayer {
         }
 
         while (true) {
-//            if(rc.getRoundNum() > 10){
+//            if(rc.getRoundNum() > 20){
 //                rc.resign();
 //            }
 

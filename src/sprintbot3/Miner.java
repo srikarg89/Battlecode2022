@@ -43,7 +43,6 @@ public class Miner extends Robot {
         indicatorString += "C " + rc.getMovementCooldownTurns() + ", " + rc.getActionCooldownTurns() + "; ";
         boolean movedTowardsGold = goToClosestGold();
         if(!movedTowardsGold){
-            RobotInfo[] nearbyEnemies = rc.senseNearbyRobots(myType.visionRadiusSquared, opponent); // 120 bytecode
             fillMapsUnrolled2(); // Costs 350 bytecode
             double currHeuristic = getHeursitic(myLoc, nearbyEnemies); // Costs 1200 bytecode
             double bestHeuristic = currHeuristic;
@@ -106,19 +105,6 @@ public class Miner extends Robot {
         }
         nav.goTo(closest);
         return true;
-    }
-
-    // Check if you can mine lead from a given location
-    public int numLeadMineable(int dx, int dy) throws GameActionException {
-        return leadMap[dx + 1][dy + 1]
-                + leadMap[dx + 2][dy + 1]
-                + leadMap[dx + 3][dy + 1]
-                + leadMap[dx + 1][dy + 2]
-                + leadMap[dx + 2][dy + 2]
-                + leadMap[dx + 3][dy + 2]
-                + leadMap[dx + 1][dy + 3]
-                + leadMap[dx + 2][dy + 3]
-                + leadMap[dx + 3][dy + 3];
     }
 
     // TODO: Move away from enemies

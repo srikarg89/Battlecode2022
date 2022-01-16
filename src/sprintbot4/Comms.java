@@ -1,4 +1,4 @@
-package sprintbot3;
+package sprintbot4;
 
 import battlecode.common.*;
 
@@ -139,6 +139,8 @@ public class Comms {
             known++;
         }
 
+//        System.out.println("Middle of scanning archons: " + Clock.getBytecodesLeft());
+
         // Search for new archons
         RobotInfo[] info = robot.nearbyEnemies;
         for(int i = 0; i < info.length; i++){
@@ -152,6 +154,9 @@ public class Comms {
                 }
             }
         }
+
+//        System.out.println("End of scanning archons: " + Clock.getBytecodesLeft());
+
         // Update shared array
         for(int i = 0; i < 4; i++){
             writeSharedArray(i + 4, enemyArchonIDs[i] + 1); // NOTE: ARCHON IDs ARE SAVED AS ID + 1 since 0 is a possible ID
@@ -202,6 +207,24 @@ public class Comms {
         }
         return index;
     }
+
+    public MapLocation getClosestEnemyArchonOnComms() throws GameActionException {
+        MapLocation closestEnemy = null;
+        int closestDist = Integer.MAX_VALUE;
+        for(int i = 8; i < 12; i++){
+            int val = rc.readSharedArray(i);
+            if(val != 0 && val < ARCHON_DEATH_OFFSET){
+                MapLocation enemyLoc = Util.intToMapLocation(val);
+                int enemyDist = robot.myLoc.distanceSquaredTo(enemyLoc);
+                if(enemyDist < closestDist){
+                    closestDist = enemyDist;
+                    closestEnemy = enemyLoc;
+                }
+            }
+        }
+        return closestEnemy;
+    }
+
 
     public MapLocation getCurrAttackLoc() throws GameActionException {
         int currThreatLevel = rc.readSharedArray(BIGGEST_THREAT_LEVEL_IDX);
@@ -268,30 +291,6 @@ public class Comms {
                 }
             }
         }
-    }
-
-    // Lead hotspot functions
-
-    public MapLocation getBlockToExplore(){
-        return null;
-    }
-
-    public MapLocation getBlockTopLeft(int x, int y){
-        return new MapLocation(robot.comms_block_width * x, robot.comms_block_height * y);
-    }
-
-    public int getBlockWidth(int x){
-        if(x == 4){
-            return rc.getMapWidth() - robot.comms_block_width * 4;
-        }
-        return robot.comms_block_width;
-    }
-
-    public int getBlockHeight(int y){
-        if(y == 4){
-            return rc.getMapHeight() - robot.comms_block_height * 4;
-        }
-        return robot.comms_block_height;
     }
 
 }
