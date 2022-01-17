@@ -1,4 +1,4 @@
-package sprintbot4;
+package sprintbot5;
 
 import battlecode.common.*;
 
@@ -16,7 +16,7 @@ public class Comms {
     final int THREAT_THRESHOLD = 10;
     final int ARCHON_DEATH_OFFSET = 10000;
 
-    final int LEAD_HOTSPOT_START_IDX = 38; // 63 - 25
+    final int LEAD_HOTSPOT_START_IDX = 27; // 63 - 36
     // Max of 100 lead things present in a given location
 
     // Properties
@@ -292,6 +292,40 @@ public class Comms {
                 }
             }
         }
+    }
+
+    public void updateLeadMap() throws GameActionException {
+        // Update comms
+        if(robot.myLoc.x % 8 == 4 || robot.myLoc.x == robot.mapWidth - 4){
+            if(robot.myLoc.y % 8 == 4 || robot.myLoc.y == robot.mapWidth - 4){
+                // At a lead block center
+                int num_gold_mines = rc.senseNearbyLocationsWithLead().length;
+                int num_lead_mines = rc.senseNearbyLocationsWithLead().length;
+                int mines_val = num_gold_mines * 30 + num_lead_mines;
+                int lead_block_x = (robot.myLoc.x - 4) / 8;
+                if(robot.myLoc.x == robot.mapWidth - 4){
+                    lead_block_x = robot.leadMapWidth - 1;
+                }
+                int lead_block_y = (robot.myLoc.y - 4) / 8;
+                if(robot.myLoc.y == robot.mapHeight - 4){
+                    lead_block_y = robot.leadMapHeight - 1;
+                }
+                int lead_block_idx = lead_block_y * robot.leadMapHeight + lead_block_x;
+                robot.leadMap[lead_block_x][lead_block_y] = mines_val;
+                writeSharedArray(LEAD_HOTSPOT_START_IDX + lead_block_idx, mines_val);
+            }
+        }
+
+        // Update based on comms
+        for(int i = 0; i < robot.leadMapWidth * robot.leadMapHeight; i++){
+            int mines_val = rc.readSharedArray(LEAD_HOTSPOT_START_IDX + i);
+            robot.leadMap[i % robot.leadMapHeight][i / robot.leadMapHeight] = mines_val;
+        }
+
+    }
+
+    public MapLocation getLeadBlockCenter(int block_x, int block_y) throws GameActionException {
+        return new MapLocation(block_x * 8 + 4, block_y * 8 + 4);
     }
 
 }
