@@ -366,3 +366,5 @@ f.write(extra_code)
 
 f.write("}\n")
 f.close()
+
+# TODO: Check vars reset method
