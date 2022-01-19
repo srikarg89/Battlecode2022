@@ -9,7 +9,7 @@ public class Builder extends Robot {
     int archonIndex = -1;
 
     MapLocation targetBuildSpot = null;
-
+    RobotType[] repairPriorityOrder = {RobotType.ARCHON, RobotType.WATCHTOWER, RobotType.LABORATORY};
 
 
 
@@ -186,21 +186,49 @@ public class Builder extends Robot {
     }
 
 
+
+    public RobotInfo findRepairTarget(RobotInfo[] nearbyFriendlies) throws GameActionException {
+        MapLocation currLoc = rc.getLocation(); // Might've been updated cuz I might've just moved TODO update myLoc
+        RobotInfo toRepair = null;
+        int botTypeIndex = 20;
+        int health = Integer.MAX_VALUE;
+
+        for(int i = 0; i < nearbyFriendlies.length; i++){
+            RobotInfo info = nearbyFriendlies[i];
+
+            if(currLoc.distanceSquaredTo(info.location) > myType.actionRadiusSquared){
+                continue;
+            }
+
+            int currBotTypeIndex = Util.getArrayIndex(repairPriorityOrder, info.type);
+            int currHealth = info.getHealth();
+
+            // curret bot is already at max health, no need to repair
+            if(currHealth >= info.getType().getMaxHealth(info.getLevel())){
+                continue;
+            }
+
+            // Find the best bot to repair based on priority order. Order: archon, watchtower, laboratory
+            if (currBotTypeIndex < botTypeIndex || (currBotTypeIndex == botTypeIndex && currHealth < health)) {
+                toRepair = info;
+                botTypeIndex = currBotTypeIndex;
+                health = currHealth;
+            }
+        }
+        return toRepair;
+    }
+
     public boolean repair () throws GameActionException {
         // Try repairing nearby buildings
         boolean repaired = false;
         RobotInfo[] potentialTowers = rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam);
-        for (int i = 0; i < potentialTowers.length; i++) {
-            if (!(potentialTowers[i].type == RobotType.WATCHTOWER || potentialTowers[i].type == RobotType.LABORATORY || potentialTowers[i].type == RobotType.ARCHON)) {
-                continue;
-            }
-            int max_health = potentialTowers[i].getType().getMaxHealth(potentialTowers[i].getLevel());
-            if (potentialTowers[i].getHealth() >= max_health) {
-                continue; // No need to repair this boi
-            }
-            while (potentialTowers[i].getHealth() < max_health && rc.isActionReady()) {
+
+        RobotInfo toRepair = findRepairTarget(potentialTowers);
+        if (toRepair != null) {
+            int max_health = toRepair.getType().getMaxHealth(toRepair.getLevel());
+            while (toRepair.getHealth() < max_health && rc.isActionReady()) {
                 repaired = true;
-                rc.repair(potentialTowers[i].location);
+                rc.repair(toRepair.location);
                 rc.setIndicatorString("Repairing da boi");
             }
         }
