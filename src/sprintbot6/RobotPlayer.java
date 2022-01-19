@@ -37,7 +37,7 @@ public strictfp class RobotPlayer {
 //                System.out.println("Bytecode left: " + Clock.getBytecodesLeft());
                 robot.prevLoc = rc.getLocation();
                 if(!checkBytecode(robot, rc)){
-                    rc.resign();
+//                    rc.resign();
                 }
             } catch (GameActionException e) {
                 Logger.Log("CAUGHT GAMEACTIONEXCEPTION");

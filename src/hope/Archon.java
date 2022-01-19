@@ -27,6 +27,8 @@ public class Archon extends Robot {
     int prevLead = 10000;
     MapLocation[] scoutingLocs;
     boolean spawnedMinerLastTurn = false;
+    MapLocation moveDestination = null;
+    boolean moving = false;
 
     public Archon(RobotController rc) throws GameActionException {
         super(rc);
@@ -49,28 +51,112 @@ public class Archon extends Robot {
         soldierCount = comms.getRobotCount(RobotType.SOLDIER);
         builderCount = comms.getRobotCount(RobotType.BUILDER);
 
-        comms.findFriendlyArchons();
-        RobotInfo[] enemiesInVision = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
-        MapLocation enemyCOM = Util.calculateEnemySoldierCOM(enemiesInVision);
-        comms.updateCurrAttackLoc(enemiesInVision, enemyCOM);
+//        rc.setIndicatorString(rc.getMode().toString());
 
-        if(spawnedMinerLastTurn){
-            comms.updateMinerInstruction(myCommsIdx, scoutingLocs[(myMiners - 1) % scoutingLocs.length]);
+        if(moveDestination == null){
+            moveDestination = findLeastRubbleSpot();
+            moving = true;
         }
 
-//        System.out.println("My miners: " + minerCount);
-//        System.out.println("My soldiers: " + soldierCount);
-        // Try building
-        if (Util.mapLocationToInt(rc.getLocation()) == rc.readSharedArray(rc.getRoundNum() % this.numFriendlyArchons)) {
-            // Build in a different direction than last time
-            boolean defended = defendYourself();
-            if(!defended){
-                runBuildOrder();
+        if(moving){         // if we are on the move to a lower rubble spot
+            while(rc.getMode().equals(RobotMode.TURRET) && rc.canTransform()){
+                rc.transform();
+            }
+            nav.goTo(moveDestination);
+            if(myLoc.distanceSquaredTo(moveDestination) == 0){  // if we are at the low rubble spot
+                moving = false;
+                while(rc.getMode().equals(RobotMode.PORTABLE) && rc.canTransform()){
+                    rc.transform();
+//                    rc.setIndicatorString("transforming1");
+                }
             }
         }
-        // Try repairing
-        runRepair();
-        prevLead = rc.getTeamLeadAmount(myTeam);
+
+
+        else {      // spawn troops
+            while(rc.getMode().equals(RobotMode.PORTABLE) && rc.canTransform()){    // make sure we are in turret mode
+//                rc.setIndicatorString("transforming2");
+                rc.transform();
+            }
+            comms.findFriendlyArchons();
+            RobotInfo[] enemiesInVision = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
+            MapLocation enemyCOM = Util.calculateEnemySoldierCOM(enemiesInVision);
+            comms.updateCurrAttackLoc(enemiesInVision, enemyCOM);
+
+            if (spawnedMinerLastTurn) {
+                comms.updateMinerInstruction(myCommsIdx, scoutingLocs[(myMiners - 1) % scoutingLocs.length]);
+            }
+//        System.out.println("My miners: " + minerCount);
+//        System.out.println("My soldiers: " + soldierCount);
+            // Try building
+            if (Util.mapLocationToInt(rc.getLocation()) == rc.readSharedArray(rc.getRoundNum() % this.numFriendlyArchons)) {
+                // Build in a different direction than last time
+                boolean defended = defendYourself();
+                if (!defended) {
+                    runBuildOrder();
+                }
+            }
+            // Try repairing
+            runRepair();
+            prevLead = rc.getTeamLeadAmount(myTeam);
+        }
+    }
+
+
+
+
+    public MapLocation findLeastRubbleSpot() throws GameActionException{
+        // checks all spots in the archon's vision radius and returns spot with lowest rubble that is closest
+        int minRubble = Integer.MAX_VALUE;
+        MapLocation bestSpot = null;
+        int distanceSquaredToBestSpot = Integer.MAX_VALUE;
+        MapLocation[] visibleSpots = {                  // all spots in vision radius of archon
+                new MapLocation(myLoc.x+0, myLoc.y+0),
+                new MapLocation(myLoc.x+1, myLoc.y+0),
+                new MapLocation(myLoc.x+0, myLoc.y+1),
+                new MapLocation(myLoc.x+1, myLoc.y+1),
+                new MapLocation(myLoc.x+2, myLoc.y+0),
+                new MapLocation(myLoc.x+0, myLoc.y+2),
+                new MapLocation(myLoc.x+2, myLoc.y+1),
+                new MapLocation(myLoc.x+1, myLoc.y+2),
+                new MapLocation(myLoc.x+2, myLoc.y+2),
+                new MapLocation(myLoc.x+3, myLoc.y+0),
+                new MapLocation(myLoc.x+0, myLoc.y+3),
+                new MapLocation(myLoc.x+3, myLoc.y+1),
+                new MapLocation(myLoc.x+1, myLoc.y+3),
+                new MapLocation(myLoc.x+3, myLoc.y+2),
+                new MapLocation(myLoc.x+2, myLoc.y+3),
+                new MapLocation(myLoc.x+3, myLoc.y+3),
+                new MapLocation(myLoc.x+4, myLoc.y+0),
+                new MapLocation(myLoc.x+0, myLoc.y+4),
+                new MapLocation(myLoc.x+4, myLoc.y+1),
+                new MapLocation(myLoc.x+1, myLoc.y+4),
+                new MapLocation(myLoc.x+4, myLoc.y+2),
+                new MapLocation(myLoc.x+2, myLoc.y+4),
+                new MapLocation(myLoc.x+4, myLoc.y+3),
+                new MapLocation(myLoc.x+3, myLoc.y+4),
+                new MapLocation(myLoc.x+4, myLoc.y+4),
+                new MapLocation(myLoc.x+5, myLoc.y+0),
+                new MapLocation(myLoc.x+0, myLoc.y+5),
+                new MapLocation(myLoc.x+5, myLoc.y+1),
+                new MapLocation(myLoc.x+1, myLoc.y+5),
+                new MapLocation(myLoc.x+5, myLoc.y+2),
+                new MapLocation(myLoc.x+2, myLoc.y+5),
+                new MapLocation(myLoc.x+5, myLoc.y+3),
+                new MapLocation(myLoc.x+3, myLoc.y+5)};
+
+        for(MapLocation potSpot: visibleSpots) {
+            if (rc.onTheMap(potSpot)) {     // is the potential spot on the map?
+                int distanceSquaredToPotSpot = myLoc.distanceSquaredTo(potSpot);
+                int rubbleAtPotSpot = rc.senseRubble(potSpot);
+                if (rubbleAtPotSpot < minRubble || (rubbleAtPotSpot == minRubble && distanceSquaredToPotSpot < distanceSquaredToBestSpot)) {
+                    bestSpot = potSpot;
+                    distanceSquaredToBestSpot = distanceSquaredToPotSpot;
+                    minRubble = rubbleAtPotSpot;
+                }
+            }
+        }
+        return bestSpot;
     }
 
     // TODO: Figure out an optimal build order instead of overfitting to specific maps
@@ -345,5 +431,7 @@ public class Archon extends Robot {
 
         return retLocs;
     }
+
+
 
 }
