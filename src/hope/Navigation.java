@@ -1,4 +1,4 @@
-package sprintbot6;
+package hope;
 
 import battlecode.common.*;
 
@@ -24,13 +24,7 @@ public class Navigation {
         Util.robot = robot;
         currentTarget = null;
         visited = new HashSet<Integer>();
-        if(rc.getType() == RobotType.MINER){
-//            bfs = new BFS13(rc, robot);
-            bfs = new BFS20(rc, robot);
-        }
-        else{
-            bfs = new BFS20(rc, robot);
-        }
+        bfs = new BFS20(rc, robot);
     }
 
     public void update() throws GameActionException {

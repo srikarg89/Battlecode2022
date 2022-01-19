@@ -1,4 +1,4 @@
-package sprintbot6;
+package hope;
 
 import battlecode.common.*;
 
@@ -56,7 +56,7 @@ public class Miner extends Robot {
 
         indicatorString += "C " + rc.getMovementCooldownTurns() + ", " + rc.getActionCooldownTurns() + "; ";
         boolean movedTowardsGold = goToClosestGold();
-         // System.out.println("Bytecode B: " + Clock.getBytecodesLeft()); // 5800 bytecode
+        // System.out.println("Bytecode B: " + Clock.getBytecodesLeft()); // 5800 bytecode
         if(!movedTowardsGold) {
             // System.out.println("Bytecode C: " + Clock.getBytecodesLeft()); // 5700
             if(numDangerousEnemies > 5){ // Retreat!

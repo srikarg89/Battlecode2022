@@ -1,4 +1,4 @@
-package sprintbot6;
+package hope;
 
 import battlecode.common.*;
 
