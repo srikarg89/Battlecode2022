@@ -1,1 +1,6 @@
 sprintbot3 wins 18, sprintbot wins 10
+sprintbot5 vs sprintbot4:
+
+With neither: sprintbot5 wins 10 (12) on red and 8 (13) on blue
+With comms: sprintbot5 wins 9 (11) on red and 8 (13) on blue
+With minerfollowing: sprintbot5 wins 11 (12) on red and 8 (13) on blue

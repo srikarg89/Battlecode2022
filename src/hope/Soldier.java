@@ -13,6 +13,7 @@ public class Soldier extends Robot {
     MapLocation lastAttackLoc = null;
     int turnsSinceRetreat = 0;
     MapLocation retreatLoc = null;
+    boolean needHealing = false;
 
     // Proportion of soldiers that are defensive (offensive will go to enemy, defensive will stay close to spawning archon)
     // might be smart to have a few created for each archon in the beginning of each game
@@ -53,8 +54,26 @@ public class Soldier extends Robot {
 
         Logger.Log("Action cooldown: " + rc.getActionCooldownTurns());
         Logger.Log("Movement cooldown: " + rc.getMovementCooldownTurns());
-        // The strat is to get two shots for the enemy's one shot. ie, you try to stay on the boundary of the enemy's vision. Then, you push, attack, (they get a turn so they attack), then you attack again, then you retreat (back out of their range)
-        if(inSafeZone){
+
+        if(rc.getHealth() < 7){
+            needHealing = true; // Go back to get healed
+        }
+        if(rc.getHealth() == myType.getMaxHealth(rc.getLevel())){
+            needHealing = false; // Stop healing when ur at full health
+        }
+
+        if(needHealing){
+            int closestArchonIdx = comms.getClosestFriendlyArchonIndex();
+            MapLocation closestArchon = Util.intToMapLocation(rc.readSharedArray(closestArchonIdx));
+            if(myLoc.distanceSquaredTo(closestArchon) > RobotType.ARCHON.actionRadiusSquared){
+                nav.goTo(closestArchon);
+            }
+            else{
+                nav.circle(closestArchon, 4, RobotType.ARCHON.actionRadiusSquared - 1, true); // TODO Change this to some sort of queue
+            }
+        }
+        else if(inSafeZone){
+          // The strat is to get two shots for the enemy's one shot. ie, you try to stay on the boundary of the enemy's attack radius. Then, you push, attack, (they get a turn so they attack), then you attack again, then you retreat (back out of their range)
 //        if(inSafeZone && rc.getHealth() >= 10){
             indicatorString += "S; ";
             Logger.Log("In safe zone!");

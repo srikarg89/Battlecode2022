@@ -83,7 +83,7 @@ public class Builder extends Robot {
             else if (targetBuildSpot == null) {       // we can't build a watchtower, so we will either try to repair a nearby building or circle our home archon
                 MapLocation potentialRepairSpot = getNearbyRepairSpot();
                 if(potentialRepairSpot == null){
-                    nav.circle(archonLoc, 10, true);
+                    nav.circle(archonLoc, 10, 20, true);
                 }
                 else{
                     nav.goTo(potentialRepairSpot);

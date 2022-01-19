@@ -204,8 +204,16 @@ public class Navigation {
         return false;
     }
 
-    public void circle(MapLocation center, int minDist, boolean ccw) throws GameActionException {
+    public void circle(MapLocation center, int minDist, int maxDist, boolean ccw) throws GameActionException {
         MapLocation myLoc = robot.myLoc;
+        if(myLoc.distanceSquaredTo(center) > maxDist){
+            robot.nav.goTo(center);
+        }
+        else if(myLoc.distanceSquaredTo(center) < minDist){
+            Direction centerDir = myLoc.directionTo(center);
+            MapLocation target = myLoc.subtract(centerDir).subtract(centerDir).subtract(centerDir).subtract(centerDir).subtract(centerDir);
+            robot.nav.goTo(target);
+        }
         int dx = myLoc.x - center.x;
         int dy = myLoc.y - center.y;
         double cs = Math.cos(ccw ? 0.5 : -0.5);
@@ -216,7 +224,28 @@ public class Navigation {
 //		goTo(target);
         Direction targetDir = myLoc.directionTo(target);
         Direction[] options = {targetDir, targetDir.rotateRight(), targetDir.rotateLeft(), targetDir.rotateRight().rotateRight(), targetDir.rotateLeft().rotateLeft()};
-        Util.tryMove(options);
+        Direction bestDirection = null;
+        int lowestCooldown = Integer.MAX_VALUE;
+        for(int i = 0; i < options.length; i++){
+            if(!rc.canMove(options[i])){
+                continue;
+            }
+            MapLocation newLoc = myLoc.add(options[i]);
+            if(center.distanceSquaredTo(newLoc) < minDist){
+                continue;
+            }
+            if(center.distanceSquaredTo(newLoc) > maxDist){
+                continue;
+            }
+            int cooldown = rc.senseRubble(newLoc);
+            if(cooldown < lowestCooldown){
+                lowestCooldown = cooldown;
+                bestDirection = options[i];
+            }
+        }
+        if(bestDirection != null){
+            rc.move(bestDirection);
+        }
     }
 
 }

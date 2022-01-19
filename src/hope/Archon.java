@@ -28,7 +28,6 @@ public class Archon extends Robot {
     MapLocation[] scoutingLocs;
     boolean spawnedMinerLastTurn = false;
     MapLocation moveDestination = null;
-    boolean moving = false;
 
     public Archon(RobotController rc) throws GameActionException {
         super(rc);
@@ -51,45 +50,36 @@ public class Archon extends Robot {
         soldierCount = comms.getRobotCount(RobotType.SOLDIER);
         builderCount = comms.getRobotCount(RobotType.BUILDER);
 
+        indicatorString += rc.getMode().toString() + "; ";
+        this.numFriendlyArchons = rc.getArchonCount();
 //        rc.setIndicatorString(rc.getMode().toString());
-
-        if(moveDestination == null){
-            moveDestination = findLeastRubbleSpot();
-            moving = true;
+        if(rc.getRoundNum() == 1){ // Might wanna do this based on map size. Might not be worth on smaller maps
+            moveDestination = findLeastRubbleSpot(); // TODO Uncomment this
+//            moveDestination = myLoc;
         }
-
-        if(moving){         // if we are on the move to a lower rubble spot
+        if(myLoc.distanceSquaredTo(moveDestination) > 0){ // if we are on the move to a lower rubble spot
+            indicatorString += "MOVING; ";
             while(rc.getMode().equals(RobotMode.TURRET) && rc.canTransform()){
                 rc.transform();
             }
             nav.goTo(moveDestination);
-            if(myLoc.distanceSquaredTo(moveDestination) == 0){  // if we are at the low rubble spot
-                moving = false;
-                while(rc.getMode().equals(RobotMode.PORTABLE) && rc.canTransform()){
-                    rc.transform();
-//                    rc.setIndicatorString("transforming1");
-                }
-            }
+            comms.writeSharedArray(myCommsIdx, Util.mapLocationToInt(myLoc));
         }
-
-
-        else {      // spawn troops
+        else { // spawn troops
+            indicatorString += "STAYING; ";
             while(rc.getMode().equals(RobotMode.PORTABLE) && rc.canTransform()){    // make sure we are in turret mode
-//                rc.setIndicatorString("transforming2");
+                indicatorString += "Transforming 2; ";
                 rc.transform();
             }
             comms.findFriendlyArchons();
             RobotInfo[] enemiesInVision = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
             MapLocation enemyCOM = Util.calculateEnemySoldierCOM(enemiesInVision);
             comms.updateCurrAttackLoc(enemiesInVision, enemyCOM);
-
             if (spawnedMinerLastTurn) {
                 comms.updateMinerInstruction(myCommsIdx, scoutingLocs[(myMiners - 1) % scoutingLocs.length]);
             }
-//        System.out.println("My miners: " + minerCount);
-//        System.out.println("My soldiers: " + soldierCount);
             // Try building
-            if (Util.mapLocationToInt(rc.getLocation()) == rc.readSharedArray(rc.getRoundNum() % this.numFriendlyArchons)) {
+            if (myCommsIdx == rc.getRoundNum() % this.numFriendlyArchons) {
                 // Build in a different direction than last time
                 boolean defended = defendYourself();
                 if (!defended) {
@@ -107,45 +97,13 @@ public class Archon extends Robot {
 
     public MapLocation findLeastRubbleSpot() throws GameActionException{
         // checks all spots in the archon's vision radius and returns spot with lowest rubble that is closest
-        int minRubble = Integer.MAX_VALUE;
         MapLocation bestSpot = null;
+        int minRubble = Integer.MAX_VALUE;
         int distanceSquaredToBestSpot = Integer.MAX_VALUE;
-        MapLocation[] visibleSpots = {                  // all spots in vision radius of archon
-                new MapLocation(myLoc.x+0, myLoc.y+0),
-                new MapLocation(myLoc.x+1, myLoc.y+0),
-                new MapLocation(myLoc.x+0, myLoc.y+1),
-                new MapLocation(myLoc.x+1, myLoc.y+1),
-                new MapLocation(myLoc.x+2, myLoc.y+0),
-                new MapLocation(myLoc.x+0, myLoc.y+2),
-                new MapLocation(myLoc.x+2, myLoc.y+1),
-                new MapLocation(myLoc.x+1, myLoc.y+2),
-                new MapLocation(myLoc.x+2, myLoc.y+2),
-                new MapLocation(myLoc.x+3, myLoc.y+0),
-                new MapLocation(myLoc.x+0, myLoc.y+3),
-                new MapLocation(myLoc.x+3, myLoc.y+1),
-                new MapLocation(myLoc.x+1, myLoc.y+3),
-                new MapLocation(myLoc.x+3, myLoc.y+2),
-                new MapLocation(myLoc.x+2, myLoc.y+3),
-                new MapLocation(myLoc.x+3, myLoc.y+3),
-                new MapLocation(myLoc.x+4, myLoc.y+0),
-                new MapLocation(myLoc.x+0, myLoc.y+4),
-                new MapLocation(myLoc.x+4, myLoc.y+1),
-                new MapLocation(myLoc.x+1, myLoc.y+4),
-                new MapLocation(myLoc.x+4, myLoc.y+2),
-                new MapLocation(myLoc.x+2, myLoc.y+4),
-                new MapLocation(myLoc.x+4, myLoc.y+3),
-                new MapLocation(myLoc.x+3, myLoc.y+4),
-                new MapLocation(myLoc.x+4, myLoc.y+4),
-                new MapLocation(myLoc.x+5, myLoc.y+0),
-                new MapLocation(myLoc.x+0, myLoc.y+5),
-                new MapLocation(myLoc.x+5, myLoc.y+1),
-                new MapLocation(myLoc.x+1, myLoc.y+5),
-                new MapLocation(myLoc.x+5, myLoc.y+2),
-                new MapLocation(myLoc.x+2, myLoc.y+5),
-                new MapLocation(myLoc.x+5, myLoc.y+3),
-                new MapLocation(myLoc.x+3, myLoc.y+5)};
+        MapLocation[] visibleSpots = rc.getAllLocationsWithinRadiusSquared(myLoc, myType.visionRadiusSquared);
 
-        for(MapLocation potSpot: visibleSpots) {
+        for(int i = 0; i < visibleSpots.length; i++) {
+            MapLocation potSpot = visibleSpots[i];
             if (rc.onTheMap(potSpot)) {     // is the potential spot on the map?
                 int distanceSquaredToPotSpot = myLoc.distanceSquaredTo(potSpot);
                 int rubbleAtPotSpot = rc.senseRubble(potSpot);
@@ -356,18 +314,22 @@ public class Archon extends Robot {
     public void runRepair() throws GameActionException {
         MapLocation toRepair = null;
         int bestRepairPriority = -100000;
-        for(int i = 0; i < nearby.length; i++){
-            if(!rc.canRepair(nearby[i].getLocation())){
+        for(int i = 0; i < nearbyFriendlies.length; i++){
+            RobotInfo info = nearbyFriendlies[i];
+            if(!rc.canRepair(info.getLocation())){
                 continue;
             }
+            if(info.getType().getMaxHealth(info.getLevel()) == info.getHealth()){
+                continue; // Doesn't need repairing
+            }
             int repairPriority = 0;
-            if(nearby[i].getType() == RobotType.WATCHTOWER){ // Prioritize repairing watchtowers
+            if(info.getType() == RobotType.SAGE){ // Prioritize repairing sages
                 repairPriority += 10000;
             }
-            if(nearby[i].getType() == RobotType.SOLDIER){ // Prioritize healing soldiers
+            if(info.getType() == RobotType.SOLDIER){ // Prioritize healing soldiers
                 repairPriority += 100;
             }
-            repairPriority -= nearby[i].getHealth(); // Prioritize healing lower health ppl
+            repairPriority += nearby[i].getHealth(); // Prioritize healing higher health ppl (since they're closer to full and can get back into the action)
             if(repairPriority > bestRepairPriority){
                 bestRepairPriority = repairPriority;
                 toRepair = nearby[i].getLocation();
