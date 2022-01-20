@@ -187,23 +187,22 @@ public class Builder extends Robot {
 
 
 
-    public RobotInfo findRepairTarget(RobotInfo[] nearbyFriendlies) throws GameActionException {
-        MapLocation currLoc = rc.getLocation(); // Might've been updated cuz I might've just moved TODO update myLoc
+    public RobotInfo findRepairTarget(RobotInfo[] robotsInActionRadius) throws GameActionException {
         RobotInfo toRepair = null;
         int botTypeIndex = 20;
         int health = Integer.MAX_VALUE;
 
-        for(int i = 0; i < nearbyFriendlies.length; i++){
-            RobotInfo info = nearbyFriendlies[i];
+        for(int i = 0; i < robotsInActionRadius.length; i++){
+            RobotInfo info = robotsInActionRadius[i];
 
-            if(currLoc.distanceSquaredTo(info.location) > myType.actionRadiusSquared){
+            if(!rc.canRepair(info.location)){
                 continue;
             }
 
             int currBotTypeIndex = Util.getArrayIndex(repairPriorityOrder, info.type);
             int currHealth = info.getHealth();
 
-            // curret bot is already at max health, no need to repair
+            // current bot is already at max health, no need to repair
             if(currHealth >= info.getType().getMaxHealth(info.getLevel())){
                 continue;
             }
@@ -218,7 +217,7 @@ public class Builder extends Robot {
         return toRepair;
     }
 
-    public boolean repair () throws GameActionException {
+    public boolean repair() throws GameActionException {
         // Try repairing nearby buildings
         boolean repaired = false;
         RobotInfo[] potentialTowers = rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam);
@@ -226,7 +225,7 @@ public class Builder extends Robot {
         RobotInfo toRepair = findRepairTarget(potentialTowers);
         if (toRepair != null) {
             int max_health = toRepair.getType().getMaxHealth(toRepair.getLevel());
-            while (toRepair.getHealth() < max_health && rc.isActionReady()) {
+            while (toRepair.getHealth() < max_health && rc.canRepair(toRepair.location)) {
                 repaired = true;
                 rc.repair(toRepair.location);
                 rc.setIndicatorString("Repairing da boi");

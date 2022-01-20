@@ -24,7 +24,12 @@ public class Navigation {
         Util.robot = robot;
         currentTarget = null;
         visited = new HashSet<Integer>();
-        bfs = new BFS20(rc, robot);
+        if(rc.getType() == RobotType.BUILDER){
+            bfs = new BFS13(rc, robot);
+        }
+        else{
+            bfs = new BFS20(rc, robot);
+        }
     }
 
     public void update() throws GameActionException {

@@ -14,6 +14,7 @@ public class Soldier extends Robot {
     int turnsSinceRetreat = 0;
     MapLocation retreatLoc = null;
     boolean needHealing = false;
+    int bestArchonForHealingIdx = -1;
 
     // Proportion of soldiers that are defensive (offensive will go to enemy, defensive will stay close to spawning archon)
     // might be smart to have a few created for each archon in the beginning of each game
@@ -55,21 +56,28 @@ public class Soldier extends Robot {
         Logger.Log("Action cooldown: " + rc.getActionCooldownTurns());
         Logger.Log("Movement cooldown: " + rc.getMovementCooldownTurns());
 
-        if(rc.getHealth() < 7){
+        if(rc.getHealth() < 7 && !needHealing){
             needHealing = true; // Go back to get healed
+            bestArchonForHealingIdx = -1;
         }
-        if(rc.getHealth() == myType.getMaxHealth(rc.getLevel())){
+        if(rc.getHealth() == myType.getMaxHealth(rc.getLevel()) && needHealing){
             needHealing = false; // Stop healing when ur at full health
+            comms.writeSharedArray(bestArchonForHealingIdx, rc.readSharedArray(bestArchonForHealingIdx) - 1);
+            bestArchonForHealingIdx = -1;
         }
 
+//        needHealing = false;
         if(needHealing){
-            int closestArchonIdx = comms.getClosestFriendlyArchonIndex();
-            MapLocation closestArchon = Util.intToMapLocation(rc.readSharedArray(closestArchonIdx));
-            if(myLoc.distanceSquaredTo(closestArchon) > RobotType.ARCHON.actionRadiusSquared){
-                nav.goTo(closestArchon);
+            if(bestArchonForHealingIdx == -1){
+                bestArchonForHealingIdx = comms.findBestArchonForHealing();
+                comms.writeSharedArray(bestArchonForHealingIdx, rc.readSharedArray(bestArchonForHealingIdx) + 1);
+            }
+            MapLocation targetLoc = Util.intToMapLocation(rc.readSharedArray(bestArchonForHealingIdx));
+            if(myLoc.distanceSquaredTo(targetLoc) > RobotType.ARCHON.actionRadiusSquared){
+                nav.goTo(targetLoc);
             }
             else{
-                nav.circle(closestArchon, 4, RobotType.ARCHON.actionRadiusSquared - 1, true); // TODO Change this to some sort of queue
+                nav.circle(targetLoc, 4, RobotType.ARCHON.actionRadiusSquared - 1, true); // TODO Change this to some sort of a healingxaz queue
             }
         }
         else if(inSafeZone){

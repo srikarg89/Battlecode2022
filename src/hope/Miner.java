@@ -11,7 +11,6 @@ public class Miner extends Robot {
     MapLocation mineLocation = null;
     Direction spawnDir = null;
     MapLocation currentTarget = null;
-    int minerSpawnNumber = 0;
 
     int[][] leadMap = new int[5][5];
 
@@ -195,6 +194,7 @@ public class Miner extends Robot {
         int dist; int cooldown; int heuristic;
         // Go to nearest lead mine
         MapLocation[] leadLocs = rc.senseNearbyLocationsWithLead(myType.visionRadiusSquared, 2);
+        // TODO Only go for the nearby leadloc if there's no miners that are closer (figure out how many turns itll take everyone to mine it and how useful you'd be)
         for(int i = leadLocs.length; i -- > 0; ){
             dist = myLoc.distanceSquaredTo(leadLocs[i]);
             cooldown = 10 + rc.senseRubble(leadLocs[i]);

@@ -16,6 +16,7 @@ public class Comms {
     final int BIGGEST_THREAT_LOC_IDX = 18;
     final int THREAT_THRESHOLD = 10;
     final int MINER_INSTRUCTION_START_IDX = 19;
+    final int ARCHON_HEALING_START_IDX = 23;
 
     final int LEAD_HOTSPOT_START_IDX = 27; // 63 - 36
     // Max of 100 lead things present in a given location
@@ -342,6 +343,23 @@ public class Comms {
             return null;
         }
         return Util.intToMapLocation(scoutingLocNum);
+    }
+
+    public int findBestArchonForHealing() throws GameActionException { // TODO Need to keep track of which friendly archons have died
+        double bestHeuristic = Integer.MAX_VALUE;
+        int bestIdx = -1;
+        for(int i = 0; i < robot.numFriendlyArchons; i++){
+            double numBusy = rc.readSharedArray(ARCHON_HEALING_START_IDX + i);
+            MapLocation archonLoc = Util.intToMapLocation(rc.readSharedArray(i));
+            double distance = Util.minMovesToReach(robot.myLoc, archonLoc);
+            // Heal rate is 2 and soldier health is 50, so if ur wasting 25 turns (10 turns there, 10 turns back) per numBusy don't go for it
+            double heuristic = numBusy * 10 + distance;
+            if(heuristic < bestHeuristic){
+                bestHeuristic = heuristic;
+                bestIdx = i;
+            }
+        }
+        return bestIdx;
     }
 
 }
