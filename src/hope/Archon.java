@@ -28,6 +28,8 @@ public class Archon extends Robot {
     MapLocation[] scoutingLocs;
     boolean spawnedMinerLastTurn = false;
     MapLocation moveDestination = null;
+    MapLocation center = new MapLocation(rc.getMapWidth()/2, rc.getMapHeight()/2);
+    MapLocation[] bestSpawnLocs;
 
     public Archon(RobotController rc) throws GameActionException {
         super(rc);
@@ -54,7 +56,7 @@ public class Archon extends Robot {
         this.numFriendlyArchons = rc.getArchonCount();
 //        rc.setIndicatorString(rc.getMode().toString());
         if(rc.getRoundNum() == 1){ // Might wanna do this based on map size. Might not be worth on smaller maps
-            moveDestination = findLeastRubbleSpot(); // TODO Uncomment this
+            moveDestination = findLeastRubbleSpot(); // TODO Add heuristic to only move if lead is not a constraint or we have too many friendly soldiers around us (and moving to lower cool-down can benefit)
 //            moveDestination = myLoc;
         }
         if(myLoc.distanceSquaredTo(moveDestination) > 0){ // if we are on the move to a lower rubble spot
@@ -393,6 +395,74 @@ public class Archon extends Robot {
 
         return retLocs;
     }
+
+
+    Comparator<MapLocation> compareByRubble  = new Comparator<MapLocation>() {
+        public int compare(MapLocation l1, MapLocation l2) {
+            try {           // hacky way to get past GameActionExceptions, which comparators aren't supposed to throw
+                // check to see if either of the locations are null (might happen, based on how we defined the array
+                int l1Rubble;
+                int l2Rubble;
+                if (!rc.onTheMap(l1)) {
+                    l1Rubble = Integer.MAX_VALUE;
+                } else {
+                    l1Rubble = rc.senseRubble(l1);
+                }
+                if (!rc.onTheMap(l2)) {
+                    l2Rubble = Integer.MAX_VALUE;
+                } else {
+                    l2Rubble = rc.senseRubble(l2);
+                }
+                if (l1Rubble < l2Rubble) {      // l1 has less rubble
+                    return -1;
+                } else if (l2Rubble < l1Rubble) {    // l2 has less rubble
+                    return 1;
+                }
+
+                else {                          // it's a tie, comparing distances to center
+                    int l1DistanceToCenter;
+                    int l2DistanceToCenter;
+                    if(l1Rubble == Integer.MAX_VALUE){  // mapLocation was not on map, so doesn't make sense to compute distance
+                        l1DistanceToCenter = Integer.MAX_VALUE;
+                    }
+                    else{
+                        l1DistanceToCenter = l1.distanceSquaredTo(center);
+                    }
+                    if(l2Rubble == Integer.MAX_VALUE){  // mapLocation was not on map, so doesn't make sense to compute distance
+                        l2DistanceToCenter = Integer.MAX_VALUE;
+                    }
+                    else{
+                        l2DistanceToCenter = l2.distanceSquaredTo(center);
+                    }
+                    if(l1DistanceToCenter < l2DistanceToCenter){
+                        return -1;
+                    }
+                    else if(l2DistanceToCenter < l1DistanceToCenter){
+                        return 1;
+                    }
+                    else{
+                        return 0;
+                    }
+                }
+            } catch (GameActionException e) {  // hopefully, this should not happen
+                System.out.println(e);
+                return 0;
+            }
+        }
+    };
+
+
+    public void getBestSpawnLocs() throws GameActionException{
+        MapLocation[] potMapLocs = new MapLocation[8];
+        for(int i=0; i<8; i++){
+            MapLocation potSpawnLoc =  myLoc.add(Util.directions[i]);
+                potMapLocs[i] = potSpawnLoc;
+        }
+        Arrays.sort(potMapLocs, compareByRubble);
+        bestSpawnLocs = potMapLocs;
+    }
+
+    //TODO: make method that spawns soldiers in bestSpawnLocs (use getBestSpawnLocs to get sorted array)
 
 
 
