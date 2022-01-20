@@ -29,7 +29,7 @@ public class Archon extends Robot {
     boolean spawnedMinerLastTurn = false;
     MapLocation moveDestination = null;
     MapLocation center = new MapLocation(rc.getMapWidth()/2, rc.getMapHeight()/2);
-    MapLocation[] bestSpawnLocs;
+    Direction[] bestSpawnDirs;
 
     public Archon(RobotController rc) throws GameActionException {
         super(rc);
@@ -55,9 +55,9 @@ public class Archon extends Robot {
         indicatorString += rc.getMode().toString() + "; ";
         this.numFriendlyArchons = rc.getArchonCount();
 //        rc.setIndicatorString(rc.getMode().toString());
-        if(rc.getRoundNum() == 1){ // Might wanna do this based on map size. Might not be worth on smaller maps
+
+        if(rc.getRoundNum() == 1){ // TODO: Might wanna do this based on map size. Might not be worth on smaller maps
             moveDestination = findLeastRubbleSpot(); // TODO Add heuristic to only move if lead is not a constraint or we have too many friendly soldiers around us (and moving to lower cool-down can benefit)
-//            moveDestination = myLoc;
         }
         if(myLoc.distanceSquaredTo(moveDestination) > 0){ // if we are on the move to a lower rubble spot
             indicatorString += "MOVING; ";
@@ -66,12 +66,18 @@ public class Archon extends Robot {
             }
             nav.goTo(moveDestination);
             comms.writeSharedArray(myCommsIdx, Util.mapLocationToInt(myLoc));
+            bestSpawnDirs = null;
         }
+
         else { // spawn troops
+
             indicatorString += "STAYING; ";
             while(rc.getMode().equals(RobotMode.PORTABLE) && rc.canTransform()){    // make sure we are in turret mode
                 indicatorString += "Transforming 2; ";
                 rc.transform();
+            }
+            if(bestSpawnDirs == null){
+                getBestSpawnDirs();
             }
             comms.findFriendlyArchons();
             RobotInfo[] enemiesInVision = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
@@ -130,27 +136,38 @@ public class Archon extends Robot {
         if(lead > 1500 && builderCount*30 < rc.getRoundNum() && builderCount < 4) {
 //        if(false){
 //            spawnTroop(RobotType.BUILDER);
-            spawnUniformly(RobotType.BUILDER, builderCount);
+//            spawnUniformly(RobotType.BUILDER, builderCount);
+            spawnLowRubble(RobotType.BUILDER);
         }
         else if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost * numFriendlyArchons || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
 //            spawnTroop(RobotType.SOLDIER);
-            spawnUniformly(RobotType.SOLDIER, builderCount);
+//            spawnUniformly(RobotType.SOLDIER, builderCount);
+            spawnLowRubble(RobotType.SOLDIER);
+
         }
         else if(rc.getRoundNum() < 30){
 //            spawnTroop(RobotType.MINER);
-            spawnUniformly(RobotType.MINER, builderCount);
+//            spawnUniformly(RobotType.MINER, builderCount);
+            spawnLowRubble(RobotType.MINER);
+
         }
         else if (soldierCount < minerCount * 1.5){
 //            spawnTroop(RobotType.SOLDIER);
-            spawnUniformly(RobotType.SOLDIER, builderCount);
+//            spawnUniformly(RobotType.SOLDIER, builderCount);
+            spawnLowRubble(RobotType.SOLDIER);
+
         }
         else if(minerCount < soldierCount){
 //            spawnTroop(RobotType.MINER);
-            spawnUniformly(RobotType.MINER, builderCount);
+//            spawnUniformly(RobotType.MINER, builderCount);
+            spawnLowRubble(RobotType.MINER);
+
         }
         else{
 //            spawnTroop(RobotType.SOLDIER);
-            spawnUniformly(RobotType.SOLDIER, builderCount);
+//            spawnUniformly(RobotType.SOLDIER, builderCount);
+            spawnLowRubble(RobotType.SOLDIER);
+
         }
     }
 
@@ -397,23 +414,27 @@ public class Archon extends Robot {
     }
 
 
-    Comparator<MapLocation> compareByRubble  = new Comparator<MapLocation>() {
-        public int compare(MapLocation l1, MapLocation l2) {
+    Comparator<Direction> compareByRubble  = new Comparator<Direction>() {
+        public int compare(Direction d1, Direction d2) {
             try {           // hacky way to get past GameActionExceptions, which comparators aren't supposed to throw
                 // check to see if either of the locations are null (might happen, based on how we defined the array
+                MapLocation l1 = myLoc.add(d1);
+                MapLocation l2 = myLoc.add(d2);
                 int l1Rubble;
                 int l2Rubble;
                 if (!rc.onTheMap(l1)) {
                     l1Rubble = Integer.MAX_VALUE;
-                } else {
+                }
+                else {
                     l1Rubble = rc.senseRubble(l1);
                 }
                 if (!rc.onTheMap(l2)) {
                     l2Rubble = Integer.MAX_VALUE;
-                } else {
+                }
+                else {
                     l2Rubble = rc.senseRubble(l2);
                 }
-                if (l1Rubble < l2Rubble) {      // l1 has less rubble
+                if(l1Rubble < l2Rubble){      // l1 has less rubble
                     return -1;
                 } else if (l2Rubble < l1Rubble) {    // l2 has less rubble
                     return 1;
@@ -452,18 +473,34 @@ public class Archon extends Robot {
     };
 
 
-    public void getBestSpawnLocs() throws GameActionException{
-        MapLocation[] potMapLocs = new MapLocation[8];
-        for(int i=0; i<8; i++){
-            MapLocation potSpawnLoc =  myLoc.add(Util.directions[i]);
-                potMapLocs[i] = potSpawnLoc;
-        }
-        Arrays.sort(potMapLocs, compareByRubble);
-        bestSpawnLocs = potMapLocs;
+    public void getBestSpawnDirs() throws GameActionException{
+        bestSpawnDirs = Util.directions;
+        Arrays.sort(bestSpawnDirs, compareByRubble);
     }
 
-    //TODO: make method that spawns soldiers in bestSpawnLocs (use getBestSpawnLocs to get sorted array)
-
+    public void spawnLowRubble(RobotType spawnType) throws GameActionException {
+        if(Util.tryBuild(spawnType, bestSpawnDirs) != Direction.CENTER){
+            comms.addRobotCount(spawnType, 1);
+            if(spawnType == RobotType.MINER){
+                Logger.Log("Successfully spawned a miner!");
+                indicatorString += "Built a miner; ";
+                myMiners++;
+                spawnedMinerLastTurn = true;
+            }
+            else if(spawnType == RobotType.SOLDIER){
+                Logger.Log("Successfully spawned a soldier!");
+                indicatorString += "Built a soldier; ";
+                mySoldiers++;
+            }
+            else if(spawnType == RobotType.BUILDER){
+                Logger.Log("Successfully spawned a builder!");
+                indicatorString += "Built a builder; ";
+                myBuilders++;
+            }
+        }
+        // TODO: Instead of going in order, check where the current miners are and try to spawn in the direction opposite of the most miners
+        // TODO: Also look at the cooldown of the block ur spawning on
+    }
 
 
 }
