@@ -1,4 +1,4 @@
-package hope2;
+package hope3;
 
 import battlecode.common.*;
 
@@ -137,16 +137,20 @@ public class Miner extends Robot {
                         indicatorString += "STAY; ";
                     }
                 }
-                else { // Find nearest mine
+                else { // Find nearest mine, then soldier, then random
                     // System.out.println("Bytecode G: " + Clock.getBytecodesLeft());
                     MapLocation targetLoc = findClosestLeadMine();
                     // System.out.println("Bytecode H: " + Clock.getBytecodesLeft());
                     if(targetLoc == null){
                         // Go to a far away lead mine area
                         if(myLoc.distanceSquaredTo(currentTarget) <= 4){
-//                        // System.out.println("Bytecode before choosing: " + Clock.getBytecodesLeft());
-//                        currentTarget = chooseNewTarget();
-                            currentTarget = nav.getRandomMapLocation();
+                            // currentTarget = findClosestSoldier();
+                            if (findCloseSoldierCount()>3) {
+                                currentTarget = Util.calculateFriendlySoldierCOM(rc.senseNearbyRobots());
+                            }
+                            else {
+                                currentTarget = nav.getRandomMapLocation();
+                            }
 //                        // System.out.println("Bytecode after choosing: " + Clock.getBytecodesLeft());
                         }
                         targetLoc = currentTarget;
@@ -321,6 +325,37 @@ public class Miner extends Robot {
             return -numEnemies * 3 * cooldown;
         }
         return (leadMineable - numTeammates - numEnemies * 6) / cooldown; // Larger heuristic is better
+    }
+
+    // Find the closest location with the most reserves (gold and lead) to mine from. If there is no location to mine from, return null
+    public MapLocation findClosestSoldier() throws GameActionException {
+        MapLocation bestLoc = null;
+        int minDistance = 100000000;
+        int dist;
+        // Direction bestDirection;
+        // find the direction with the nearest soldier
+        RobotInfo[] robots = rc.senseNearbyRobots();
+        for(int i = robots.length; i -- > 0; ){
+            if(robots[i].getType()!=RobotType.SOLDIER) continue;
+            dist = myLoc.distanceSquaredTo(robots[i].getLocation());
+            if(dist<minDistance){
+                minDistance = dist;
+                // bestDirection = myLoc.directionTo(robots[i].getLocation());
+                bestLoc = robots[i].getLocation();
+            }
+        }
+        return bestLoc;
+    }
+
+    public int findCloseSoldierCount() throws  GameActionException {
+        RobotInfo[] robots = rc.senseNearbyRobots();
+        int soldierCount = 0;
+        for(int i = robots.length; i -- > 0; ){
+            if(robots[i].getType()!=RobotType.SOLDIER) {
+                soldierCount++;
+            }
+        }
+        return soldierCount;
     }
 
     // Find the closest location with the most reserves (gold and lead) to mine from. If there is no location to mine from, return null
