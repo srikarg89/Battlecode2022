@@ -110,6 +110,14 @@ public class Util {
     }
 
     // Purpose of the +1 and -1 is to ensure that the integer version of a map location is never equal to 0 (useful for shared array)
+//    static int mapLocationToInt(MapLocation loc){
+//        return loc.x * 100 + loc.y + 1;
+//    }
+//
+//    static MapLocation intToMapLocation(int num){
+//        return new MapLocation((num - 1) / 100, (num - 1) % 100);
+//    }
+
     static int mapLocationToInt(MapLocation loc){
         return loc.x * 100 + loc.y + 1;
     }

@@ -16,6 +16,9 @@ public class Robot {
 //    double[] COS_LOOKUP = new double[24];
 //    double[] SIN_LOOKUP = new double[24];
 
+    // Miner variables
+    boolean canFarm = false;
+
     // Robot properties
     RobotController rc;
     Navigation nav;

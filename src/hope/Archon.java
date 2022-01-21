@@ -84,7 +84,11 @@ public class Archon extends Robot {
             MapLocation enemyCOM = Util.calculateEnemySoldierCOM(enemiesInVision);
             comms.updateCurrAttackLoc(enemiesInVision, enemyCOM);
             if (spawnedMinerLastTurn) {
-                comms.updateMinerInstruction(myCommsIdx, scoutingLocs[(myMiners - 1) % scoutingLocs.length]);
+                int canExplore = 1;
+                if(myMiners % 3 == 0){
+                    canExplore = 0;
+                }
+                comms.updateMinerInstruction(myCommsIdx, scoutingLocs[(myMiners - 1) % scoutingLocs.length], canExplore);
             }
             // Try building
             if (myCommsIdx == rc.getRoundNum() % this.numFriendlyArchons) {
@@ -136,37 +140,37 @@ public class Archon extends Robot {
         if(lead > 1500 && builderCount*30 < rc.getRoundNum() && builderCount < 4) {
 //        if(false){
 //            spawnTroop(RobotType.BUILDER);
-//            spawnUniformly(RobotType.BUILDER, builderCount);
-            spawnLowRubble(RobotType.BUILDER);
+            spawnUniformly(RobotType.BUILDER, builderCount);
+//            spawnLowRubble(RobotType.BUILDER);
         }
         else if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost * numFriendlyArchons || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
 //            spawnTroop(RobotType.SOLDIER);
-//            spawnUniformly(RobotType.SOLDIER, builderCount);
-            spawnLowRubble(RobotType.SOLDIER);
+            spawnUniformly(RobotType.SOLDIER, builderCount);
+//            spawnLowRubble(RobotType.SOLDIER);
 
         }
         else if(rc.getRoundNum() < 30){
 //            spawnTroop(RobotType.MINER);
-//            spawnUniformly(RobotType.MINER, builderCount);
-            spawnLowRubble(RobotType.MINER);
+            spawnUniformly(RobotType.MINER, builderCount);
+//            spawnLowRubble(RobotType.MINER);
 
         }
         else if (soldierCount < minerCount * 1.5){
 //            spawnTroop(RobotType.SOLDIER);
-//            spawnUniformly(RobotType.SOLDIER, builderCount);
-            spawnLowRubble(RobotType.SOLDIER);
+            spawnUniformly(RobotType.SOLDIER, builderCount);
+//            spawnLowRubble(RobotType.SOLDIER);
 
         }
         else if(minerCount < soldierCount){
 //            spawnTroop(RobotType.MINER);
-//            spawnUniformly(RobotType.MINER, builderCount);
-            spawnLowRubble(RobotType.MINER);
+            spawnUniformly(RobotType.MINER, builderCount);
+//            spawnLowRubble(RobotType.MINER);
 
         }
         else{
 //            spawnTroop(RobotType.SOLDIER);
-//            spawnUniformly(RobotType.SOLDIER, builderCount);
-            spawnLowRubble(RobotType.SOLDIER);
+            spawnUniformly(RobotType.SOLDIER, builderCount);
+//            spawnLowRubble(RobotType.SOLDIER);
 
         }
     }

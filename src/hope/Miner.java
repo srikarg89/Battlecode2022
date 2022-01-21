@@ -2,6 +2,8 @@ package hope;
 
 import battlecode.common.*;
 
+import java.util.Map;
+
 // And then just go to the spot with the best heuristic
 
 public class Miner extends Robot {
@@ -11,8 +13,9 @@ public class Miner extends Robot {
     MapLocation mineLocation = null;
     Direction spawnDir = null;
     MapLocation currentTarget = null;
-
-    int[][] leadMap = new int[5][5];
+    final int ignore_farmer_threshold = 11;
+    MapLocation farmerLoc; // If this is null ur not a farmer get lost, if its not you are a farmer
+    final int FARM_RADIUS = 13;
 
     int leadVal00 = 0; int leadVal01 = 0; int leadVal02 = 0; int leadVal03 = 0; int leadVal04 = 0; int leadVal10 = 0; int leadVal11 = 0; int leadVal12 = 0; int leadVal13 = 0; int leadVal14 = 0; int leadVal20 = 0; int leadVal21 = 0; int leadVal22 = 0; int leadVal23 = 0; int leadVal24 = 0; int leadVal30 = 0; int leadVal31 = 0; int leadVal32 = 0; int leadVal33 = 0; int leadVal34 = 0; int leadVal40 = 0; int leadVal41 = 0; int leadVal42 = 0; int leadVal43 = 0; int leadVal44 = 0;
     int teammate_2_1 = 0; int teammate_20 = 0; int teammate_21 = 0; int teammate_1_2 = 0; int teammate_1_1 = 0; int teammate_10 = 0; int teammate_11 = 0; int teammate_12 = 0; int teammate0_2 = 0; int teammate0_1 = 0; int teammate01 = 0; int teammate02 = 0; int teammate1_2 = 0; int teammate1_1 = 0; int teammate10 = 0; int teammate11 = 0; int teammate12 = 0; int teammate2_1 = 0; int teammate20 = 0; int teammate21 = 0;
@@ -30,89 +33,99 @@ public class Miner extends Robot {
         }
         assert(archonLoc != null);
 
-        // // System.out.println("Bytecode A: " + Clock.getBytecodesLeft()); // 6500 bytecode
-        if(currentTarget == null){
-            currentTarget = comms.getArchonScoutingLocation(archonIndex);
-            if(currentTarget == null){
-                currentTarget = nav.getRandomMapLocation();
-            }
-            else{
-                indicatorString += "AT; ";
-            }
-        }
-
         RobotInfo[] nearbyDangerousEnemies = new RobotInfo[nearbyEnemies.length];
         int numDangerousEnemies = 0;
-        for(int i = nearbyEnemies.length; i-- > 0; ){
-            if(nearbyEnemies[i].getType() == RobotType.SOLDIER || nearbyEnemies[i].getType() == RobotType.WATCHTOWER){
+        int enemyDamage = 0;
+        for (int i = nearbyEnemies.length; i-- > 0; ) {
+            if (nearbyEnemies[i].getType() == RobotType.SOLDIER || nearbyEnemies[i].getType() == RobotType.WATCHTOWER) {
                 nearbyDangerousEnemies[numDangerousEnemies] = nearbyEnemies[i];
                 numDangerousEnemies++;
+                enemyDamage += nearbyEnemies[i].getType().damage;
             }
         }
 
         // Calculate mineLocation
         comms.scanEnemyArchons(); // Costs 500 bytecode
 
+        indicatorString += "EXP; ";
+        if (currentTarget == null) {
+            currentTarget = comms.getArchonScoutingLocation(archonIndex);
+            if (currentTarget == null) {
+                currentTarget = nav.getRandomMapLocation();
+            } else {
+                indicatorString += "AT; ";
+            }
+        }
+
+        if(canFarm){
+            indicatorString += "YE; ";
+        }
+        else{
+            indicatorString += "NA; ";
+        }
+
         indicatorString += "C " + rc.getMovementCooldownTurns() + ", " + rc.getActionCooldownTurns() + "; ";
         boolean movedTowardsGold = goToClosestGold();
         // System.out.println("Bytecode B: " + Clock.getBytecodesLeft()); // 5800 bytecode
-        if(!movedTowardsGold) {
+        if (!movedTowardsGold) {
             // System.out.println("Bytecode C: " + Clock.getBytecodesLeft()); // 5700
-            if(numDangerousEnemies > 5){ // Retreat!
+            if (enemyDamage > rc.getHealth() / 4) { // Retreat!
                 MapLocation enemyCOM = Util.calculateEnemySoldierCOM(nearbyDangerousEnemies);
                 Direction enemyDir = myLoc.directionTo(enemyCOM);
                 MapLocation retreatLoc = myLoc.add(enemyDir).add(enemyDir).add(enemyDir).add(enemyDir);
                 nav.goTo(retreatLoc);
-            }
-            else{ // Run heuristic code
-                fillMapsUnrolled2(); // Costs 350 bytecode
-                fillAdjTeammate();
-                // System.out.println("Bytecode D: " + Clock.getBytecodesLeft()); // 4600
-                double currHeuristic = getHeursitic(myLoc, nearbyEnemies); // Costs 500 bytecode
-//            System.out.println("CH: " + currHeuristic);
-                double bestHeuristic = currHeuristic;
-                if(currHeuristic != 0){
-                    // System.out.println("Bytecode E: " + Clock.getBytecodesLeft()); // 4100
-                    Direction bestDir = null;
-                    for (int i = 0; i < Util.directions.length; i++) { // If you can move to a better spot, do so
-                        Direction dir = Util.directions[i];
-                        if (!rc.canMove(dir)) {
-                            continue;
-                        }
-                        MapLocation newLoc = myLoc.add(dir);
-                        double newHeuristic = getHeursitic(newLoc, nearbyEnemies);
-                        // System.out.println("Bytecode F: " + Clock.getBytecodesLeft()); // 550 per loop
-                        if (newHeuristic > bestHeuristic) {
-                            bestHeuristic = newHeuristic;
-                            bestDir = dir;
-                        }
-                    }
-                    if (bestDir != null) { // If you can move in a better direction, do so
-                        rc.move(bestDir);
-                        indicatorString += "CH: " + (int) (currHeuristic * 100) + ",BH: " + (int) (bestHeuristic * 100) + ", Dir: " + bestDir + "; ";
-                    }
-                    else{
-                        indicatorString += "CH: " + (int) (currHeuristic * 100) + "; ";
-                        indicatorString += "STAY; ";
-                    }
+            } else { // Run heuristic code
+                if(farmerLoc != null){
+                    runFarmer();
                 }
-                else { // Find nearest mine
-                    // System.out.println("Bytecode G: " + Clock.getBytecodesLeft());
-                    MapLocation targetLoc = findClosestLeadMine();
-                    // System.out.println("Bytecode H: " + Clock.getBytecodesLeft());
-                    if(targetLoc == null){
-                        // Go to a far away lead mine area
-                        if(myLoc.distanceSquaredTo(currentTarget) <= 4){
-//                        // System.out.println("Bytecode before choosing: " + Clock.getBytecodesLeft());
-//                        currentTarget = chooseNewTarget();
-                            currentTarget = nav.getRandomMapLocation();
-//                        // System.out.println("Bytecode after choosing: " + Clock.getBytecodesLeft());
+                else{
+                    fillMapsUnrolled2(); // Costs 350 bytecode
+                    fillAdjTeammate();
+                    // System.out.println("Bytecode D: " + Clock.getBytecodesLeft()); // 4600
+                    double currHeuristic = getHeursitic(myLoc, nearbyEnemies); // Costs 500 bytecode
+                    // System.out.println("CH: " + currHeuristic);
+                    double bestHeuristic = currHeuristic;
+                    if (currHeuristic != 0) {
+                        // System.out.println("Bytecode E: " + Clock.getBytecodesLeft()); // 4100
+                        Direction bestDir = null;
+                        for (int i = 0; i < Util.directions.length; i++) { // If you can move to a better spot, do so
+                            Direction dir = Util.directions[i];
+                            if (!rc.canMove(dir)) {
+                                continue;
+                            }
+                            MapLocation newLoc = myLoc.add(dir);
+                            double newHeuristic = getHeursitic(newLoc, nearbyEnemies);
+                            // System.out.println("Bytecode F: " + Clock.getBytecodesLeft()); // 550 per loop
+                            if (newHeuristic > bestHeuristic) {
+                                bestHeuristic = newHeuristic;
+                                bestDir = dir;
+                            }
                         }
-                        targetLoc = currentTarget;
+                        if (bestDir != null) { // If you can move in a better direction, do so
+                            rc.move(bestDir);
+                            indicatorString += "CH: " + (int) (currHeuristic * 100) + ",BH: " + (int) (bestHeuristic * 100) + ", Dir: " + bestDir + "; ";
+                        } else {
+                            indicatorString += "CH: " + (int) (currHeuristic * 100) + "; ";
+                            indicatorString += "STAY; ";
+                        }
+                    } else { // Find nearest mine
+                        // System.out.println("Bytecode G: " + Clock.getBytecodesLeft());
+                        MapLocation targetLoc = findClosestLeadMine(ignore_farmer_threshold);
+                        // System.out.println("Bytecode H: " + Clock.getBytecodesLeft());
+                        if (targetLoc == null) {
+                            if(canFarm){
+                                checkIfIShouldBeAFarmerAndCry();
+                            }
+                            // Go to a far away lead mine area
+                            if (myLoc.distanceSquaredTo(currentTarget) <= 4) {
+                                currentTarget = nav.getRandomMapLocation();
+                            }
+                            targetLoc = currentTarget;
+                        }
+                        nav.goTo(targetLoc);
+                        // System.out.println("Bytecode I: " + Clock.getBytecodesLeft());
+                        indicatorString += "NAV " + Util.mapLocationToInt(targetLoc) + "; ";
                     }
-                    nav.goTo(targetLoc);
-                    // System.out.println("Bytecode I: " + Clock.getBytecodesLeft());
-                    indicatorString += "NAV " + Util.mapLocationToInt(targetLoc) + "; ";
                 }
             }
         }
@@ -142,6 +155,27 @@ public class Miner extends Robot {
         }
         nav.goTo(closest);
         return true;
+    }
+
+    public void runFarmer() throws GameActionException {
+        // Do farmer stuff
+        indicatorString += "FMR " + farmerLoc.toString() + "; ";
+        MapLocation[] leadMines = rc.senseNearbyLocationsWithLead(farmerLoc, FARM_RADIUS, 2);
+        if(leadMines.length == 0){
+            nav.circle(farmerLoc, 3, 13, true);
+        }
+        else{
+            MapLocation closestMine = null;
+            int closestDist = Integer.MAX_VALUE;
+            for(int i = 0; i < leadMines.length; i++){
+                int dist = myLoc.distanceSquaredTo(leadMines[i]);
+                if(dist < closestDist){
+                    closestDist = dist;
+                    closestMine = leadMines[i];
+                }
+            }
+            nav.goTo(closestMine);
+        }
     }
 
     // TODO: Move away from enemies
@@ -188,12 +222,12 @@ public class Miner extends Robot {
     }
 
     // Find the closest location with the most reserves (gold and lead) to mine from. If there is no location to mine from, return null
-    public MapLocation findClosestLeadMine() throws GameActionException {
+    public MapLocation findClosestLeadMine(int minLead) throws GameActionException {
         MapLocation bestLoc = null;
         int bestHeuristic = 100000;
         int dist; int cooldown; int heuristic;
         // Go to nearest lead mine
-        MapLocation[] leadLocs = rc.senseNearbyLocationsWithLead(myType.visionRadiusSquared, 2);
+        MapLocation[] leadLocs = rc.senseNearbyLocationsWithLead(myType.visionRadiusSquared, minLead);
         // TODO Only go for the nearby leadloc if there's no miners that are closer (figure out how many turns itll take everyone to mine it and how useful you'd be)
         for(int i = leadLocs.length; i -- > 0; ){
             dist = myLoc.distanceSquaredTo(leadLocs[i]);
@@ -207,6 +241,58 @@ public class Miner extends Robot {
         }
 
         return bestLoc;
+    }
+
+    public void checkIfIShouldBeAFarmerAndCry() throws GameActionException {
+        MapLocation[] currentFarmerLocs = new MapLocation[64];
+        int numFarmerLocs = 0;
+        for(int i = comms.FARMER_LOCATION_START_IDX; i <= comms.FARMER_LOCATION_END_IDX; i++){
+            int val = rc.readSharedArray(i);
+            if(val == 0){
+                break;
+            }
+            currentFarmerLocs[i - comms.FARMER_LOCATION_START_IDX] = Util.intToMapLocation(val);
+            numFarmerLocs++;
+        }
+
+        MapLocation[] farmersNearMe = new MapLocation[numFarmerLocs];
+        int numFarmersNearMe = 0;
+        for(int i = 0; i < numFarmerLocs; i++){
+            if(myLoc.distanceSquaredTo(currentFarmerLocs[i]) <= myType.visionRadiusSquared * 4){
+                farmersNearMe[numFarmersNearMe] = currentFarmerLocs[i];
+                numFarmersNearMe++;
+            }
+        }
+
+        MapLocation[] leadFarms = rc.senseNearbyLocationsWithLead(myType.visionRadiusSquared, 2);
+        MapLocation closestUnexploredLeadLoc = null;
+        int closestDist = Integer.MAX_VALUE;
+        for(int i = 0; i < leadFarms.length; i++){
+            boolean isPartOfFarm = false;
+            MapLocation leadLoc = leadFarms[i];
+            for(int j = 0; j < numFarmersNearMe; j++){
+                if(leadLoc.distanceSquaredTo(farmersNearMe[j]) < FARM_RADIUS){
+                    isPartOfFarm = true;
+                    break;
+                }
+            }
+            if(!isPartOfFarm){
+                int dist = myLoc.distanceSquaredTo(leadLoc);
+                if(dist < closestDist){
+                    closestDist = dist;
+                    closestUnexploredLeadLoc = leadLoc;
+                }
+            }
+        }
+
+        if(closestUnexploredLeadLoc != null){
+            // Set that to be ur farmer loc
+            // Become a farmer
+            // Cry cuz its drought season
+            comms.addFarmerLoc(closestUnexploredLeadLoc);
+            farmerLoc = closestUnexploredLeadLoc;
+        }
+
     }
 
     public void tryMineAllDirections() throws GameActionException {
@@ -507,41 +593,5 @@ public class Miner extends Robot {
             }
         }
     }
-
-
-
-    public MapLocation chooseNewTarget() throws GameActionException {
-//        // System.out.println("Curr location: " + rc.getLocation());
-        int[] anglePriority = new int[24];
-        int totalAnglePriority = 0;
-        for(int i = anglePriority.length; i-- > 0;){
-//            int distToEdge = (int)Util.distanceToEdge(myLoc, COS_LOOKUP[i], SIN_LOOKUP[i]);
-            int distToEdge = (int) Util.distanceToEdge(myLoc, Util.cos2(i * 15), Util.sin2(i * 15));
-//            // System.out.println("Here: " + Clock.getBytecodesLeft());
-//            // System.out.println("i: " + i + ", dist: " + distToEdge);
-            if(distToEdge > 10){
-                anglePriority[i] = distToEdge;
-                totalAnglePriority += distToEdge;
-            }
-//            // System.out.println("Bytecode each one: " + Clock.getBytecodesLeft());
-        }
-//        int rand = (int)(Math.random() * totalAnglePriority) + 1;
-        int rand = (int)(Util.mathRandom() * totalAnglePriority) + 1;
-        // System.out.println("Total angle priority: " + totalAnglePriority + ", rand: " + rand);
-        for(int i = 0; i < anglePriority.length; i++){
-            rand -= anglePriority[i];
-            if(rand <= 0){
-                double distToTravel = anglePriority[i] - 3;
-//                int targetX = myLoc.x + (int)(COS_LOOKUP[i] * distToTravel);
-//                int targetY = myLoc.y + (int)(SIN_LOOKUP[i] * distToTravel);
-                int targetX = myLoc.x + (int)(Util.cos2(i * 15) * distToTravel);
-                int targetY = myLoc.y + (int)(Util.sin2(i * 15) * distToTravel);
-//                // System.out.println("Bytecode after looping: " + Clock.getBytecodesLeft());
-                return new MapLocation(targetX, targetY);
-            }
-        }
-        return nav.getRandomMapLocation();
-    }
-
 
 }
