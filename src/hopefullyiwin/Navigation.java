@@ -25,11 +25,14 @@ public class Navigation {
         Util.robot = robot;
         currentTarget = null;
         visited = new HashSet<Integer>();
-        if(rc.getType() == RobotType.BUILDER){
-            bfs = new BFS13(rc, robot);
-        }
-        else{
+        if(rc.getType() == RobotType.BUILDER ||
+                rc.getType() == RobotType.SOLDIER ||
+                rc.getType() == RobotType.MINER ||
+                rc.getType() == RobotType.LABORATORY){
             bfs = new BFS20(rc, robot);
+        }
+        else{   // watchtower, archon, sage
+            bfs = new BFS34(rc, robot);
         }
     }
 
