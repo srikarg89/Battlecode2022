@@ -1,8 +1,6 @@
 package hope;
 
-import battlecode.common.Clock;
-import battlecode.common.GameActionException;
-import battlecode.common.RobotController;
+import battlecode.common.*;
 // ANOMALY NOTE FOR VISUALIZER: Charge is yellow, vortex is purple
 
 public strictfp class RobotPlayer {
@@ -36,7 +34,7 @@ public strictfp class RobotPlayer {
                 rc.setIndicatorString(robot.indicatorString);
 //                System.out.println("Bytecode left: " + Clock.getBytecodesLeft());
                 robot.prevLoc = rc.getLocation();
-                if(!checkBytecode(robot, rc)){
+                if(!checkBytecode(robot, rc) && rc.getType() != RobotType.ARCHON){
                     rc.resign();
                 }
             } catch (GameActionException e) {
