@@ -1,4 +1,4 @@
-package hopefullyiwin;
+package sprintbot8;
 
 import battlecode.common.*;
 
@@ -22,12 +22,8 @@ public class Miner extends Robot {
 
     MapLocation archonLoc = null;
     int archonIndex = -1;
-    MapLocation mineLocation = null;
-    Direction spawnDir = null;
     MapLocation currentTarget = null;
     final int ignore_farmer_threshold = 11;
-    MapLocation farmerLoc; // If this is null ur not a farmer get lost, if its not you are a farmer
-    final int FARM_RADIUS = 13;
     boolean finishedExploring = false;
     MapLocation[] forgottenMines = new MapLocation[30];
     int forgottenMinesIdx = 0;
@@ -72,22 +68,6 @@ public class Miner extends Robot {
             }
         }
 
-        if(canFarm){
-            indicatorString += "YE; ";
-        }
-        else{
-            indicatorString += "NA; ";
-        }
-
-        // Update comms farthest pushed miner
-        for(int i = comms.FARTHEST_AWAY_MINER_START_IDX; i < comms.FARTHEST_AWAY_MINER_START_IDX + 4; i++){
-            int currLocNum = rc.readSharedArray(i);
-            boolean update = false;
-            if(currLocNum == 0){
-                update = true;
-            }
-        }
-
         // System.out.println("Before forgetting: " + Clock.getBytecodesLeft());
 
         int numForgotten = 0;
@@ -126,10 +106,6 @@ public class Miner extends Robot {
             Direction enemyDir = myLoc.directionTo(enemyCOM);
             MapLocation retreatLoc = myLoc.add(enemyDir).add(enemyDir).add(enemyDir).add(enemyDir);
             return nav.goTo(retreatLoc);
-        }
-        if(farmerLoc != null){
-            // System.out.println("RUNNING FARMER");
-            return runFarmer();
         }
         indicatorString += "EXP; ";
         fillMapsUnrolled2(); // Costs 350 bytecode
@@ -186,13 +162,13 @@ public class Miner extends Robot {
                 // Go to a far away lead mine area
                 if (myLoc.distanceSquaredTo(currentTarget) <= 4) {
                     finishedExploring = true;
-                    nav.doingWeirdMinerPathing = false;
+//                    nav.doingWeirdMinerPathing = false;
                     // System.out.println("SETTING FINISHED EXPLORING TO TRUE: " + currentTarget.toString());
                     currentTarget = nav.getRandomMapLocation();
                 }
                 targetLoc = currentTarget;
                 if(!finishedExploring){
-                    nav.doingWeirdMinerPathing = true;
+//                    nav.doingWeirdMinerPathing = true;
                     Direction towardsCurrentTarget = myLoc.directionTo(currentTarget);
                     targetLoc = myLoc;
                     for(int i = 5; i-- > 0; ){
@@ -202,13 +178,6 @@ public class Miner extends Robot {
                         targetLoc = targetLoc.add(towardsCurrentTarget);
                     }
                 }
-            }
-            if(canFarm && finishedExploring && closestUnfarmedLead != null){
-                // System.out.println("ADDING FARMER LOC YEET");
-                indicatorString += "BCFARM; ";
-                comms.addFarmerLoc(closestUnfarmedLead);
-                farmerLoc = closestUnfarmedLead;
-                return nav.goTo(farmerLoc);
             }
             indicatorString += "NAV " + Util.mapLocationToInt(targetLoc) + "; ";
             return nav.goTo(targetLoc);
@@ -234,25 +203,6 @@ public class Miner extends Robot {
         }
         nav.goTo(closest);
         return true;
-    }
-
-    public boolean runFarmer() throws GameActionException {
-        // Do farmer stuff
-        indicatorString += "FMR " + farmerLoc.toString() + "; ";
-        MapLocation[] leadMines = rc.senseNearbyLocationsWithLead(farmerLoc, FARM_RADIUS, 2);
-        if(leadMines.length == 0){
-            return nav.circle(farmerLoc, 3, 13, true);
-        }
-        MapLocation closestMine = null;
-        int closestDist = Integer.MAX_VALUE;
-        for(int i = 0; i < leadMines.length; i++){
-            int dist = myLoc.distanceSquaredTo(leadMines[i]);
-            if(dist < closestDist){
-                closestDist = dist;
-                closestMine = leadMines[i];
-            }
-        }
-        return nav.goTo(closestMine);
     }
 
     // TODO: Move away from enemies
@@ -346,71 +296,6 @@ public class Miner extends Robot {
         }
 
         return bestLoc;
-    }
-
-    // Finds the closest lead mine with min lead 2 that is not currently part of a farm
-    public MapLocation findClosestNonFarmMine(MapLocation[] nearbyLeadMin2) throws GameActionException {
-        MapLocation bestLoc = null;
-        int bestHeuristic = 100000;
-        int dist; int cooldown; int heuristic;
-        // Go to nearest lead mine
-        MapLocation[] leadLocs = rc.senseNearbyLocationsWithLead(myType.visionRadiusSquared, 2);
-        for(int i = leadLocs.length; i -- > 0; ){
-            dist = myLoc.distanceSquaredTo(leadLocs[i]);
-            cooldown = 10 + rc.senseRubble(leadLocs[i]);
-            heuristic = dist * cooldown;
-            if(heuristic >= bestHeuristic){
-                continue;
-            }
-            bestHeuristic = heuristic;
-            bestLoc = leadLocs[i];
-        }
-
-        return bestLoc;
-    }
-
-    public MapLocation getClosestUnfarmedLead(MapLocation[] nearbyLeadMin2) throws GameActionException {
-        MapLocation[] currentFarmerLocs = new MapLocation[64];
-        int numFarmerLocs = 0;
-        for(int i = comms.FARMER_LOCATION_START_IDX; i <= comms.FARMER_LOCATION_END_IDX; i++){
-            int val = rc.readSharedArray(i);
-            if(val == 0){
-                break;
-            }
-            currentFarmerLocs[i - comms.FARMER_LOCATION_START_IDX] = Util.intToMapLocation(val);
-            numFarmerLocs++;
-        }
-
-        MapLocation[] farmersNearMe = new MapLocation[numFarmerLocs];
-        int numFarmersNearMe = 0;
-        for(int i = 0; i < numFarmerLocs; i++){
-            if(myLoc.distanceSquaredTo(currentFarmerLocs[i]) <= myType.visionRadiusSquared * 4){
-                farmersNearMe[numFarmersNearMe] = currentFarmerLocs[i];
-                numFarmersNearMe++;
-            }
-        }
-
-        MapLocation closestUnexploredLeadLoc = null;
-        int closestDist = Integer.MAX_VALUE;
-        for(int i = 0; i < nearbyLeadMin2.length; i++){
-            boolean isPartOfFarm = false;
-            MapLocation leadLoc = nearbyLeadMin2[i];
-            for(int j = 0; j < numFarmersNearMe; j++){
-                if(leadLoc.distanceSquaredTo(farmersNearMe[j]) < FARM_RADIUS){
-                    isPartOfFarm = true;
-                    break;
-                }
-            }
-            if(!isPartOfFarm){
-                int dist = myLoc.distanceSquaredTo(leadLoc);
-                if(dist < closestDist){
-                    closestDist = dist;
-                    closestUnexploredLeadLoc = leadLoc;
-                }
-            }
-        }
-
-        return closestUnexploredLeadLoc;
     }
 
     public void tryMineAllDirections() throws GameActionException {

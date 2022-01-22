@@ -1,4 +1,4 @@
-package hopefullyiwin;
+package sprintbot8;
 
 import battlecode.common.*;
 
@@ -12,17 +12,12 @@ public class Comms {
     final int SOLDIER_COUNT_IDX = 14;
     final int SAGE_COUNT_IDX = 15;
     final int BUILDER_COUNT_IDX = 16;
-    final int MINER_TOTAL_COUNT_IDX = 17;
-    final int SOLDIER_TOTAL_COUNT_IDX = 18;
-    final int BIGGEST_THREAT_LEVEL_IDX = 19;
-    final int BIGGEST_THREAT_LOC_IDX = 20;
+    final int BIGGEST_THREAT_LEVEL_IDX = 17;
+    final int BIGGEST_THREAT_LOC_IDX = 18;
     final int THREAT_THRESHOLD = 10;
-    final int MINER_INSTRUCTION_START_IDX = 21; // 21-24
-    final int ARCHON_HEALING_START_IDX = 25; // 25-28
-    final int FARTHEST_AWAY_MINER_START_IDX = 29; // 29-32
-    final int FARMER_LOCATION_START_IDX = 33; // Goes up to 63
-    final int FARMER_LOCATION_END_IDX = 63;
-    // Store mapLocationToInt * 100
+    final int MINER_INSTRUCTION_START_IDX = 19;
+
+    final int LEAD_HOTSPOT_START_IDX = 27; // 63 - 36
     // Max of 100 lead things present in a given location
 
     // Properties
@@ -172,29 +167,19 @@ public class Comms {
     }
 
     public void addRobotCount(RobotType type, int diff) throws GameActionException {
-        int idx = robotTypeToAliveIndex(type);
+        int idx = robotTypeToIndex(type);
         int newVal = rc.readSharedArray(idx) + diff;
         if(newVal < 0){
             newVal = 0;
         }
         writeSharedArray(idx, newVal);
-        if(type == RobotType.SOLDIER && diff > 0){
-            writeSharedArray(SOLDIER_TOTAL_COUNT_IDX, rc.readSharedArray(SOLDIER_TOTAL_COUNT_IDX) + 1);
-        }
-        else if(type == RobotType.MINER && diff > 0){
-            writeSharedArray(MINER_TOTAL_COUNT_IDX, rc.readSharedArray(MINER_TOTAL_COUNT_IDX) + 1);
-        }
     }
 
-    public int getAliveRobotCount(RobotType type) throws GameActionException {
-        return rc.readSharedArray(robotTypeToAliveIndex(type));
+    public int getRobotCount(RobotType type) throws GameActionException {
+        return rc.readSharedArray(robotTypeToIndex(type));
     }
 
-    public int getTotalRobotCount(RobotType type) throws GameActionException {
-        return rc.readSharedArray(robotTypeToTotalIndex(type));
-    }
-
-    public int robotTypeToAliveIndex(RobotType type){
+    public int robotTypeToIndex(RobotType type){
         switch(type){
             case MINER:
                 return MINER_COUNT_IDX;
@@ -204,16 +189,6 @@ public class Comms {
                 return SAGE_COUNT_IDX;
             case BUILDER:
                 return BUILDER_COUNT_IDX;
-        }
-        return -1;
-    }
-
-    public int robotTypeToTotalIndex(RobotType type){
-        switch(type){
-            case MINER:
-                return MINER_TOTAL_COUNT_IDX;
-            case SOLDIER:
-                return SOLDIER_TOTAL_COUNT_IDX;
         }
         return -1;
     }
@@ -320,59 +295,53 @@ public class Comms {
         }
     }
 
+    public void updateLeadMap() throws GameActionException {
+        // Update comms
+        if(robot.myLoc.x % 8 == 4 || robot.myLoc.x == robot.mapWidth - 4){
+            if(robot.myLoc.y % 8 == 4 || robot.myLoc.y == robot.mapWidth - 4){
+                // At a lead block center
+                int num_gold_mines = rc.senseNearbyLocationsWithLead().length;
+                int num_lead_mines = rc.senseNearbyLocationsWithLead().length;
+                int mines_val = num_gold_mines * 30 + num_lead_mines;
+                int lead_block_x = (robot.myLoc.x - 4) / 8;
+                if(robot.myLoc.x == robot.mapWidth - 4){
+                    lead_block_x = robot.leadMapWidth - 1;
+                }
+                int lead_block_y = (robot.myLoc.y - 4) / 8;
+                if(robot.myLoc.y == robot.mapHeight - 4){
+                    lead_block_y = robot.leadMapHeight - 1;
+                }
+                int lead_block_idx = lead_block_y * robot.leadMapHeight + lead_block_x;
+                robot.leadMap[lead_block_x][lead_block_y] = mines_val;
+                writeSharedArray(LEAD_HOTSPOT_START_IDX + lead_block_idx, mines_val);
+            }
+        }
+
+        // Update based on comms
+        for(int i = 0; i < robot.leadMapWidth * robot.leadMapHeight; i++){
+            int mines_val = rc.readSharedArray(LEAD_HOTSPOT_START_IDX + i);
+            robot.leadMap[i % robot.leadMapHeight][i / robot.leadMapHeight] = mines_val;
+        }
+
+    }
+
     public MapLocation getLeadBlockCenter(int block_x, int block_y) throws GameActionException {
         return new MapLocation(block_x * 8 + 4, block_y * 8 + 4);
     }
 
-    public void updateMinerInstruction(int archonCommsIdx, MapLocation targetLoc, int canExplore) throws GameActionException {
+    public void updateMinerInstruction(int archonCommsIdx, MapLocation targetLoc) throws GameActionException {
         int targetLocNum = Util.mapLocationToInt(targetLoc);
-        writeSharedArray(MINER_INSTRUCTION_START_IDX + archonCommsIdx, targetLocNum * 10 + canExplore);
+        writeSharedArray(MINER_INSTRUCTION_START_IDX + archonCommsIdx, targetLocNum);
     }
 
     public MapLocation getArchonScoutingLocation(int archonCommsIdx) throws GameActionException {
-        int scoutingVal = rc.readSharedArray(MINER_INSTRUCTION_START_IDX + archonCommsIdx);
-        int scoutingLocNum = scoutingVal / 10;
-        int canExplore = scoutingVal % 10;
-        if(canExplore == 0){
-//            robot.canFarm = true;
-            robot.canFarm = false; // TODO IS THIS OKAY?
-        }
+        int scoutingLocNum = rc.readSharedArray(MINER_INSTRUCTION_START_IDX + archonCommsIdx);
         System.out.println("SCOUTING LOC NUM: " + scoutingLocNum);
-        System.out.println("CAN EXPLORE: " + scoutingLocNum);
         if(scoutingLocNum == 0){
             assert(false);
             return null;
         }
         return Util.intToMapLocation(scoutingLocNum);
-    }
-
-    public int findBestArchonForHealing() throws GameActionException { // TODO Need to keep track of which friendly archons have died
-        double bestHeuristic = Integer.MAX_VALUE;
-        int bestIdx = -1;
-        for(int i = 0; i < robot.numFriendlyArchons; i++){
-            double numBusy = rc.readSharedArray(ARCHON_HEALING_START_IDX + i);
-            MapLocation archonLoc = Util.intToMapLocation(rc.readSharedArray(i));
-            double distance = Util.minMovesToReach(robot.myLoc, archonLoc);
-            // Heal rate is 2 and soldier health is 50, so if ur wasting 25 turns (10 turns there, 10 turns back) per numBusy don't go for it
-            double heuristic = numBusy * 10 + distance;
-            System.out.println("Location: " + archonLoc.toString() + ", Distance: " + distance + ", Heuristic: " + heuristic);
-            if(heuristic < bestHeuristic){
-                bestHeuristic = heuristic;
-                bestIdx = i;
-            }
-        }
-        return bestIdx;
-    }
-
-    public int addFarmerLoc(MapLocation center) throws GameActionException {
-        for(int i = FARMER_LOCATION_START_IDX; i <= FARMER_LOCATION_END_IDX; i++){
-            if(rc.readSharedArray(i) == 0){
-                int farmerLoc = Util.mapLocationToInt(center);
-                writeSharedArray(i, farmerLoc);
-                return i;
-            }
-        }
-        return -1;
     }
 
 }

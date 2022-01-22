@@ -1,6 +1,8 @@
-package hopefullyiwin;
+package sprintbot8;
 
-import battlecode.common.*;
+import battlecode.common.Clock;
+import battlecode.common.GameActionException;
+import battlecode.common.RobotController;
 // ANOMALY NOTE FOR VISUALIZER: Charge is yellow, vortex is purple
 
 public strictfp class RobotPlayer {
@@ -22,10 +24,10 @@ public strictfp class RobotPlayer {
         }
 
         while (true) {
-            if(rc.getRoundNum() > 1200){
-                System.out.println("Resigning XD");
-                rc.resign();
-            }
+//            if(rc.getRoundNum() > 100){
+//                System.out.println("Resigning XD");
+//                rc.resign();
+//            }
 
             // Try/catch blocks stop unhandled exceptions, which cause your robot to explode.
             try {
@@ -34,17 +36,17 @@ public strictfp class RobotPlayer {
                 rc.setIndicatorString(robot.indicatorString);
 //                System.out.println("Bytecode left: " + Clock.getBytecodesLeft());
                 robot.prevLoc = rc.getLocation();
-                if(!checkBytecode(robot, rc) && rc.getType() != RobotType.ARCHON){
-                    rc.resign();
+                if(!checkBytecode(robot, rc)){
+//                    rc.resign();
                 }
             } catch (GameActionException e) {
                 Logger.Log("CAUGHT GAMEACTIONEXCEPTION");
                 e.printStackTrace();
-                rc.resign();
+//                rc.resign();
             } catch (Exception e) {
                 Logger.Log("CAUGHT EXCEPTION");
                 e.printStackTrace();
-                rc.resign();
+//                rc.resign();
             } finally {
                 Clock.yield();
             }
