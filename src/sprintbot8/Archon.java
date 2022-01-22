@@ -27,6 +27,7 @@ public class Archon extends Robot {
     int prevLead = 10000;
     MapLocation[] scoutingLocs;
     boolean spawnedMinerLastTurn = false;
+    MapLocation center = new MapLocation(rc.getMapWidth()/2, rc.getMapHeight());
 
     public Archon(RobotController rc) throws GameActionException {
         super(rc);
@@ -84,27 +85,38 @@ public class Archon extends Robot {
         if(lead > 1500 && builderCount*30 < rc.getRoundNum() && builderCount < 4) {
 //        if(false){
 //            spawnTroop(RobotType.BUILDER);
-            spawnUniformly(RobotType.BUILDER, builderCount);
+//            spawnUniformly(RobotType.BUILDER, builderCount);
+            spawnLowRubble(RobotType.BUILDER);
         }
         else if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost * numFriendlyArchons || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
 //            spawnTroop(RobotType.SOLDIER);
-            spawnUniformly(RobotType.SOLDIER, builderCount);
+//            spawnUniformly(RobotType.SOLDIER, builderCount);
+            spawnLowRubble(RobotType.SOLDIER);
+
         }
         else if(rc.getRoundNum() < 30){
 //            spawnTroop(RobotType.MINER);
-            spawnUniformly(RobotType.MINER, builderCount);
+//            spawnUniformly(RobotType.MINER, builderCount);
+            spawnLowRubble(RobotType.MINER);
+
         }
         else if (soldierCount < minerCount * 1.5){
 //            spawnTroop(RobotType.SOLDIER);
-            spawnUniformly(RobotType.SOLDIER, builderCount);
+//            spawnUniformly(RobotType.SOLDIER, builderCount);
+            spawnLowRubble(RobotType.SOLDIER);
+
         }
         else if(minerCount < soldierCount){
 //            spawnTroop(RobotType.MINER);
-            spawnUniformly(RobotType.MINER, builderCount);
+//            spawnUniformly(RobotType.MINER, builderCount);
+            spawnLowRubble(RobotType.MINER);
+
         }
         else{
 //            spawnTroop(RobotType.SOLDIER);
-            spawnUniformly(RobotType.SOLDIER, builderCount);
+//            spawnUniformly(RobotType.SOLDIER, builderCount);
+            spawnLowRubble(RobotType.SOLDIER);
+
         }
     }
 
@@ -333,7 +345,7 @@ public class Archon extends Robot {
             @Override
             public int compare(TempLocation a, TempLocation b){
 //            public int compare(int a, int b){
-                return distances[a.idx] - distances[b.idx];
+                return distances[b.idx] - distances[a.idx];
 //                return myLoc.distanceSquaredTo(b.loc) - myLoc.distanceSquaredTo(a.loc);
             }
         });
@@ -344,6 +356,52 @@ public class Archon extends Robot {
         }
 
         return retLocs;
+    }
+
+    public double spawnDirHeuristic(Direction dir, RobotType spawnType) throws GameActionException{
+        // lower heuristic is better
+        MapLocation newMapLocation = myLoc.add(dir);
+        if(!rc.canBuildRobot(spawnType, dir)){
+            return Integer.MAX_VALUE;     // very bad, do not move if we can't sense the location or if there is a bot in that spot
+        }
+
+        //larger distance squared to center leads to larger heuristic (which is bad)
+        return Math.sqrt((newMapLocation.distanceSquaredTo(center))) * (1.0 + rc.senseRubble(newMapLocation) / 10.0);
+    }
+
+    public void spawnLowRubble(RobotType spawnType) throws GameActionException {
+        double bestHeuristic = Integer.MAX_VALUE;
+        Direction bestDir = null;
+
+        for(int i = Util.directions.length; i-- > 0; ){
+            double currHeuristic = spawnDirHeuristic(Util.directions[i], spawnType);
+            if(currHeuristic < bestHeuristic){
+                bestHeuristic = currHeuristic;
+                bestDir = Util.directions[i];
+            }
+        }
+
+        if(bestHeuristic < Integer.MAX_VALUE){  // if spot wasn't completely trash
+            rc.buildRobot(spawnType, bestDir);
+            comms.addRobotCount(spawnType, 1);
+
+            if(spawnType == RobotType.MINER){
+                Logger.Log("Successfully spawned a miner!");
+                indicatorString += "Built a miner; ";
+                myMiners++;
+                spawnedMinerLastTurn = true;
+            }
+            else if(spawnType == RobotType.SOLDIER){
+                Logger.Log("Successfully spawned a soldier!");
+                indicatorString += "Built a soldier; ";
+                mySoldiers++;
+            }
+            else if(spawnType == RobotType.BUILDER){
+                Logger.Log("Successfully spawned a builder!");
+                indicatorString += "Built a builder; ";
+                myBuilders++;
+            }
+        }
     }
 
 }
