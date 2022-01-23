@@ -359,7 +359,8 @@ public class Comms {
     // First binary number: whether or not 180 degree rotational symmetry is possible (0b100)
 
     public void runRubbleBasedSymmetry() throws GameActionException {
-        int symmetry = rc.readSharedArray(SYMMETRY_IDX);
+        int initial_symmetry = rc.readSharedArray(SYMMETRY_IDX);
+        int symmetry = initial_symmetry;
         if(symmetry == 0){
             symmetry = 7;
         }
@@ -371,7 +372,8 @@ public class Comms {
         int centerX = rc.getMapWidth() / 2;
 
         int[] binVals = {1, 2, 4};
-        for(int j = 0; j < 3; j++){
+        boolean checkedSymmetry = false;
+        for(int j = 2; j >= 0; j--){
             int reflectionType = j + 1;
             int binVal = binVals[j];
             if((symmetry & binVal) != 0){
@@ -419,12 +421,16 @@ public class Comms {
 //                        break;
                     }
                 }
+                checkedSymmetry = true;
                 System.out.println("Ran alg on: " + numRunningOn);
                 if(!valid){
                     System.out.println("Invalid! " + binVal);
                     symmetry &= (7 ^ binVal);
                 }
                 System.out.println("AFTER RUBBLE SYMMETRY: " + Clock.getBytecodesLeft());
+            }
+            if(checkedSymmetry){
+                break;
             }
         }
 

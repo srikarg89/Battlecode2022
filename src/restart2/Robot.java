@@ -71,9 +71,9 @@ public class Robot {
         if(rc.getRoundNum() >= 2){
 //            comms.determineSymmetry();
         }
-        System.out.println("Run method A: " + Clock.getBytecodesLeft());
+//        System.out.println("Run method A: " + Clock.getBytecodesLeft());
         comms.runRubbleBasedSymmetry();
-        System.out.println("Run method B: " + Clock.getBytecodesLeft());
+//        System.out.println("Run method B: " + Clock.getBytecodesLeft());
         comms.scanEnemyArchons();
         age++;
     }
