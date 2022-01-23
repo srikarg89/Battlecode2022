@@ -53,7 +53,7 @@ public class Builder extends Robot {
         enoughLeadForBuild = rc.getTeamLeadAmount(rc.getTeam()) > buildType.buildCostLead;
         if (rc.isActionReady()){
             boolean repaired = repair();
-            System.out.println(repaired);
+//            System.out.println(repaired);
             if(!repaired && targetBuildSpot != null && myLoc.distanceSquaredTo(targetBuildSpot) <= RobotType.BUILDER.actionRadiusSquared){      //time to build
                 Direction dir = myLoc.directionTo(targetBuildSpot);
                 Direction[] buildDirections = {dir};
@@ -152,7 +152,7 @@ public class Builder extends Robot {
         else if(botType == RobotType.LABORATORY){
             System.out.println("deciding building spot");
             for(int i=Util.directions.length; i-->0; ){
-                MapLocation potLoc = archonLoc.add(Util.directions[i]);
+                MapLocation potLoc = archonLoc.add(Util.directions[i]).add(Util.directions[i]).add(Util.directions[i]);
                 if(rc.canSenseLocation(potLoc)&& !rc.isLocationOccupied(potLoc)){
                     return potLoc;
                 }
@@ -173,7 +173,7 @@ public class Builder extends Robot {
             RobotInfo info = nearbyFriendlies[i];
 
             if(currLoc.distanceSquaredTo(info.location) > myType.actionRadiusSquared
-            || !(info.type == RobotType.BUILDER || info.type == RobotType.ARCHON || info.type == RobotType.WATCHTOWER)){
+            || !(info.type == RobotType.LABORATORY || info.type == RobotType.ARCHON || info.type == RobotType.WATCHTOWER)){
                 continue;
             }
             int currBotTypeIndex = Util.getArrayIndex(repairPriorityOrder, info.type);
@@ -198,6 +198,12 @@ public class Builder extends Robot {
         RobotInfo[] potentialTowers = rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam);
 
         RobotInfo toRepair = findRepairTarget(potentialTowers);
+        if(toRepair == null){
+            System.out.println("toRepair: null");
+        }
+        else {
+            System.out.println("toRepair: " + toRepair.toString());
+        }
         if (toRepair != null) {
             int max_health = toRepair.getType().getMaxHealth(toRepair.getLevel());
             while (toRepair.getHealth() < max_health && rc.isActionReady()) {
