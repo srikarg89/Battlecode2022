@@ -44,6 +44,27 @@ public class Miner extends Robot {
         // Calculate mineLocation
         comms.scanEnemyArchons(); // Costs 500 bytecode
 
+        int closestFriendlyArchonIdx = comms.getClosestFriendlyArchonIndex();
+        MapLocation closestFriendlyArchon = Util.intToMapLocation(rc.readSharedArray(closestFriendlyArchonIdx));
+        MapLocation closestEnemyArchon = comms.getClosestEnemyArchonOnComms();
+        if(closestEnemyArchon == null){
+            int symmetry = rc.readSharedArray(comms.SYMMETRY_IDX);
+            if(symmetry == 1 || symmetry == 2 || symmetry == 4){
+                MapLocation[] potentialEnemyLocs = comms.getPotentialEnemyArchonLocations();
+                int bestDist = Integer.MAX_VALUE;
+                for(int i = 0; i < potentialEnemyLocs.length; i++){
+                    int dist = myLoc.distanceSquaredTo(potentialEnemyLocs[i]);
+                    if(closestEnemyArchon == null || dist < bestDist){
+                        closestEnemyArchon = potentialEnemyLocs[i];
+                        bestDist = dist;
+                    }
+                }
+            }
+        }
+//        System.out.println("My location: " + rc.getLocation());
+//        System.out.println("Closest enemy archon: " + closestEnemyArchon);
+//        System.out.println("Closest friendly archon: " + closestFriendlyArchon);
+
         int numDangerousEnemies = 0;
         RobotInfo[] nearbyDangerousEnemies = new RobotInfo[nearbyEnemies.length];
         for(int i = 0; i < nearbyEnemies.length; i++){
@@ -92,7 +113,7 @@ public class Miner extends Robot {
                     }
                 }
                 else { // Find nearest mine
-                    MapLocation targetLoc = findClosestLeadMine();
+                    MapLocation targetLoc = findClosestLeadMine(closestFriendlyArchon, closestEnemyArchon);
                     if(targetLoc == null){
                         if(minerType == 1){
                             currentTarget = comms.getCurrAttackLoc();
@@ -107,7 +128,7 @@ public class Miner extends Robot {
                 }
             }
         }
-        tryMineAllDirections(); // 700 bytecode
+        tryMineAllDirections(closestFriendlyArchon, closestEnemyArchon); // 700 bytecode
         checkPossibleDeath();
     }
 
@@ -170,15 +191,12 @@ public class Miner extends Robot {
     }
 
     // Find the closest location with the most reserves (gold and lead) to mine from. If there is no location to mine from, return null
-    public MapLocation findClosestLeadMine() throws GameActionException {
+    public MapLocation findClosestLeadMine(MapLocation closestFriendlyArchon, MapLocation closestEnemyArchon) throws GameActionException {
         MapLocation bestLoc = null;
         int bestHeuristic = 100000;
         int dist; int cooldown; int heuristic;
         // Go to nearest lead mine
         MapLocation[] leadLocs = rc.senseNearbyLocationsWithLead(myType.visionRadiusSquared, 1);
-        int closestFriendlyArchonIdx = comms.getClosestFriendlyArchonIndex();
-        MapLocation closestFriendlyArchon = Util.intToMapLocation(rc.readSharedArray(closestFriendlyArchonIdx));
-        MapLocation closestEnemyArchon = comms.getClosestEnemyArchonOnComms();
         for(int i = leadLocs.length; i -- > 0; ){
             if(closestEnemyArchon == null || leadLocs[i].distanceSquaredTo(closestEnemyArchon) > leadLocs[i].distanceSquaredTo(closestFriendlyArchon)){
                 if(rc.senseLead(leadLocs[i]) < 2){
@@ -198,7 +216,7 @@ public class Miner extends Robot {
         return bestLoc;
     }
 
-    public void tryMineAllDirections() throws GameActionException {
+    public void tryMineAllDirections(MapLocation closestFriendlyArchon, MapLocation closestEnemyArchon) throws GameActionException {
         for(int i = 0; i < Util.allDirections.length; i++){
             Direction dir = Util.allDirections[i];
             MapLocation loc = myLoc.add(dir);
@@ -208,34 +226,26 @@ public class Miner extends Robot {
             }
         }
 
-        int closestFriendlyArchonIdx = comms.getClosestFriendlyArchonIndex();
-        MapLocation closestFriendlyArchon = Util.intToMapLocation(rc.readSharedArray(closestFriendlyArchonIdx));
-        MapLocation closestEnemyArchon = comms.getClosestEnemyArchonOnComms();
-        if(closestEnemyArchon == null){
-            int symmetry = rc.readSharedArray(comms.SYMMETRY_IDX);
-            if(symmetry == 1 || symmetry == 2 || symmetry == 4){
-                MapLocation[] potentialEnemyLocs = comms.getPotentialEnemyArchonLocations();
-                int bestDist = Integer.MAX_VALUE;
-                for(int i = 0; i < potentialEnemyLocs.length; i++){
-                    int dist = myLoc.distanceSquaredTo(potentialEnemyLocs[i]);
-                    if(closestEnemyArchon == null || dist < bestDist){
-                        closestEnemyArchon = potentialEnemyLocs[i];
-                        bestDist = dist;
-                    }
-                }
-            }
-        }
-        System.out.println("My location: " + rc.getLocation());
-        System.out.println("Closest enemy archon: " + closestEnemyArchon);
-        System.out.println("Closest friendly archon: " + closestFriendlyArchon);
+//        System.out.println("SYMMETRY: " + rc.readSharedArray(comms.SYMMETRY_IDX));
         for(int i = 0; i < Util.allDirections.length; i++){
             Direction dir = Util.allDirections[i];
             MapLocation loc = myLoc.add(dir);
+            if(!rc.canMineLead(loc)){
+                continue;
+            }
             int mineUntil = 1;
+//            System.out.println("CURRENTLY TESTING: " + loc.toString());
             if(closestEnemyArchon != null && loc.distanceSquaredTo(closestEnemyArchon) < loc.distanceSquaredTo(closestFriendlyArchon)){
+//                System.out.println("CLOSEST FRIENDLY: " + closestFriendlyArchon);
+//                System.out.println("CLOSEST FRIENDLY DIST: " + loc.distanceSquaredTo(closestFriendlyArchon));
+//                System.out.println("CLOSEST ENEMY: " + closestEnemyArchon);
+//                System.out.println("CLOSEST ENEMY DIST: " + loc.distanceSquaredTo(closestEnemyArchon));
                 mineUntil = 0;
             }
             while (rc.canMineLead(loc) && rc.senseLead(loc) > mineUntil) {
+                if(closestEnemyArchon != null && loc.distanceSquaredTo(closestEnemyArchon) < loc.distanceSquaredTo(closestFriendlyArchon)) {
+                    indicatorString += "FD:" + loc.distanceSquaredTo(closestFriendlyArchon) + ",ED:" + loc.distanceSquaredTo(closestEnemyArchon) + ";";
+                }
                 rc.mineLead(loc);
                 indicatorString += "L;";
             }
