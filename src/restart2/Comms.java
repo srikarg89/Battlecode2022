@@ -353,5 +353,85 @@ public class Comms {
         return potentialScoutingLocs;
     }
 
+    // Symmetry stored as an integer, starting at 7 (111 in binary).
+    // Third binary number: whether or not vertical symmetry is possible (0b001)
+    // Second binary number: whether or not horizontal symmetry is possible (0b010)
+    // First binary number: whether or not 180 degree rotational symmetry is possible (0b100)
+
+    public void runRubbleBasedSymmetry() throws GameActionException {
+        int symmetry = rc.readSharedArray(SYMMETRY_IDX);
+        if(symmetry == 0){
+            symmetry = 7;
+        }
+        if(symmetry == 1 || symmetry == 2 || symmetry == 4){
+            return;
+        }
+
+        int centerY = rc.getMapHeight() / 2;
+        int centerX = rc.getMapWidth() / 2;
+
+        int[] binVals = {1, 2, 4};
+        for(int j = 0; j < 3; j++){
+            int reflectionType = j + 1;
+            int binVal = binVals[j];
+            if((symmetry & binVal) != 0){
+                if((binVal == 1 || binVal == 4) && Math.abs(robot.myLoc.y - centerY) > 3){
+                    continue;
+                }
+                if((binVal == 2 || binVal == 4) && Math.abs(robot.myLoc.x - centerX) > 3){
+                    continue;
+                }
+                System.out.println("BEFORE RUBBLE SYMMETRY: " + Clock.getBytecodesLeft());
+                MapLocation[] nearbyLocs = rc.getAllLocationsWithinRadiusSquared(robot.myLoc, robot.myType.visionRadiusSquared);
+//                MapLocation[] reflectLocs = Util.reflect(nearbyLocs, reflectionType);
+                boolean valid = true;
+                int ydiff = robot.myLoc.y - centerY;
+                int xdiff = robot.myLoc.x - centerX;
+                int numRunningOn = 0;
+                System.out.println("Bin val: " + binVal);
+                for(int i = nearbyLocs.length; i-- > 0; ){
+//                    System.out.println("BYTECODE PER THING: " + Clock.getBytecodesLeft());
+                    switch(binVal){
+                        case 1:
+                            if(ydiff * (nearbyLocs[i].y - centerY) >= 0){
+                                continue;
+                            }
+                            break;
+                        case 2:
+                        case 4:
+                            if(xdiff * (nearbyLocs[i].x - centerX) >= 0){
+                                continue;
+                            }
+                            break;
+                    }
+                    numRunningOn++;
+                    MapLocation reflectLoc = Util.reflect(nearbyLocs[i], reflectionType);
+                    if(binVal == 4 && !rc.canSenseLocation(reflectLoc)){
+                        continue;
+                    }
+//                    System.out.println("Num running on: " + numRunningOn);
+//                    System.out.println("BC: " + Clock.getBytecodesLeft());
+//                    System.out.println("Nearby Loc: " + nearbyLocs[i].toString());
+//                    System.out.println("Reflect Loc: " + reflectLoc.toString());
+                    if(rc.senseRubble(nearbyLocs[i]) != rc.senseRubble(reflectLoc)){
+                        System.out.println("FOUND SYMMETRY ISSUE: " + nearbyLocs[i].toString() + ", " + reflectLoc.toString());
+                        valid = false;
+//                        break;
+                    }
+                }
+                System.out.println("Ran alg on: " + numRunningOn);
+                if(!valid){
+                    System.out.println("Invalid! " + binVal);
+                    symmetry &= (7 ^ binVal);
+                }
+                System.out.println("AFTER RUBBLE SYMMETRY: " + Clock.getBytecodesLeft());
+            }
+        }
+
+        writeSharedArray(SYMMETRY_IDX, symmetry);
+
+    }
+
+
 
 }

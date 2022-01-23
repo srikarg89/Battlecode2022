@@ -69,8 +69,11 @@ public class Robot {
         }
         // TODO: Only do this for scouts, cuz most likely by the time anyone else gets there the archon will have moved
         if(rc.getRoundNum() >= 2){
-            comms.determineSymmetry();
+//            comms.determineSymmetry();
         }
+        System.out.println("Run method A: " + Clock.getBytecodesLeft());
+        comms.runRubbleBasedSymmetry();
+        System.out.println("Run method B: " + Clock.getBytecodesLeft());
         comms.scanEnemyArchons();
         age++;
     }

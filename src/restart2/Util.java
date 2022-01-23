@@ -219,20 +219,35 @@ public class Util {
     public static MapLocation[] reflect(MapLocation[] locs, int reflectionType){
         MapLocation[] ret = new MapLocation[locs.length];
         for(int i = 0; i < locs.length; i++){
-            if(reflectionType == 1){
-                ret[i] = new MapLocation(locs[i].x, robot.mapHeight - locs[i].y - 1);
-            }
-            else if(reflectionType == 2){
-                ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, locs[i].y);
-            }
-            else if(reflectionType == 3){
-                ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, robot.mapHeight - locs[i].y - 1);
-            }
-            else{
-                assert(false);
+            switch(reflectionType){
+                case 1:
+                    ret[i] = new MapLocation(locs[i].x, robot.mapHeight - locs[i].y - 1);
+                    break;
+                case 2:
+                    ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, locs[i].y);
+                    break;
+                case 3:
+                    ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, robot.mapHeight - locs[i].y - 1);
+                    break;
+                default:
+                    assert(false);
             }
         }
         return ret;
+    }
+
+    // reflection type: 1 = vertical reflection, 2 = horizontal reflection, 3 = 180 degree rotation
+    public static MapLocation reflect(MapLocation loc, int reflectionType){
+        switch(reflectionType){
+            case 1:
+                return new MapLocation(loc.x, robot.mapHeight - loc.y - 1);
+            case 2:
+                return new MapLocation(robot.mapWidth - loc.x - 1, loc.y);
+            case 3:
+                return new MapLocation(robot.mapWidth - loc.x - 1, robot.mapHeight - loc.y - 1);
+        }
+        assert(false);
+        return null;
     }
 
     public static int countRobotTypes(RobotInfo[] infos, RobotType typ, Team team){
@@ -301,7 +316,7 @@ public class Util {
         return lowestLoc;
     }
 
-    public int directionToIndex(Direction dir){
+    public static int directionToIndex(Direction dir){
         switch(dir){
             case NORTH:
                 return 0;
@@ -579,29 +594,6 @@ public class Util {
         return Double.MAX_VALUE;
     }
 
-//    static double cos2(int angle){
-//        if(angle == 90 || angle == 270){
-//            return 0.0;
-//        }
-//        if(angle < 180){
-//            return (90 - angle) / 90.0;
-//        }
-//        return (angle - 270) / 90.0;
-//    }
-//
-//    static double sin2(int angle){
-//        if(angle == 0 || angle == 180){
-//            return 0.0;
-//        }
-//        if(angle < 90){
-//            return angle / 90.0;
-//        }
-//        if(angle < 270){
-//            return (180 - angle) / 90.0;
-//        }
-//        return (angle - 360) / 90.0;
-//    }
-
     static double cos2(int angle){
         switch(angle){
             case 0:
@@ -733,59 +725,6 @@ public class Util {
             return distHor;
         }
         return distVert;
-
-//        switch(angle){
-//            case 0:
-//                return loc.x;
-//            case 15:
-//                return Math.min(loc.x / 3.0, robot.mapHeight - loc.y) * robot.SQRT_4;
-//            case 30:
-//                return Math.min(loc.x / 2.0, robot.mapHeight - loc.y) * robot.SQRT_3;
-//            case 45:
-//                return Math.min(loc.x, robot.mapHeight - loc.y);
-//            case 60:
-//                return Math.min(loc.x, (robot.mapHeight - loc.y) / 2.0) * robot.SQRT_3;
-//            case 75:
-//                return Math.min(loc.x, (robot.mapHeight - loc.y) / 3.0) * robot.SQRT_4;
-//            case 90:
-//                return robot.mapHeight - loc.y;
-//            case 105:
-//                return Math.min(robot.mapWidth - loc.x, (robot.mapHeight - loc.y) / 3.0) * robot.SQRT_4;
-//            case 120:
-//                return Math.min(robot.mapWidth - loc.x, (robot.mapHeight - loc.y) / 2.0) * robot.SQRT_3;
-//            case 135:
-//                return Math.min(robot.mapWidth - loc.x, robot.mapHeight - loc.y);
-//            case 150:
-//                return Math.min((robot.mapWidth - loc.x) / 2.0, robot.mapHeight - loc.y) * robot.SQRT_3;
-//            case 165:
-//                return Math.min((robot.mapWidth - loc.x) / 3.0, robot.mapHeight - loc.y) * robot.SQRT_4;
-//            case 180:
-//                return robot.mapWidth - loc.x;
-//            case 195:
-//                return Math.min((robot.mapWidth - loc.x) / 3.0, loc.y) * robot.SQRT_4;
-//            case 210:
-//                return Math.min((robot.mapWidth - loc.x) / 2.0, loc.y) * robot.SQRT_3;
-//            case 225:
-//                return Math.min(robot.mapWidth - loc.x, loc.y);
-//            case 240:
-//                return Math.min(robot.mapWidth - loc.x, loc.y / 2.0) * robot.SQRT_3;
-//            case 255:
-//                return Math.min(robot.mapWidth - loc.x, loc.y / 3.0) * robot.SQRT_4;
-//            case 270:
-//                return loc.y;
-//            case 285:
-//                return Math.min(loc.x, loc.y / 3.0) * robot.SQRT_4;
-//            case 300:
-//                return Math.min(loc.x, loc.y / 2.0) * robot.SQRT_3;
-//            case 315:
-//                return Math.min(loc.x, loc.y);
-//            case 330:
-//                return Math.min(loc.x / 2.0, loc.y) * robot.SQRT_3;
-//            case 345:
-//                return Math.min(loc.x / 3.0, loc.y) * robot.SQRT_4;
-//        }
-//
-//        throw new GameActionException(GameActionExceptionType.INTERNAL_ERROR, "Trying to find dist to unrecognized angle");
     }
 
     public static double mathRandom(){
