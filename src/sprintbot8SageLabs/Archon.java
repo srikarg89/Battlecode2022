@@ -87,7 +87,7 @@ public class Archon extends Robot {
             spawnLowRubble(RobotType.SAGE);
         }
 
-        else if(lead > 1500 && builderCount*30 < rc.getRoundNum() && builderCount < 4) {
+        else if(lead > 40 && builderCount*30 < rc.getRoundNum() && builderCount < 2) {
 //        if(false){
 //            spawnTroop(RobotType.BUILDER);
 //            spawnUniformly(RobotType.BUILDER, builderCount);
