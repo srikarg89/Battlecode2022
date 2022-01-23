@@ -25,20 +25,22 @@ public class Builder extends Robot {
 
     public void run() throws GameActionException {
         super.run();
-
         if (archonIndex == -1) {
             archonIndex = comms.getClosestFriendlyArchonIndex();
             archonLoc = Util.intToMapLocation(rc.readSharedArray(archonIndex));
         }
-        assert (archonLoc != null);
+//        assert (archonLoc != null);
 
-
-
-
-        if(buildType == null){
+        if (buildType == null){
             buildType = whatBotShouldIBuild();
+            System.out.println(buildType);
+            System.out.println(Clock.getBytecodesLeft());
             targetBuildSpot = findNearbyBuildSpot(buildType);
+            System.out.println(targetBuildSpot);
+            System.out.println(Clock.getBytecodesLeft());
+
         }
+
 
         RobotType newBuildType = whatBotShouldIBuild(); // see if the bot we need to build has changed
         // probably better to do this from Comms, where Archon will give miner initial instruction
@@ -48,19 +50,16 @@ public class Builder extends Robot {
         }
 
 
-//        System.out.println(rc.getTeamLeadAmount(rc.getTeam()));
-//        System.out.println(buildType);
-//        System.out.println(buildType.buildCostLead);
-
-        enoughLeadForBuild = rc.getTeamLeadAmount(rc.getTeam()) > buildType.buildCostLead * 2;
-
-        // repairing / building
-        if (rc.isActionReady()) {
+        enoughLeadForBuild = rc.getTeamLeadAmount(rc.getTeam()) > buildType.buildCostLead;
+        if (rc.isActionReady()){
             boolean repaired = repair();
+            System.out.println(repaired);
             if(!repaired && targetBuildSpot != null && myLoc.distanceSquaredTo(targetBuildSpot) <= RobotType.BUILDER.actionRadiusSquared){      //time to build
                 Direction dir = myLoc.directionTo(targetBuildSpot);
                 Direction[] buildDirections = {dir};
                 Direction build_dir = Util.tryBuild(buildType, buildDirections);
+//                System.out.println("")
+                System.out.println("hello");
                 if(build_dir.equals(dir)){       // we've built the watchtower
                     comms.addRobotCount(buildType, 1);
                     targetBuildSpot = null;     // find a new target buildSpot on the next turn
@@ -70,7 +69,7 @@ public class Builder extends Robot {
 
 
         if (rc.isMovementReady()){
-            if (myLoc.distanceSquaredTo(archonLoc) <= 2) {            // move out of the way of the spawning archon
+            if (myLoc.distanceSquaredTo(archonLoc) <= 2){            // move out of the way of the spawning archon
                 Logger.Log("Too close to archon, so moving away");
                 Direction away = myLoc.directionTo(archonLoc).opposite();
                 nav.goTo(myLoc.add(away).add(away).add(away));
@@ -151,7 +150,8 @@ public class Builder extends Robot {
 
         // where should I build a laboratory
         else if(botType == RobotType.LABORATORY){
-            for(int i=Util.directions.length; i-->0; i++){
+            System.out.println("deciding building spot");
+            for(int i=Util.directions.length; i-->0; ){
                 MapLocation potLoc = archonLoc.add(Util.directions[i]);
                 if(rc.canSenseLocation(potLoc)&& !rc.isLocationOccupied(potLoc)){
                     return potLoc;
@@ -172,7 +172,8 @@ public class Builder extends Robot {
         for(int i = 0; i < nearbyFriendlies.length; i++){
             RobotInfo info = nearbyFriendlies[i];
 
-            if(currLoc.distanceSquaredTo(info.location) > myType.actionRadiusSquared){
+            if(currLoc.distanceSquaredTo(info.location) > myType.actionRadiusSquared
+            || !(info.type == RobotType.BUILDER || info.type == RobotType.ARCHON || info.type == RobotType.WATCHTOWER)){
                 continue;
             }
             int currBotTypeIndex = Util.getArrayIndex(repairPriorityOrder, info.type);
