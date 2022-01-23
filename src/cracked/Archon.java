@@ -1,4 +1,4 @@
-package restart2;
+package cracked;
 
 import battlecode.common.*;
 
@@ -90,27 +90,21 @@ public class Archon extends Robot {
 
         if(lead > 1500 && builderCount*30 < rc.getRoundNum() && builderCount < 4) {
 //        if(false){
-//            spawnTroop(RobotType.BUILDER);
             spawnUniformly(RobotType.BUILDER, builderCount);
         }
         else if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost * numFriendlyArchons || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
-//            spawnTroop(RobotType.SOLDIER);
             spawnUniformly(RobotType.SOLDIER, builderCount);
         }
         else if(rc.getRoundNum() < 30){
-//            spawnTroop(RobotType.MINER);
             spawnUniformly(RobotType.MINER, builderCount);
         }
         else if (soldierCount < minerCount * 1.5){
-//            spawnTroop(RobotType.SOLDIER);
             spawnUniformly(RobotType.SOLDIER, builderCount);
         }
         else if(minerCount < soldierCount){
-//            spawnTroop(RobotType.MINER);
             spawnUniformly(RobotType.MINER, builderCount);
         }
         else{
-//            spawnTroop(RobotType.SOLDIER);
             spawnUniformly(RobotType.SOLDIER, builderCount);
         }
     }
@@ -140,90 +134,6 @@ public class Archon extends Robot {
             return true;
         }
         return false;
-    }
-
-    public void spawnTroop(RobotType spawnType) throws GameActionException {
-        MapLocation map_center = new MapLocation(mapWidth / 2, mapHeight / 2);
-        if(myLoc.equals(map_center)){ // Check just in case, shouldn't ever really occur
-            map_center = myLoc.add(Direction.NORTHEAST);
-        }
-
-        Direction spawnDir = null;
-        if(spawnType == RobotType.SOLDIER){
-            MapLocation attackLoc = comms.getCurrAttackLoc();
-            if(attackLoc != null){
-                spawnDir = myLoc.directionTo(attackLoc);
-            }
-            if(spawnDir == null){
-                MapLocation enemyArchonLoc = comms.getClosestEnemyArchonOnComms();
-                if(enemyArchonLoc != null){
-                    spawnDir = myLoc.directionTo(enemyArchonLoc);
-                }
-            }
-        }
-        else if(spawnType == RobotType.MINER){
-            MapLocation closestMine = null;
-            int closestDist = Integer.MAX_VALUE;
-            // Find closest gold mine
-            MapLocation[] goldMines = rc.senseNearbyLocationsWithGold();
-            for(int i = 0; i < goldMines.length; i++){
-                int dist = myLoc.distanceSquaredTo(goldMines[i]);
-                if(dist < closestDist){
-                    closestMine = goldMines[i];
-                    closestDist = dist;
-                }
-            }
-            if(closestMine != null){
-                spawnDir = myLoc.directionTo(closestMine);
-            }
-            if(closestMine == null){
-                // Find closest lead mine
-                MapLocation[] leadMines = rc.senseNearbyLocationsWithLead(myType.visionRadiusSquared, 2);
-                for(int i = 0; i < leadMines.length; i++){
-                    int dist = myLoc.distanceSquaredTo(leadMines[i]);
-                    if(dist < closestDist){
-                        closestMine = leadMines[i];
-                        closestDist = dist;
-                    }
-                }
-                if(closestMine != null){
-                    myLoc.directionTo(closestMine);
-                }
-            }
-        }
-        if(spawnDir == null || spawnDir == Direction.CENTER){
-            spawnDir = myLoc.directionTo(map_center);
-        }
-
-        // Determine order to spawn in (depends on cooldown)
-
-        Direction[] checkOrder = Util.closeDirections(spawnDir);
-        int minCooldown = Integer.MAX_VALUE;
-        int[] cooldowns = new int[checkOrder.length];
-        for(int i = 0; i < checkOrder.length; i++){
-            MapLocation checkLoc = myLoc.add(checkOrder[i]);
-            if(!rc.canSenseLocation(checkLoc)){
-                cooldowns[i] = Integer.MAX_VALUE;
-                continue;
-            }
-            if(!rc.canBuildRobot(spawnType, checkOrder[i])){
-                cooldowns[i] = Integer.MAX_VALUE;
-                continue;
-            }
-            cooldowns[i] = rc.senseRubble(checkLoc);
-            minCooldown = Math.min(minCooldown, cooldowns[i]);
-        }
-        if(minCooldown == Integer.MAX_VALUE){ // No available places to spawn troop
-            return;
-        }
-        for(int i = 0; i < checkOrder.length; i++){
-            if(cooldowns[i] == minCooldown){
-                spawnRobot(spawnType, checkOrder[i]);
-                return;
-            }
-        }
-
-        // TODO: Instead of going in order, check where the current miners are and try to spawn in the direction opposite of the most miners
     }
 
     public void spawnRobot(RobotType spawnType, Direction dir) throws GameActionException {
@@ -282,10 +192,19 @@ public class Archon extends Robot {
                 continue;
             }
             int repairPriority = 0;
+            if(nearby[i].getType() == RobotType.WATCHTOWER){ // Prioritize repairing watchtowers
+                repairPriority += 10000;
+            }
             if(nearby[i].getType() == RobotType.SOLDIER){ // Prioritize healing soldiers
                 repairPriority += 100;
             }
-            repairPriority -= nearby[i].getHealth(); // Prioritize healing lower health ppl
+//            repairPriority -= nearby[i].getHealth(); // Prioritize healing lower health ppl
+            int maxHealth = nearby[i].getType().getMaxHealth(nearby[i].getLevel());
+            int healthToFull = maxHealth - nearby[i].getHealth();
+            if(healthToFull == 0){
+                continue;
+            }
+            repairPriority -= healthToFull; // Prioritize healing lower health ppl
             if(repairPriority > bestRepairPriority){
                 bestRepairPriority = repairPriority;
                 toRepair = nearby[i].getLocation();
@@ -294,8 +213,11 @@ public class Archon extends Robot {
         if(toRepair == null){
             return;
         }
-        rc.repair(toRepair);
-        indicatorString += "Repairing: " + toRepair.toString() + "; ";
+        if(rc.canRepair(toRepair)){
+            rc.repair(toRepair);
+            Logger.Log("Repairing: " + toRepair.toString());
+            indicatorString += "Repairing: " + toRepair.toString() + "; ";
+        }
     }
 
     public MapLocation[] getAllScoutingLocs(){

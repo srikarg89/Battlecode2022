@@ -1,4 +1,4 @@
-package restart2;
+package cracked2;
 
 import battlecode.common.Clock;
 import battlecode.common.GameActionException;
@@ -24,7 +24,7 @@ public strictfp class RobotPlayer {
         }
 
         while (true) {
-//            if(rc.getRoundNum() > 1000){
+//            if(rc.getRoundNum() > 150){
 //                System.out.println("Resigning XD");
 //                rc.resign();
 //            }

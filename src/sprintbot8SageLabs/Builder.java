@@ -12,11 +12,8 @@ public class Builder extends Robot {
     RobotType buildType = null;
     boolean enoughLeadForBuild = false;
 
-
     RobotType[] repairPriorityOrder = {RobotType.ARCHON, RobotType.LABORATORY, RobotType.WATCHTOWER};
     final int MAX_LABORATORIES = 1;
-
-
 
     public Builder(RobotController rc) throws GameActionException {
         super(rc);
@@ -29,7 +26,6 @@ public class Builder extends Robot {
             archonIndex = comms.getClosestFriendlyArchonIndex();
             archonLoc = Util.intToMapLocation(rc.readSharedArray(archonIndex));
         }
-//        assert (archonLoc != null);
 
         if (buildType == null){
             buildType = whatBotShouldIBuild();
@@ -38,9 +34,7 @@ public class Builder extends Robot {
             targetBuildSpot = findNearbyBuildSpot(buildType);
             System.out.println(targetBuildSpot);
             System.out.println(Clock.getBytecodesLeft());
-
         }
-
 
         RobotType newBuildType = whatBotShouldIBuild(); // see if the bot we need to build has changed
         // probably better to do this from Comms, where Archon will give miner initial instruction

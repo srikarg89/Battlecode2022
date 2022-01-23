@@ -1,4 +1,4 @@
-package restart2;
+package cracked;
 
 import battlecode.common.*;
 
@@ -19,6 +19,7 @@ public class Comms {
     final int BIGGEST_THREAT_LEVEL_IDX_END = 17;
     final int BIGGEST_THREAT_LOC_IDX_END = 18;
     final int MINER_INSTRUCTION_START_IDX = 19; // 19-23
+    final int ARCHON_HEALING_START_IDX = 23;
 
 //    final int BIGGEST_THREAT_LEVEL_IDX_END = 25;
 //    final int BIGGEST_THREAT_LOC_IDX_END = 26;
@@ -339,6 +340,23 @@ public class Comms {
         int minerInstruction = rc.readSharedArray(MINER_INSTRUCTION_START_IDX + archonCommsIdx);
         int minerType = minerInstruction % 10;
         return minerType;
+    }
+
+    public int findBestArchonForHealing() throws GameActionException { // TODO Need to keep track of which friendly archons have died
+        double bestHeuristic = Integer.MAX_VALUE;
+        int bestIdx = -1;
+        for(int i = 0; i < robot.numFriendlyArchons; i++){
+            double numBusy = rc.readSharedArray(ARCHON_HEALING_START_IDX + i);
+            MapLocation archonLoc = Util.intToMapLocation(rc.readSharedArray(i));
+            double distance = Math.sqrt(robot.myLoc.distanceSquaredTo(archonLoc));
+            // Heal rate is 2 and soldier health is 50, so if ur wasting 25 turns (10 turns there, 10 turns back) per numBusy don't go for it
+            double heuristic = numBusy + distance * 2;
+            if(heuristic < bestHeuristic){
+                bestHeuristic = heuristic;
+                bestIdx = i;
+            }
+        }
+        return bestIdx;
     }
 
     // Returns potential enemy archon locations based on symmetry

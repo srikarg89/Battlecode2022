@@ -1,10 +1,11 @@
-package restart2;
+package cracked2;
 
 import battlecode.common.*;
 
 public class Comms {
 
     // Constants
+    final int THREAT_THRESHOLD = 10;
     final int MAX_COMMS_VAL = 65535;
     final int ARCHON_DEATH_OFFSET = 10000;
     final int SYMMETRY_IDX = 12;
@@ -12,13 +13,15 @@ public class Comms {
     final int SOLDIER_COUNT_IDX = 14;
     final int SAGE_COUNT_IDX = 15;
     final int BUILDER_COUNT_IDX = 16;
-    final int THREAT_THRESHOLD = 10;
-    final int BIGGEST_THREAT_LEVEL_IDX_START = 17;
-    final int BIGGEST_THREAT_LOC_IDX_START = 18;
+    final int LABORATORY_COUNT_IDX = 17;
+    final int BIGGEST_THREAT_LEVEL_IDX_START = 18;
+    final int BIGGEST_THREAT_LOC_IDX_START = 19;
 
-    final int BIGGEST_THREAT_LEVEL_IDX_END = 17;
-    final int BIGGEST_THREAT_LOC_IDX_END = 18;
-    final int MINER_INSTRUCTION_START_IDX = 19; // 19-23
+    final int BIGGEST_THREAT_LEVEL_IDX_END = 18;
+    final int BIGGEST_THREAT_LOC_IDX_END = 19;
+    final int MINER_INSTRUCTION_START_IDX = 20; // 20-23
+    final int ARCHON_HEALING_START_IDX = 24; // 24-27
+    final int LEAD_SAVE_UP_IDX = 28;
 
 //    final int BIGGEST_THREAT_LEVEL_IDX_END = 25;
 //    final int BIGGEST_THREAT_LOC_IDX_END = 26;
@@ -194,6 +197,8 @@ public class Comms {
                 return SAGE_COUNT_IDX;
             case BUILDER:
                 return BUILDER_COUNT_IDX;
+            case LABORATORY:
+                return LABORATORY_COUNT_IDX;
         }
         return -1;
     }
@@ -341,6 +346,23 @@ public class Comms {
         return minerType;
     }
 
+    public int findBestArchonForHealing() throws GameActionException { // TODO Need to keep track of which friendly archons have died
+        double bestHeuristic = Integer.MAX_VALUE;
+        int bestIdx = -1;
+        for(int i = 0; i < robot.numFriendlyArchons; i++){
+            double numBusy = rc.readSharedArray(ARCHON_HEALING_START_IDX + i);
+            MapLocation archonLoc = Util.intToMapLocation(rc.readSharedArray(i));
+            double distance = Math.sqrt(robot.myLoc.distanceSquaredTo(archonLoc));
+            // Heal rate is 2 and soldier health is 50, so if ur wasting 25 turns (10 turns there, 10 turns back) per numBusy don't go for it
+            double heuristic = numBusy + distance * 2;
+            if(heuristic < bestHeuristic){
+                bestHeuristic = heuristic;
+                bestIdx = i;
+            }
+        }
+        return bestIdx;
+    }
+
     // Returns potential enemy archon locations based on symmetry
     public MapLocation[] getPotentialEnemyArchonLocations() throws GameActionException {
         Logger.Log("--------------------------------------");
@@ -407,16 +429,13 @@ public class Comms {
                 if((binVal == 2 || binVal == 4) && Math.abs(robot.myLoc.x - centerX) > 3){
                     continue;
                 }
-//                System.out.println("BEFORE RUBBLE SYMMETRY: " + Clock.getBytecodesLeft());
                 MapLocation[] nearbyLocs = rc.getAllLocationsWithinRadiusSquared(robot.myLoc, robot.myType.visionRadiusSquared);
-//                MapLocation[] reflectLocs = Util.reflect(nearbyLocs, reflectionType);
                 boolean valid = true;
                 int ydiff = robot.myLoc.y - centerY;
                 int xdiff = robot.myLoc.x - centerX;
                 int numRunningOn = 0;
                 System.out.println("Bin val: " + binVal);
                 for(int i = nearbyLocs.length; i-- > 0; ){
-//                    System.out.println("BYTECODE PER THING: " + Clock.getBytecodesLeft());
                     switch(binVal){
                         case 1:
                             if(ydiff * (nearbyLocs[i].y - centerY) >= 0){
@@ -435,31 +454,30 @@ public class Comms {
                     if(binVal == 4 && !rc.canSenseLocation(reflectLoc)){
                         continue;
                     }
-//                    System.out.println("Num running on: " + numRunningOn);
-//                    System.out.println("BC: " + Clock.getBytecodesLeft());
-//                    System.out.println("Nearby Loc: " + nearbyLocs[i].toString());
-//                    System.out.println("Reflect Loc: " + reflectLoc.toString());
                     if(rc.senseRubble(nearbyLocs[i]) != rc.senseRubble(reflectLoc)){
-//                        System.out.println("FOUND SYMMETRY ISSUE: " + nearbyLocs[i].toString() + ", " + reflectLoc.toString());
                         valid = false;
-//                        break;
                     }
                 }
                 checkedSymmetry = true;
-//                System.out.println("Ran alg on: " + numRunningOn);
                 if(!valid){
                     System.out.println("Invalid! " + binVal);
                     symmetry &= (7 ^ binVal);
                 }
-//                System.out.println("AFTER RUBBLE SYMMETRY: " + Clock.getBytecodesLeft());
             }
             if(checkedSymmetry){
                 break;
             }
         }
-
         writeSharedArray(SYMMETRY_IDX, symmetry);
+    }
 
+    public boolean saveUpLead(int leadAmount) throws GameActionException {
+        int currSaveUp = rc.readSharedArray(LEAD_SAVE_UP_IDX);
+        if(currSaveUp != 0){
+            return false;
+        }
+        writeSharedArray(LEAD_SAVE_UP_IDX, leadAmount);
+        return true;
     }
 
 
