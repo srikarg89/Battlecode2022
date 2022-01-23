@@ -157,7 +157,6 @@ public class Miner extends Robot {
         if(!rc.canSenseLocation(center)){
             return -10000;
         }
-//        RobotInfo[] enemyList = rc.senseNearbyRobots(center, myType.visionRadiusSquared, opponent);
 
         double numEnemies = 0.0;
         for(int i = nearbyEnemies.length; i-- > 0; ){
@@ -198,7 +197,7 @@ public class Miner extends Robot {
         // Go to nearest lead mine
         MapLocation[] leadLocs = rc.senseNearbyLocationsWithLead(myType.visionRadiusSquared, 1);
         for(int i = leadLocs.length; i -- > 0; ){
-            if(closestEnemyArchon == null || leadLocs[i].distanceSquaredTo(closestEnemyArchon) > leadLocs[i].distanceSquaredTo(closestFriendlyArchon)){
+            if(closestEnemyArchon == null || leadLocs[i].distanceSquaredTo(closestEnemyArchon) >= leadLocs[i].distanceSquaredTo(closestFriendlyArchon)){
                 if(rc.senseLead(leadLocs[i]) < 2){
                     continue;
                 }
