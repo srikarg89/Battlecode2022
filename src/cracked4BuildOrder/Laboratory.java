@@ -24,7 +24,7 @@ public class Laboratory extends Robot {
         minerCount = comms.getRobotCount(RobotType.MINER);
         int initialMinerCount = 3; // scale this according to map size
         double scalingFactor = Math.sqrt(rc.getMapHeight() * rc.getMapWidth());
-        initialMinerCount *= scalingFactor/15;
+        initialMinerCount *= scalingFactor/25;
         if(rc.canTransmute() && minerCount>=initialMinerCount){
             rc.transmute();
             rc.setIndicatorString("Transmuting");
