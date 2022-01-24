@@ -268,7 +268,9 @@ public class Builder extends Robot {
     }
 
     public RobotType whatBotShouldIBuild() throws GameActionException{
-        if(comms.getRobotCount(RobotType.LABORATORY) == 0){
+        int labCount = comms.getRobotCount(RobotType.LABORATORY);
+        int soldierCount = comms.getRobotCount(RobotType.SOLDIER);
+        if(labCount * 15 < soldierCount){
             return RobotType.LABORATORY;
         }
         if(buildType == RobotType.LABORATORY){
