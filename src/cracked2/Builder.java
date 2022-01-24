@@ -28,8 +28,10 @@ public class Builder extends Robot {
         if(buildType == null){
             targetBuildSpot = null;
         }
-        else{
+        // Find the best build spot. Find a new one if that spot is now occupied.
+        else if(targetBuildSpot == null || (rc.canSenseLocation(targetBuildSpot) && rc.isLocationOccupied(targetBuildSpot))){
             targetBuildSpot = findNearbyBuildSpot(buildType);
+            System.out.println("TARGET BUILD SPOT: " + targetBuildSpot);
         }
 
         if(rc.isMovementReady()){
@@ -43,63 +45,51 @@ public class Builder extends Robot {
     }
 
     public void runAction() throws GameActionException {
-        if(buildType != null && savingUp == 0){
-            int buildCost = buildType.buildCostLead;
-            if(comms.saveUpLead(buildCost)){
-                savingUp = buildCost;
+        if(buildType != null && targetBuildSpot != null && myLoc.distanceSquaredTo(targetBuildSpot) <= 2){
+            if(savingUp == 0){
+                int buildCost = buildType.buildCostLead;
+                if(comms.saveUpLead(buildCost)){
+                    savingUp = buildCost;
+                }
             }
-        }
-
-        boolean repaired = repair();
-        if(!repaired && targetBuildSpot != null && myLoc.distanceSquaredTo(targetBuildSpot) <= RobotType.BUILDER.actionRadiusSquared){
-            Direction dir = myLoc.directionTo(targetBuildSpot);
-            if(Util.tryBuild(buildType, dir)){
-                comms.addRobotCount(buildType, 1);
-                targetBuildSpot = null;
-            }
-        }
-    }
-
-    public void runMovement() throws GameActionException {
-        if (myLoc.distanceSquaredTo(archonLoc) <= 8){            // move out of the way of the spawning archon
-            Direction away = myLoc.directionTo(archonLoc).opposite();
-            nav.goTo(myLoc.add(away).add(away).add(away).add(away).add(away).add(away));
-        }
-        else if (targetBuildSpot != null && myLoc.distanceSquaredTo(targetBuildSpot) > RobotType.BUILDER.actionRadiusSquared && enoughLeadForBuild) {        //if we are currently travelling to targetBuildSpot
-            nav.goTo(targetBuildSpot);
-        }
-        else if (targetBuildSpot == null) {       // we can't build a watchtower, so we will either try to repair a nearby building or circle our home archon
-            MapLocation potentialRepairSpot = getNearbyRepairSpot();
-            if(potentialRepairSpot == null){
-                nav.circle(archonLoc, 10, true);
-            }
-            else{
-                nav.goTo(potentialRepairSpot);
-            }
-        }
-
-    }
-
-    public void repairNearby() throws GameActionException {
-        // Search for nearby robot to repair
-        int closestDist = 10000;
-        MapLocation closest = null;
-        for(int i = 0; i < nearby.length; i++){
-            RobotInfo info = nearby[i];
-            if(info.type == RobotType.ARCHON || info.type == RobotType.WATCHTOWER || info.type == RobotType.LABORATORY){
-                int health = info.getHealth();
-                int maxHealth = info.type.getMaxHealth(info.getLevel());
-                int dist = myLoc.distanceSquaredTo(info.getLocation());
-                if(health <= maxHealth && dist < closestDist){
-                    closestDist = dist;
-                    closest = info.getLocation();
+            int teamLead = rc.getTeamLeadAmount(myTeam);
+            int leadAvailableToUse = teamLead + comms.getLeadSaveUp() - savingUp;
+            if(leadAvailableToUse >= buildType.buildCostLead){
+                if(Util.tryBuild(buildType, myLoc.directionTo(targetBuildSpot))){
+                    if(savingUp != 0){
+                        comms.removeLeadSaveUp();
+                        savingUp = 0;
+                    }
+                    comms.addRobotCount(buildType, 1);
+                    buildType = null;
+                    targetBuildSpot = null;
                 }
             }
         }
-        if(closest == null){
-            return;
+
+        repair();
+    }
+
+    public void runMovement() throws GameActionException {
+        if(targetBuildSpot != null){
+            if(myLoc.distanceSquaredTo(targetBuildSpot) > 2){
+                nav.goTo(targetBuildSpot);
+            }
         }
-        nav.goTo(closest);
+        else{
+            MapLocation potentialRepairSpot = getNearbyRepairSpot();
+            if(potentialRepairSpot != null){
+                if(myLoc.distanceSquaredTo(potentialRepairSpot) < myType.actionRadiusSquared){
+                    nav.goTo(potentialRepairSpot);
+                }
+                else{
+                    nav.circle(potentialRepairSpot, 3, false);
+                }
+            }
+            else{
+                nav.circle(archonLoc, myType.visionRadiusSquared - 5, false);
+            }
+        }
     }
 
     public MapLocation getNearbyRepairSpot() throws GameActionException {
@@ -108,22 +98,26 @@ public class Builder extends Robot {
         MapLocation closest = null;
         for(int i = 0; i < nearby.length; i++){
             RobotInfo info = nearby[i];
-            if(info.type == RobotType.ARCHON || info.type == RobotType.WATCHTOWER || info.type == RobotType.LABORATORY){
-                int health = info.getHealth();
-                int maxHealth = info.type.getMaxHealth(info.getLevel());
-                int dist = myLoc.distanceSquaredTo(info.getLocation());
-                if(health <= maxHealth && dist < closestDist){
-                    closestDist = dist;
-                    closest = info.getLocation();
-                }
+            int repairPriority = getRepairPriority(info.type);
+            if(repairPriority == -1){
+                continue;
             }
+            int health = info.getHealth();
+            int maxHealth = info.type.getMaxHealth(info.getLevel());
+            if(health == maxHealth) {
+                continue;
+            }
+            int dist = myLoc.distanceSquaredTo(info.getLocation());
+            if(dist > closestDist) {
+                continue;
+            }
+            closest = info.getLocation();
         }
         return closest;
     }
 
     // Build in grid location
     public MapLocation findNearbyBuildSpot(RobotType botType) throws GameActionException {
-        // where should I build a watchtower?
         if(botType == RobotType.WATCHTOWER) {
             int closestDist = 10000;
             MapLocation closestLoc = null;
@@ -158,72 +152,95 @@ public class Builder extends Robot {
             }
             return closestLoc;
         }
-
-        // where should I build a laboratory
         else if(botType == RobotType.LABORATORY){
-            System.out.println("deciding building spot");
-            for(int i = Util.directions.length; i-->0; ){
-                MapLocation potLoc = archonLoc.add(Util.directions[i]);
-                if(rc.canSenseLocation(potLoc)&& !rc.isLocationOccupied(potLoc)){
-                    return potLoc;
+            MapLocation[] potentialPlotLocations = rc.getAllLocationsWithinRadiusSquared(myLoc, myType.visionRadiusSquared);
+            MapLocation bestLoc = null;
+            int bestDist = Integer.MAX_VALUE;
+            int bestCooldown = Integer.MAX_VALUE;
+            for(int i = 0; i < potentialPlotLocations.length; i++){
+                MapLocation loc = potentialPlotLocations[i];
+                if(!rc.canSenseLocation(loc)){
+                    continue;
+                }
+                if(rc.isLocationOccupied(loc)){
+                    continue;
+                }
+                int cooldown = rc.senseRubble(loc);
+                int dist = myLoc.distanceSquaredTo(loc);
+                if(cooldown < bestCooldown){
+                    bestLoc = loc;
+                    bestCooldown = cooldown;
+                    bestDist = dist;
+                }
+                else if(cooldown == bestCooldown && dist < bestDist){
+                    bestLoc = loc;
+                    bestCooldown = cooldown;
+                    bestDist = dist;
                 }
             }
-            return archonLoc.add(Direction.EAST);
+            return bestLoc;
         }
         return null;
     }
 
+    public int getRepairPriority(RobotType type) throws GameActionException {
+        switch(type){
+            case ARCHON:
+                return 0;
+            case LABORATORY:
+                return 1;
+            case WATCHTOWER:
+                return 2;
+        }
+        return -1;
+    }
+
     public boolean repair() throws GameActionException {
         // Try repairing nearby watchtowers
-        boolean repaired = false;
         RobotInfo[] potentialTowers = rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam);
-        MapLocation bestToRepair = null;
-        int bestHealth = -1;
-        boolean repairingPrototype = false;
+        RobotInfo bestInfo = null;
         for (int i = 0; i < potentialTowers.length; i++) {
             RobotInfo info = potentialTowers[i];
-            if (info.type != RobotType.WATCHTOWER) {
-                continue;
-            }
             if(!rc.canRepair(info.location)){
                 continue;
             }
-            int max_health = RobotType.WATCHTOWER.getMaxHealth(info.getLevel());
-            if (info.getHealth() >= max_health) {
-                continue; // No need to repair this boi
-            }
-            if(repairingPrototype && info.mode != RobotMode.PROTOTYPE){
+            if(info.getHealth() == info.getType().getMaxHealth(info.getLevel())){
                 continue;
             }
-            if(!repairingPrototype){
-                if(info.mode == RobotMode.PROTOTYPE){ // Prefer rebuilding prototype watchtowers
-                    repairingPrototype = true;
-                    bestToRepair = info.location;
-                    bestHealth = info.getHealth();
-                }
-                else{
-                    int currHealth = info.getHealth();
-                    if(currHealth < bestHealth){ // Prioritize repairing non-prototype watchtowers with lower health
-                        bestHealth = currHealth;
-                        bestToRepair = info.location;
-                    }
-                }
-            }
-            else{
-                int currHealth = info.getHealth();
-                if(currHealth > bestHealth){ // Prioritize repairing prototype watchtowers with higher health (so that they can start attacking ASAP)
-                    bestHealth = currHealth;
-                    bestToRepair = info.location;
-                }
+            if(bestInfo == null || isHigherRepairPriority(info, bestInfo)){
+                bestInfo = info;
             }
         }
-        if(bestToRepair == null){
+        if(bestInfo == null){
             return false;
         }
-        rc.repair(bestToRepair);
-        indicatorString += "Repairing: " + bestToRepair.toString();
+        rc.repair(bestInfo.location);
+        indicatorString += "Repairing: " + bestInfo.location.toString();
 
-        return repaired;
+        return true;
+    }
+
+    // Returns true if repairing robot a is higher in priority than repairing robot b
+    public boolean isHigherRepairPriority(RobotInfo a, RobotInfo b) throws GameActionException {
+        int repairPriorityA = getRepairPriority(a.type);
+        int repairPriorityB = getRepairPriority(b.type);
+        if(repairPriorityA < repairPriorityB){
+            return true;
+        }
+        if(repairPriorityA > repairPriorityB){
+            return false;
+        }
+
+        if(a.mode == RobotMode.PROTOTYPE && b.mode != RobotMode.PROTOTYPE){
+            return true;
+        }
+        if(a.mode != RobotMode.PROTOTYPE && b.mode == RobotMode.PROTOTYPE){
+            return false;
+        }
+
+        int healthDiffA = a.type.getMaxHealth(a.getLevel()) - a.getHealth();
+        int healthDiffB = b.type.getMaxHealth(b.getLevel()) - b.getHealth();
+        return healthDiffA > healthDiffB;
     }
 
     public RobotType whatBotShouldIBuild() throws GameActionException{

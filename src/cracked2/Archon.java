@@ -30,6 +30,7 @@ public class Archon extends Robot {
     int prevLead = 10000;
     MapLocation[] scoutingLocs;
     boolean spawnedMinerLastTurn = false;
+    int savingUp = 0;
 
     public Archon(RobotController rc) throws GameActionException {
         super(rc);
@@ -89,10 +90,10 @@ public class Archon extends Robot {
 
         int leadDiff = lead - prevLead;
 
-        if(gold >= RobotType.SAGE.buildCostLead){
+        if(gold >= RobotType.SAGE.buildCostGold){
             spawnUniformly(RobotType.SAGE, sageCount);
         }
-        else if(lead > 40 && builderCount * 50 < rc.getRoundNum() && builderCount < 2) {
+        else if(builderCount * 50 + 50 < rc.getRoundNum() && builderCount < 1) {
             spawnUniformly(RobotType.BUILDER, builderCount);
         }
         else if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost * numFriendlyArchons || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
@@ -140,8 +141,14 @@ public class Archon extends Robot {
     }
 
     public void spawnUniformly(RobotType spawnType, int offset) throws GameActionException {
+//        System.out.println("Trying to spawn: " + spawnType.toString());
+        int leadUsable = rc.getTeamLeadAmount(myTeam) - comms.getLeadSaveUp() + savingUp;
         Direction[] defaultSpawnDirs = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NORTHEAST, Direction.SOUTHWEST, Direction.NORTHWEST, Direction.SOUTHEAST};
         Direction[] spawnDirs = Util.closeDirections(defaultSpawnDirs[offset % 8]);
+        if(leadUsable < spawnType.buildCostLead){
+//            System.out.println("Someone's saving up so im not gonna spawn this turn");
+            return;
+        }
         if(Util.tryBuild(spawnType, spawnDirs) != Direction.CENTER){
             comms.addRobotCount(spawnType, 1);
             if(spawnType == RobotType.MINER){

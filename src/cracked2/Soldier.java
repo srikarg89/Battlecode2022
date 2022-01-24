@@ -7,11 +7,14 @@ class SoldierHeuristic {
     double friendlyDamage;
     double enemyHP;
     double enemyDamage;
-    public SoldierHeuristic(double FH, double FD, double EH, double ED){
+    double totalEnemyDamage;
+
+    public SoldierHeuristic(double FH, double FD, double EH, double ED, double TED){
         friendlyHP = FH;
         friendlyDamage = FD;
         enemyHP = EH;
         enemyDamage = ED;
+        totalEnemyDamage = TED;
     }
 
     public boolean getSafe(Robot robot){
@@ -102,6 +105,15 @@ public class Soldier extends Robot {
             int prevHealingLeft = healingLeft;
             healingLeft = maxHealth - rc.getHealth();
             comms.writeSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx, currVal - prevHealingLeft + healingLeft);
+        }
+
+        if(!needHealing && heuristic != null && (rc.getHealth() <= heuristic.totalEnemyDamage || rc.getHealth() <= heuristic.enemyDamage * 2.0 / 100.0)){
+            needHealing = true;
+            bestArchonForHealingIdx = comms.findBestArchonForHealing();
+            int currVal = rc.readSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx);
+            int maxHealth = myType.getMaxHealth(rc.getLevel());
+            healingLeft = maxHealth - rc.getHealth();
+            comms.writeSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx, currVal + healingLeft);
         }
 
         if(needHealing){
@@ -444,6 +456,7 @@ public class Soldier extends Robot {
         double enemyDamage = 0.0;
         double friendlyHP = 0.0;
         double enemyHP = 0.0;
+        double totalEnemyDamage = 0.0;
 
         // Calculate enemies attacking you
         for(int i = 0; i < dangeorusEnemies.length; i++){
@@ -452,6 +465,7 @@ public class Soldier extends Robot {
                 double attackCooldown = rc.senseRubble(info.location) + 10;
                 attackCooldown *= info.type.actionCooldown;
                 enemyDamage += info.type.damage / attackCooldown;
+                totalEnemyDamage += info.type.damage;
                 enemyHP += info.getHealth();
             }
 //            else if(info.type == RobotType.ARCHON){
@@ -474,6 +488,9 @@ public class Soldier extends Robot {
                 continue; // Only count friendlies that can attack said enemy
             }
             if(info.getHealth() < health_to_retreat){
+                continue;
+            }
+            if(info.type == RobotType.SAGE){
                 continue;
             }
             if(info.type == RobotType.SOLDIER || info.type == RobotType.WATCHTOWER || info.type == RobotType.SAGE){
@@ -503,7 +520,7 @@ public class Soldier extends Robot {
         friendlyDamage += myType.damage / myAttackCooldown;
         friendlyHP += rc.getHealth();
 
-        return new SoldierHeuristic(friendlyHP, friendlyDamage, enemyHP, enemyDamage);
+        return new SoldierHeuristic(friendlyHP, friendlyDamage, enemyHP, enemyDamage, totalEnemyDamage);
     }
 
     public boolean moveForwardSafely(MapLocation target, int maxRubbleAllowed) throws GameActionException { // Maybe instead do smth else

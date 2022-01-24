@@ -15,12 +15,17 @@ public class Laboratory extends Robot {
         super.run();
         int lead = rc.getTeamLeadAmount(myTeam);
         int leadDiff = lead - prevLead;
-        if(rc.canTransmute() && leadDiff > 3 * rc.getTransmutationRate()){
+        indicatorString += "LTR: " + rc.getTransmutationRate() + ";";
+        indicatorString += "CT?: " + rc.canTransmute() + ";";
+        indicatorString += "AC: " + rc.getActionCooldownTurns() + ";";
+        indicatorString += "CT?: " + rc.canTransmute() + ";";
+        if(rc.canTransmute() && leadDiff >= rc.getTransmutationRate() * 1.5){
             rc.transmute();
             rc.setIndicatorString("Transmuting");
         }
 
         prevLead = lead;
+        checkPossibleDeath();
     }
 
 

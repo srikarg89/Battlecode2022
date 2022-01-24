@@ -2,39 +2,12 @@ package cracked2;
 
 import battlecode.common.*;
 
-class SageHeuristic {
-    double friendlyHP;
-    double friendlyDamage;
-    double enemyHP;
-    double enemyDamage;
-    public SageHeuristic(double FH, double FD, double EH, double ED){
-        friendlyHP = FH;
-        friendlyDamage = FD;
-        enemyHP = EH;
-        enemyDamage = ED;
-    }
-
-    public boolean getSafe(Robot robot){
-        double myTurnsNeeded = enemyHP / friendlyDamage;
-        double enemyTurnsNeeded = friendlyHP / enemyDamage;
-//        System.out.println("Friendly HP: " + friendlyHP + ", DMG: " + friendlyDamage + ", Enemy HP: " + enemyHP + ", DMG: " + enemyDamage);
-        robot.indicatorString += "MT: " + (int)myTurnsNeeded + ", ET: " + (int)enemyTurnsNeeded + "; ";
-
-        // 1.5 simply because im ballsy and wanna go for it
-        return myTurnsNeeded <= enemyTurnsNeeded * 1.2; // If you can kill them faster than they can kill you, return true
-    }
-
-}
-
 public class Sage extends Robot {
     MapLocation archonLoc = null;
     int archonIndex = -1;
 
     // The last enemy that you attacked (so that you can chase them if they get away from your sight)
-    int turnsSinceAttack = 0;
     MapLocation lastAttackLoc = null;
-    int turnsSinceRetreat = 0;
-    MapLocation retreatLoc = null;
 
     //list defining what we should destroy first
     RobotType[] priorityOrder = {RobotType.SAGE, RobotType.SOLDIER, RobotType.ARCHON, RobotType.WATCHTOWER, RobotType.MINER,
@@ -43,7 +16,7 @@ public class Sage extends Robot {
     MapLocation currentTarget;
     boolean enemyConfirmed = false;
     boolean needHealing = false;
-    final int health_to_retreat = 13;
+    final int health_to_retreat = 20;
     int bestArchonForHealingIdx = -1;
     int healingLeft = -1;
 
@@ -62,38 +35,22 @@ public class Sage extends Robot {
             archonLoc = Util.intToMapLocation(rc.readSharedArray(archonIndex));
         }
         assert (archonLoc != null);
-        MapLocation enemyCOM = Util.calculateEnemySoldierCOM(nearbyEnemies);
-        comms.updateCurrAttackLoc(nearbyEnemies, enemyCOM);
-
-        // If your bois are attacking an enemy more than the enemy is attacking ur bois, then go for the attack
-        RobotInfo[] nearbyFriendlies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam);
-        RobotInfo[] nearbyActionEnemies = rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam.opponent());
-        RobotInfo[] nearbyVisionEnemies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
-        MapLocation[] potentialEnemyArchonLocs = comms.getPotentialEnemyArchonLocations();
-
-        int symmetry = rc.readSharedArray(comms.SYMMETRY_IDX);
-        MapLocation closestEnemyArchon = null;
-        int closestEnemyDist = Integer.MAX_VALUE;
-        if(symmetry == 1 || symmetry == 2 || symmetry == 4){
-            for(int i = 0; i < potentialEnemyArchonLocs.length; i++){
-                int dist = myLoc.distanceSquaredTo(potentialEnemyArchonLocs[i]);
-                if(dist < closestEnemyDist){
-                    closestEnemyArchon = potentialEnemyArchonLocs[i];
-                    closestEnemyDist = dist;
-                }
-            }
-        }
-        MapLocation closestFriendlyArchon = Util.intToMapLocation(rc.readSharedArray(comms.getClosestFriendlyArchonIndex()));
-
-        RobotInfo nearestEnemyInfo = getNearestEnemy(nearbyVisionEnemies);
-        SageHeuristic heuristic = getHeursitic(nearbyFriendlies, nearbyVisionEnemies, nearestEnemyInfo, closestEnemyArchon, closestFriendlyArchon); // 2300 bytecode for 31 nearby
-        boolean inSafeZone = true;
-        if(heuristic != null){
-            inSafeZone = heuristic.getSafe(this);
-        }
-        RobotInfo attackTarget = findAttackTarget(nearbyActionEnemies);
 
         indicatorString += "AC:" + rc.getActionCooldownTurns() + ";MC:" + rc.getMovementCooldownTurns() + ";";
+
+        // If your bois are attacking an enemy more than the enemy is attacking ur bois, then go for the attack
+        RobotInfo[] nearbyActionEnemies = rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam.opponent());
+        RobotInfo[] nearbyVisionEnemies = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
+
+        MapLocation enemySoldierCOM = Util.calculateEnemySoldierCOM(nearbyVisionEnemies);
+        RobotInfo nearestEnemyInfo = getNearestEnemy(nearbyVisionEnemies);
+        RobotInfo attackTarget = findAttackTarget(nearbyActionEnemies);
+
+        comms.updateCurrAttackLoc(nearbyEnemies, enemySoldierCOM);
+
+        if(rc.getHealth() <= health_to_retreat){
+            needHealing = true;
+        }
 
         if(needHealing && rc.getHealth() == myType.getMaxHealth(rc.getLevel())){
             needHealing = false;
@@ -106,7 +63,7 @@ public class Sage extends Robot {
 
         if(needHealing){
             attack(attackTarget);
-            if(inSafeZone){
+            if(enemySoldierCOM.equals(myLoc)){
                 MapLocation targetLoc = Util.intToMapLocation(rc.readSharedArray(bestArchonForHealingIdx));
                 if(myLoc.distanceSquaredTo(targetLoc) > RobotType.ARCHON.actionRadiusSquared - 10){
                     nav.goTo(targetLoc);
@@ -121,105 +78,45 @@ public class Sage extends Robot {
                 comms.writeSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx, currVal - prevHealingLeft + healingLeft);
             }
             else{
-                retreat(enemyCOM, heuristic);
+                retreat(enemySoldierCOM);
             }
+
         }
-        // The strat is to get two shots for the enemy's one shot. ie, you try to stay on the boundary of the enemy's vision. Then, you push, attack, (they get a turn so they attack), then you attack again, then you retreat (back out of their range)
-        else if(inSafeZone){
-            indicatorString += "S; ";
-            Logger.Log("In safe zone!");
+        else if(rc.isActionReady()){
             if(attackTarget != null){
-                indicatorString += "AT; ";
-                // If I can both move and attack, the check if I can move to a better loc and attack from there
-                if(rc.isActionReady() && rc.isMovementReady()){
-                    // If I can move to a lower cooldown loc and still attack from there, do that
-                    boolean movedToLowerCooldown = attackFromLowerCooldown(attackTarget);
-                    if(movedToLowerCooldown) {
-                        Logger.Log("Moved lower coooldown");
-                        indicatorString += "LC; ";
-                        attack(attackTarget);
-                    }
-                    else { // Attack and back up (you know the drill)
-                        attack(attackTarget);
-                        if(attackTarget.type == RobotType.SOLDIER || attackTarget.type == RobotType.WATCHTOWER || attackTarget.type == RobotType.SAGE){
-                            Direction dirToEnemyCOM = myLoc.directionTo(enemyCOM);
-                            MapLocation awayFromEnemyCOM = myLoc.subtract(dirToEnemyCOM).subtract(dirToEnemyCOM).subtract(dirToEnemyCOM);
-                            boolean retreated = moveForwardSafely(awayFromEnemyCOM, rc.senseRubble(myLoc));
-                            if(retreated){
-                                Logger.Log("Successfully retreated!");
-                                indicatorString += "BACKUP1; ";
-                            }
-                        }
-                    }
-                }
-                else if(rc.isActionReady()) { // If you can attack, just attack
+                boolean movedToLowerCooldown = attackFromLowerCooldown(attackTarget);
+                if(movedToLowerCooldown) {
+                    Logger.Log("Moved lower coooldown");
+                    indicatorString += "LC; ";
                     attack(attackTarget);
                 }
                 else{
-                    // Well you can't attack, so back up so that they can't attack you. Retreat safely
-                    Direction dirToEnemyCOM = myLoc.directionTo(enemyCOM);
-                    MapLocation awayFromEnemyCOM = myLoc.subtract(dirToEnemyCOM).subtract(dirToEnemyCOM).subtract(dirToEnemyCOM);
-                    boolean retreated = moveForwardSafely(awayFromEnemyCOM, rc.senseRubble(myLoc));
-                    if(retreated){
-                        indicatorString += "BACKUP2; ";
-                    }
+                    attack(attackTarget);
+                    retreat(enemySoldierCOM);
                 }
+            }
+            else if(!enemySoldierCOM.equals(myLoc)){
+                push(enemySoldierCOM);
+            }
+            else if(nearestEnemyInfo != null){
+                push(nearestEnemyInfo.location);
             }
             else{
-                indicatorString += "NOAT; ";
-                // If you can both attack and move, do that
-                if(rc.isMovementReady() && rc.isActionReady() && (nearestEnemyInfo != null || (turnsSinceAttack < 3 && lastAttackLoc != null && turnsSinceRetreat > 3))){ // If you can see an enemy push him and attack him
-                    indicatorString += "PUSH; ";
-                    MapLocation pushLoc = lastAttackLoc;
-                    if(nearestEnemyInfo != null){
-                        pushLoc = nearestEnemyInfo.location;
-                    }
-                    push(enemyCOM, pushLoc, heuristic);
-                    nearbyActionEnemies = rc.senseNearbyRobots(myType.actionRadiusSquared, opponent);
-                    indicatorString += nearbyActionEnemies.length + "; ";
-                    attackTarget = findAttackTarget(nearbyActionEnemies);
-                    if(attackTarget == null){
-                        indicatorString += "NULL; ";
-                    }
-                    else{
-                        indicatorString += attackTarget.toString() + "; ";
-                    }
-                    attack(attackTarget);
-                }
-                else if(rc.isMovementReady()){ // Run regular scouting / comms movement
-                    Logger.Log("Running regular movement");
-                    if(turnsSinceRetreat < 3){
-                        // Find friendly soldiers to pair up w/
-                        goToNearestFriendly();
-                    }
-                    else{
-                        runMovement();
-                    }
-                }
+                runMovement();
             }
+            nearbyActionEnemies = rc.senseNearbyRobots(myType.actionRadiusSquared, myTeam.opponent());
+            attackTarget = findAttackTarget(nearbyActionEnemies);
+            attack(attackTarget);
         }
         else{
-            indicatorString += "NS; ";
-            Logger.Log("Not in safe zone!");
-            attack(attackTarget);
-            // Get the hell outta there
-            retreat(enemyCOM, heuristic);
-            if(rc.getHealth() < health_to_retreat){
-                needHealing = true;
-                bestArchonForHealingIdx = comms.findBestArchonForHealing();
-                int currVal = rc.readSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx);
-                int maxHealth = myType.getMaxHealth(rc.getLevel());
-                healingLeft = maxHealth - rc.getHealth();
-                comms.writeSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx, currVal + healingLeft);
+            if(!enemySoldierCOM.equals(myLoc)){
+                retreat(enemySoldierCOM);
             }
-            turnsSinceRetreat = 0;
-            retreatLoc = enemyCOM;
-            // TODO Consider retreating towards friendlies as well as away from enemies
         }
+
         checkPossibleDeath();
-        turnsSinceAttack++;
-        turnsSinceRetreat++;
     }
+
 
     // Follow the miner thats farthest away from archon
     public MapLocation nearestMinerLoc() throws GameActionException {
@@ -282,35 +179,7 @@ public class Sage extends Robot {
         return nearestMiner;
     }
 
-    public MapLocation nearestFriendlyDamageUnit() throws GameActionException {
-        MapLocation nearestFriendly = null;
-        int closestDist = 0;
-        for(int i = nearbyFriendlies.length; i-- > 0; ){
-            if(nearbyFriendlies[i].type != RobotType.SOLDIER || nearbyFriendlies[i].type != RobotType.WATCHTOWER || nearbyFriendlies[i].type != RobotType.SAGE){
-                continue;
-            }
-            int dist = myLoc.distanceSquaredTo(nearbyFriendlies[i].location);
-            if(dist > closestDist){
-                closestDist = dist;
-                nearestFriendly = nearbyFriendlies[i].location;
-            }
-        }
-        if(nearestFriendly != null){
-            return nearestFriendly;
-        }
-        int tempArchonIndex = comms.getClosestFriendlyArchonIndex();
-        MapLocation closestArchonLoc = Util.intToMapLocation(rc.readSharedArray(tempArchonIndex));
-        return closestArchonLoc;
-    }
-
-    // TODO MINERS SHOULD CALL FOR HELP!!
-
-    public void goToNearestFriendly() throws GameActionException {
-//        runMovement();
-        nav.goTo(nearestFriendlyDamageUnit());
-    }
-
-    public void retreat(MapLocation enemyCOM, SageHeuristic heuristic) throws GameActionException { // Movement method
+    public void retreat(MapLocation enemyCOM) throws GameActionException { // Movement method
         Logger.Log("Retreating from: " + enemyCOM.toString());
         indicatorString += "RTR!; ";
         if(enemyCOM.equals(myLoc)){ // No enemies nearby, just retreat back to base
@@ -320,47 +189,20 @@ public class Sage extends Robot {
         else{
             // Determine if moving backwards is worth it
             int maxRubbleAllowed = rc.senseRubble(myLoc);
-            if(heuristic != null){
-                double myTurns = heuristic.enemyHP / heuristic.friendlyDamage;
-                double enemyTurns = heuristic.friendlyHP / heuristic.enemyDamage;
-                double ratio = myTurns / enemyTurns;
-                maxRubbleAllowed = (int)((rc.senseRubble(myLoc) + 10) * ratio) - 10;
-            }
-            else{
-                assert(false);
-            }
-//            double myTurns = heuristic.enemyHP / heuristic.friendlyDamage;
-//            double enemyTurns = heuristic.friendlyHP / heuristic.enemyDamage;
-//            double ratio = myTurns / enemyTurns;
-//            int maxRubbleAllowed = (int)(rc.senseRubble(myLoc) * ratio);
             Direction away = myLoc.directionTo(enemyCOM).opposite();
             MapLocation retreatTarget = myLoc.add(away).add(away).add(away).add(away);
             boolean retreated = moveForwardSafely(retreatTarget, maxRubbleAllowed);
             if(!retreated){ // Else, just get the hell outta there
-//                nav.goTo(retreatTarget);
+                nav.goTo(retreatTarget);
             }
         }
     }
 
-    public void push(MapLocation enemyCOM, MapLocation bestAttackTarget, SageHeuristic heuristic) throws GameActionException { // Movement method
-        Logger.Log("Pushing towards: " + enemyCOM.toString());
-        if(enemyCOM.equals(myLoc)){ // No enemy soldiers nearby, go after whatever else there is
-            nav.goTo(bestAttackTarget);
-        }
-        else{
-            int maxRubbleAllowed = rc.senseRubble(myLoc);
-            if(heuristic != null){
-                double myTurns = heuristic.enemyHP / heuristic.friendlyDamage;
-                double enemyTurns = heuristic.friendlyHP / heuristic.enemyDamage;
-                double ratio = enemyTurns / myTurns;
-                maxRubbleAllowed = (int)((rc.senseRubble(myLoc) + 10) * ratio) - 10;
-            }
-//            double myTurns = heuristic.enemyHP / heuristic.friendlyDamage;
-//            double enemyTurns = heuristic.friendlyHP / heuristic.enemyDamage;
-//            double ratio = enemyTurns / myTurns;
-//            int maxRubbleAllowed = (int)(rc.senseRubble(myLoc) * ratio);
-            moveForwardSafely(enemyCOM, maxRubbleAllowed);
-        }
+    public void push(MapLocation pushLoc) throws GameActionException { // Movement method
+        Logger.Log("Pushing towards: " + pushLoc.toString());
+        // Determine if moving backwards is worth it
+        int maxRubbleAllowed = rc.senseRubble(myLoc);
+        moveForwardSafely(pushLoc, maxRubbleAllowed);
     }
 
     public boolean attack(RobotInfo toAttack) throws GameActionException { // Action method
@@ -376,7 +218,6 @@ public class Sage extends Robot {
             // Check if you have more friendly soldiers than enemy soldiers
             rc.attack(toAttack.location);
             indicatorString += "ATK: " + toAttack.location.toString() + "; ";
-            turnsSinceAttack = 0;
             lastAttackLoc = toAttack.getLocation();
             // Check if you killed an archon, and if you did, update comms
             if(toAttack.type == RobotType.ARCHON && toAttack.team == myTeam.opponent() && !rc.canSenseRobot(toAttack.ID)){
@@ -389,23 +230,19 @@ public class Sage extends Robot {
     }
 
     public RobotInfo findAttackTarget(RobotInfo[] nearbyEnemies) throws GameActionException {
-        MapLocation currLoc = rc.getLocation(); // Might've been updated cuz I might've just moved TODO update myLoc
         RobotInfo toAttack = null;
         int oppTypeIndex = 20;
-        int health = Integer.MAX_VALUE;
+        int health = Integer.MIN_VALUE;
         for(int i = 0; i < nearbyEnemies.length; i++){
             RobotInfo info = nearbyEnemies[i];
-//            if(!rc.canAttack(info.location)){
-//                continue; // Can't attack (prolly cuz too far)
-//            }
-            if(currLoc.distanceSquaredTo(info.location) > myType.actionRadiusSquared){
-                continue;
+            if(!rc.canAttack(info.location)){
+                continue; // Can't attack (prolly cuz too far)
             }
             int currOppTypeIndex = Util.getArrayIndex(priorityOrder, info.type);
             int currHealth = info.getHealth();
 
             // Find the best enemy to attack based on priority order
-            if (currOppTypeIndex < oppTypeIndex || (currOppTypeIndex == oppTypeIndex && currHealth < health)) {
+            if (currOppTypeIndex < oppTypeIndex || (currOppTypeIndex == oppTypeIndex && currHealth > health)) {
                 toAttack = info;
                 oppTypeIndex = currOppTypeIndex;
                 health = currHealth;
@@ -426,84 +263,6 @@ public class Sage extends Robot {
             }
         }
         return nearestEnemyInfo;
-    }
-
-    // TODO Count the # of soldiers on their front lines? I'm alr kinda doing that, but maybe comm that info so that everyone's aware of how fucked you are?
-
-    public SageHeuristic getHeursitic(RobotInfo[] nearbyFriendlies, RobotInfo[] dangeorusEnemies, RobotInfo nearestEnemyInfo, MapLocation closestEnemyArchon, MapLocation closestFriendlyLocation) throws GameActionException { // TODO: Maybe only check # of attackers on the robot closest to you?
-        // your attack isn't ready, then don't engage
-
-        if(nearestEnemyInfo == null){ // No enemies nearby, we safe
-            indicatorString += "NE1; ";
-            return null;
-        }
-
-        Logger.Log("Nearest enemy Info: " + nearestEnemyInfo.location.toString());
-
-        double friendlyDamage = 0.0;
-        double enemyDamage = 0.0;
-        double friendlyHP = 0.0;
-        double enemyHP = 0.0;
-
-        // Calculate enemies attacking you
-        for(int i = 0; i < dangeorusEnemies.length; i++){
-            RobotInfo info = dangeorusEnemies[i];
-            if(info.type == RobotType.SOLDIER || info.type == RobotType.WATCHTOWER || info.type == RobotType.SAGE){
-                double attackCooldown = rc.senseRubble(info.location) + 10;
-                attackCooldown *= info.type.actionCooldown;
-                enemyDamage += info.type.damage / attackCooldown;
-                enemyHP += info.getHealth();
-            }
-//            else if(info.type == RobotType.ARCHON){
-////                friendlyDamage -= info.type.damage / repairCooldown;
-//                double damageDiff = 2.0 / (rc.senseRubble(info.location) + 10.0);
-//                if(friendlyDamage <= damageDiff){
-//                    friendlyDamage = 0;
-//                }
-//                else{
-//                    friendlyDamage -= damageDiff;
-//                }
-//                enemyHP += info.getHealth();
-//            }
-        }
-
-        // Calculate friendlies attacking the enemy
-        for(int i = 0; i < nearbyFriendlies.length; i++){
-            RobotInfo info = nearbyFriendlies[i];
-            if(info.getLocation().distanceSquaredTo(nearestEnemyInfo.getLocation()) > info.type.actionRadiusSquared){
-                continue; // Only count friendlies that can attack said enemy
-            }
-            if(info.getHealth() < health_to_retreat){
-                continue;
-            }
-            if(info.type == RobotType.SOLDIER || info.type == RobotType.WATCHTOWER || info.type == RobotType.SAGE){
-                double attackCooldown = rc.senseRubble(info.location) + 10;
-                attackCooldown *= info.type.actionCooldown;
-                friendlyDamage += info.type.damage / attackCooldown;
-                friendlyHP += info.getHealth();
-            }
-            if(info.type == RobotType.ARCHON){ // NOTE: Archons can't attack, but this just makes you more likely to wanna protect your own archon
-//                friendlyHP += info.getHealth();
-                double damageDiff = 2.0 / (rc.senseRubble(info.location) + 10.0);
-                if(enemyDamage <= damageDiff){
-                    enemyDamage = 0;
-                }
-                else{
-                    enemyDamage -= damageDiff;
-                }
-            }
-        }
-
-        if(enemyHP == 0 || enemyDamage == 0){
-            indicatorString += "NE2; ";
-            return null;
-        }
-
-        double myAttackCooldown = rc.senseRubble(myLoc) + 10;
-        friendlyDamage += myType.damage / myAttackCooldown;
-        friendlyHP += rc.getHealth();
-
-        return new SageHeuristic(friendlyHP, friendlyDamage, enemyHP, enemyDamage);
     }
 
     public boolean moveForwardSafely(MapLocation target, int maxRubbleAllowed) throws GameActionException { // Maybe instead do smth else
@@ -533,7 +292,6 @@ public class Sage extends Robot {
         return true;
     }
 
-    // TODO: Fix this
     public boolean attackFromLowerCooldown(RobotInfo attackTarget) throws GameActionException {
         MapLocation targetLoc = attackTarget.location;
         double lowestHeuristic = rc.senseRubble(myLoc) + 10;
@@ -551,9 +309,8 @@ public class Sage extends Robot {
             if(myLoc.distanceSquaredTo(targetLoc) > myType.actionRadiusSquared){ // Make sure you can still attack the enemy troop
                 continue;
             }
-            double newEnemies = numNewEnemiesAttackableAfterMoving(testDirs[i]) + 1;
             double cooldown = rc.senseRubble(testLoc) + 10;
-            double heuristic = newEnemies * cooldown;
+            double heuristic = cooldown;
             // If i can attack twice as fast, its worth walking into another enemy
             if(heuristic < lowestHeuristic){
                 lowestLoc = testLoc;
@@ -595,8 +352,6 @@ public class Sage extends Robot {
             return;
         }
         tempLoc = comms.getClosestEnemyArchonOnComms();
-//        tempLoc = nearestMinerLoc();
-//        tempLoc = null;
         if(tempLoc != null){
             currentTarget = tempLoc;
             enemyConfirmed = true;
@@ -612,7 +367,6 @@ public class Sage extends Robot {
         enemyConfirmed = false;
         // Scout for enemy based on symmetry
         tempLoc = scoutForEnemyArchons();
-//        tempLoc = nearestMinerLoc();
         if(tempLoc != null){
             currentTarget = tempLoc;
             targetLevel = 2;
@@ -621,7 +375,6 @@ public class Sage extends Robot {
         if(targetLevel >= 1){
             return;
         }
-        // Run around randomly?
         targetLevel = 1;
         currentTarget = nav.getRandomMapLocation();
         Logger.Log("New current target: " + currentTarget.toString() + ", randomly chosen location");
@@ -668,30 +421,6 @@ public class Sage extends Robot {
 
         return null;
     }
-
-
-    int numNewEnemiesAttackableAfterMoving(Direction dir) throws GameActionException {
-        MapLocation[] checkLocs = Util.getSenseableLocsAfterMoving(dir);
-        int newBots = 0;
-        for(int i = 0; i < checkLocs.length; i++){
-            MapLocation loc = checkLocs[i];
-            if(loc == null){
-                continue;
-            }
-            if(!rc.canSenseLocation(loc)){
-                continue;
-            }
-            RobotInfo info = rc.senseRobotAtLocation(loc);
-            if(info == null){
-                continue;
-            }
-            if(info.team == opponent && info.type == RobotType.SOLDIER){
-                newBots++;
-            }
-        }
-        return newBots;
-    }
-
 
 }
 

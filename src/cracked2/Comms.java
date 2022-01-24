@@ -243,8 +243,8 @@ public class Comms {
         for(int i = BIGGEST_THREAT_LOC_IDX_START; i <= BIGGEST_THREAT_LOC_IDX_END; i += 2){
             int currThreatLocInt = rc.readSharedArray(i);
             if(currThreatLocInt != 0 && currThreatLocInt != MAX_COMMS_VAL){
-                System.out.println("CURR LEVEL: " + rc.readSharedArray(i - 1));
-                System.out.println("CURR LOC INT: " + currThreatLocInt);
+//                System.out.println("CURR LEVEL: " + rc.readSharedArray(i - 1));
+//                System.out.println("CURR LOC INT: " + currThreatLocInt);
                 MapLocation loc = Util.intToMapLocation(currThreatLocInt);
                 int threat_level = rc.readSharedArray(i - 1);
                 double heuristic = threat_level / (double)Math.sqrt(robot.myLoc.distanceSquaredTo(loc));
@@ -480,6 +480,13 @@ public class Comms {
         return true;
     }
 
+    public void removeLeadSaveUp() throws GameActionException {
+        writeSharedArray(LEAD_SAVE_UP_IDX, 0);
+    }
+
+    public int getLeadSaveUp() throws GameActionException {
+        return rc.readSharedArray(LEAD_SAVE_UP_IDX);
+    }
 
 
 }
