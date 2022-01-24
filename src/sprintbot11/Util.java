@@ -1,4 +1,4 @@
-package cracked4;
+package sprintbot11;
 
 import battlecode.common.*;
 
@@ -56,19 +56,14 @@ public class Util {
 
     static Direction tryBuild(RobotType type, Direction[] dirs) throws GameActionException {
         for(int i = 0; i < dirs.length; i++){
-            if(Util.tryBuild(type, dirs[i])){
-                return dirs[i];
+            Direction dir = dirs[i];
+//            Logger.Log("Tryna build robot of type: " + type.toString() + " in direction: " + dir.toString());
+            if (rc.canBuildRobot(type, dir)) {
+                rc.buildRobot(type, dir);
+                return dir;
             }
         }
         return Direction.CENTER;
-    }
-
-    static boolean tryBuild(RobotType type, Direction dir) throws GameActionException {
-        if (rc.canBuildRobot(type, dir)) {
-            rc.buildRobot(type, dir);
-            return true;
-        }
-        return false;
     }
 
     static boolean tryMove(Direction[] dirs) throws GameActionException {
@@ -220,40 +215,59 @@ public class Util {
         return false;
     }
 
-    // reflection type: 1 = vertical reflection, 2 = horizontal reflection, 3 = 180 degree rotation
-    public static MapLocation[] reflect(MapLocation[] locs, int reflectionType){
-        MapLocation[] ret = new MapLocation[locs.length];
-        for(int i = 0; i < locs.length; i++){
-            switch(reflectionType){
-                case 1:
-                    ret[i] = new MapLocation(locs[i].x, robot.mapHeight - locs[i].y - 1);
-                    break;
-                case 2:
-                    ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, locs[i].y);
-                    break;
-                case 3:
-                    ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, robot.mapHeight - locs[i].y - 1);
-                    break;
-                default:
-                    assert(false);
-            }
+//    // reflection type: 1 = vertical reflection, 2 = horizontal reflection, 3 = 180 degree rotation
+//    public static MapLocation[] reflect(MapLocation[] locs, int reflectionType){
+//        MapLocation[] ret = new MapLocation[locs.length];
+//        for(int i = 0; i < locs.length; i++){
+//            switch(reflectionType){
+//                case 1:
+//                    ret[i] = new MapLocation(locs[i].x, robot.mapHeight - locs[i].y - 1);
+//                    break;
+//                case 2:
+//                    ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, locs[i].y);
+//                    break;
+//                case 3:
+//                    ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, robot.mapHeight - locs[i].y - 1);
+//                    break;
+//                default:
+//                    assert(false);
+//            }
+//        }
+//        return ret;
+//    }
+//
+//    // reflection type: 1 = vertical reflection, 2 = horizontal reflection, 3 = 180 degree rotation
+//    public static MapLocation reflect(MapLocation loc, int reflectionType){
+//        switch(reflectionType){
+//            case 1:
+//                return new MapLocation(loc.x, robot.mapHeight - loc.y - 1);
+//            case 2:
+//                return new MapLocation(robot.mapWidth - loc.x - 1, loc.y);
+//            case 3:
+//                return new MapLocation(robot.mapWidth - loc.x - 1, robot.mapHeight - loc.y - 1);
+//        }
+//        assert(false);
+//        return null;
+//    }
+// reflection type: 1 = vertical reflection, 2 = horizontal reflection, 3 = 180 degree rotation
+public static MapLocation[] reflect(MapLocation[] locs, int reflectionType){
+    MapLocation[] ret = new MapLocation[locs.length];
+    for(int i = 0; i < locs.length; i++){
+        if(reflectionType == 1){
+            ret[i] = new MapLocation(locs[i].x, robot.mapHeight - locs[i].y - 1);
         }
-        return ret;
-    }
-
-    // reflection type: 1 = vertical reflection, 2 = horizontal reflection, 3 = 180 degree rotation
-    public static MapLocation reflect(MapLocation loc, int reflectionType){
-        switch(reflectionType){
-            case 1:
-                return new MapLocation(loc.x, robot.mapHeight - loc.y - 1);
-            case 2:
-                return new MapLocation(robot.mapWidth - loc.x - 1, loc.y);
-            case 3:
-                return new MapLocation(robot.mapWidth - loc.x - 1, robot.mapHeight - loc.y - 1);
+        else if(reflectionType == 2){
+            ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, locs[i].y);
         }
-        assert(false);
-        return null;
+        else if(reflectionType == 3){
+            ret[i] = new MapLocation(robot.mapWidth - locs[i].x - 1, robot.mapHeight - locs[i].y - 1);
+        }
+        else{
+            assert(false);
+        }
     }
+    return ret;
+}
 
     public static int countRobotTypes(RobotInfo[] infos, RobotType typ, Team team){
         int count = 0;
@@ -324,7 +338,7 @@ public class Util {
         return lowestLoc;
     }
 
-    public static int directionToIndex(Direction dir){
+    public int directionToIndex(Direction dir){
         switch(dir){
             case NORTH:
                 return 0;

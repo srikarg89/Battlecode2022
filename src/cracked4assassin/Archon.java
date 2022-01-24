@@ -1,4 +1,4 @@
-package cracked4BuildOrder;
+package cracked4assassin;
 
 import battlecode.common.*;
 
@@ -49,7 +49,6 @@ public class Archon extends Robot {
 
     public void run() throws GameActionException {
         super.run();
-        System.out.println("COMMS SAVEUP: " + comms.getLeadSaveUp());
         minerCount = comms.getRobotCount(RobotType.MINER);
         soldierCount = comms.getRobotCount(RobotType.SOLDIER);
         builderCount = comms.getRobotCount(RobotType.BUILDER);
@@ -89,36 +88,28 @@ public class Archon extends Robot {
         int soldierCost = RobotType.SOLDIER.buildCostLead;
         // If the current miners can build a soldier every round, then just build a soldier every round
 
-        int initialMinerCount = 3; // scale this according to map size
-        double scalingFactor = Math.sqrt(rc.getMapHeight() * rc.getMapWidth());
-        initialMinerCount *= scalingFactor/15;
-        System.out.println(initialMinerCount);
-        indicatorString += "SF: " + scalingFactor + "; ";
-        double smratio = 1.0;
-        if(soldierCount > 35){
-            smratio = 1.5;
-        }
-        else{
-            smratio = ((double)soldierCount) * .5 / 35.0 + 1.0;
-        }
-        System.out.println("RATIO: " + smratio);
-
         int leadDiff = lead - prevLead;
+
         if(gold >= RobotType.SAGE.buildCostGold){
             spawnUniformly(RobotType.SAGE, sageCount);
         }
-        // once builder spawns, we will begin saving up to 180
-        else if((double)soldierCount / scalingFactor > 0.3  && builderCount < 1) {
+        else if(builderCount * 50 + 50 < rc.getRoundNum() && builderCount < 1) {
             spawnUniformly(RobotType.BUILDER, builderCount);
         }
-        else if(minerCount < initialMinerCount){
-            spawnUniformly(RobotType.MINER, minerCount);
+        else if(numFriendlyArchons > 0 && (lead - prevLead > soldierCost * numFriendlyArchons || lead / numFriendlyArchons > soldierCost * 10)){ // Also if you have a shitton of lead, just use it XD
+            spawnUniformly(RobotType.SOLDIER, builderCount);
         }
-        else if(soldierCount < minerCount * smratio){
-            spawnUniformly(RobotType.SOLDIER, soldierCount);
+        else if(rc.getRoundNum() < 30){
+            spawnUniformly(RobotType.MINER, builderCount);
+        }
+        else if (soldierCount < minerCount * 1.5){
+            spawnUniformly(RobotType.SOLDIER, builderCount);
+        }
+        else if(minerCount < soldierCount){
+            spawnUniformly(RobotType.MINER, builderCount);
         }
         else{
-            spawnUniformly(RobotType.MINER, minerCount);
+            spawnUniformly(RobotType.SOLDIER, builderCount);
         }
     }
 
@@ -154,7 +145,6 @@ public class Archon extends Robot {
         int leadUsable = rc.getTeamLeadAmount(myTeam) - comms.getLeadSaveUp() + savingUp;
         Direction[] defaultSpawnDirs = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NORTHEAST, Direction.SOUTHWEST, Direction.NORTHWEST, Direction.SOUTHEAST};
         Direction[] spawnDirs = Util.closeDirections(defaultSpawnDirs[offset % 8]);
-        System.out.println("LEAD USABLE: " + leadUsable);
         if(leadUsable < spawnType.buildCostLead){
 //            System.out.println("Someone's saving up so im not gonna spawn this turn");
             return;

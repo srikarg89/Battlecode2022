@@ -58,7 +58,11 @@ public class Sage extends Robot {
             int maxHealth = myType.getMaxHealth(rc.getLevel());
             int prevHealingLeft = healingLeft;
             healingLeft = maxHealth - rc.getHealth();
-            comms.writeSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx, currVal - prevHealingLeft + healingLeft);
+            int newVal = currVal - prevHealingLeft + healingLeft;
+            if(newVal < 0){ // THIS SHOULD NEVER OCCUR, BUT JUST IN CASE
+                newVal = 0;
+            }
+            comms.writeSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx, newVal);
         }
 
         if(needHealing){
@@ -76,7 +80,11 @@ public class Sage extends Robot {
                 int maxHealth = myType.getMaxHealth(rc.getLevel());
                 int prevHealingLeft = healingLeft;
                 healingLeft = maxHealth - rc.getHealth();
-                comms.writeSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx, currVal - prevHealingLeft + healingLeft);
+                int newVal = currVal - prevHealingLeft + healingLeft;
+                if(newVal < 0){ // THIS SHOULD NEVER OCCUR, BUT JUST IN CASE
+                    newVal = 0;
+                }
+                comms.writeSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx, newVal);
             }
             else{
                 retreat(enemySoldierCOM);

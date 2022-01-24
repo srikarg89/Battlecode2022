@@ -1,4 +1,4 @@
-package cracked4BuildOrder;
+package cracked4assassin;
 
 import battlecode.common.*;
 

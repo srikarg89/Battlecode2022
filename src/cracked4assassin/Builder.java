@@ -1,4 +1,4 @@
-package cracked2;
+package cracked4assassin;
 
 import battlecode.common.*;
 
@@ -155,7 +155,7 @@ public class Builder extends Robot {
         else if(botType == RobotType.LABORATORY){
             MapLocation[] potentialPlotLocations = rc.getAllLocationsWithinRadiusSquared(myLoc, myType.visionRadiusSquared);
             MapLocation bestLoc = null;
-            int bestDist = Integer.MAX_VALUE;
+            int bestDist = Integer.MIN_VALUE;
             int bestCooldown = Integer.MAX_VALUE;
             for(int i = 0; i < potentialPlotLocations.length; i++){
                 MapLocation loc = potentialPlotLocations[i];
@@ -166,13 +166,15 @@ public class Builder extends Robot {
                     continue;
                 }
                 int cooldown = rc.senseRubble(loc);
-                int dist = myLoc.distanceSquaredTo(loc);
+//                int dist = myLoc.distanceSquaredTo(loc);
+                int dist = archonLoc.distanceSquaredTo(loc);
                 if(cooldown < bestCooldown){
                     bestLoc = loc;
                     bestCooldown = cooldown;
                     bestDist = dist;
                 }
-                else if(cooldown == bestCooldown && dist < bestDist){
+//                else if(cooldown == bestCooldown && dist < bestDist){
+                else if(cooldown == bestCooldown && dist  > bestDist){
                     bestLoc = loc;
                     bestCooldown = cooldown;
                     bestDist = dist;
@@ -250,6 +252,7 @@ public class Builder extends Robot {
         if(buildType == RobotType.LABORATORY){
             comms.removeLeadSaveUp();
         }
+
         return null;
     }
 
