@@ -65,7 +65,7 @@ public class Archon extends Robot {
         if(rc.getRoundNum() == 1){ // TODO: Might wanna do this based on map size. Might not be worth on smaller maps
             moveDestination = findLeastRubbleSpot(); // TODO Add heuristic to only move if lead is not a constraint or we have too many friendly soldiers around us (and moving to lower cool-down can benefit)
         }
-        if(myLoc!= null && myLoc.distanceSquaredTo(moveDestination) > 0){ // if we are on the move to a lower rubble spot
+        if(moveDestination != null && myLoc.distanceSquaredTo(moveDestination) > 0){ // if we are on the move to a lower rubble spot
             indicatorString += "MOVING; ";
             if(rc.getMode().equals(RobotMode.TURRET) && rc.canTransform()){
                 rc.transform();
