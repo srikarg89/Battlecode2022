@@ -245,7 +245,10 @@ public class Navigation {
             MapLocation target = myLoc.subtract(centerDir).subtract(centerDir).subtract(centerDir).subtract(centerDir).subtract(centerDir);
             boolean moved = goTo(target);
             if(!moved){
-                goToFuzzy(target);
+                moved=goToFuzzy(target);
+                if(!moved){
+                    circle(center, minDist, maxDist, !ccw);
+                }
             }
             return;
         }
