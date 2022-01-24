@@ -67,7 +67,7 @@ public class Archon extends Robot {
         }
         if(myLoc.distanceSquaredTo(moveDestination) > 0){ // if we are on the move to a lower rubble spot
             indicatorString += "MOVING; ";
-            while(rc.getMode().equals(RobotMode.TURRET) && rc.canTransform()){
+            if(rc.getMode().equals(RobotMode.TURRET) && rc.canTransform()){
                 rc.transform();
             }
             nav.goTo(moveDestination);
@@ -91,7 +91,9 @@ public class Archon extends Robot {
         }
 
         // Try building
-        if (Util.mapLocationToInt(rc.getLocation()) == rc.readSharedArray(rc.getRoundNum() % this.numFriendlyArchons)) {
+        indicatorString += "TBUILD";
+        comms.writeSharedArray(myCommsIdx, Util.mapLocationToInt(rc.getLocation()));
+        if(myCommsIdx == rc.getRoundNum() % this.numFriendlyArchons) {
             // Build in a different direction than last time
             boolean defended = defendYourself();
             if(!defended){
