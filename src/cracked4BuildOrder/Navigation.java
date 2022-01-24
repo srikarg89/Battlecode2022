@@ -89,6 +89,27 @@ public class Navigation {
         return Util.tryMove(toGo);
     }
 
+    public boolean goToFuzzy(MapLocation target) throws GameActionException {
+        if (robot.myLoc.distanceSquaredTo(target) <= minDistToSatisfy) {
+            return true;
+        }
+        rc.setIndicatorLine(robot.myLoc, target, 0, 255, 0);
+        if (!rc.isMovementReady()) {
+            return false;
+        }
+        if(currentTarget != target){
+            // Reset pathfinding vars
+            currentTarget = target;
+            visited.clear();
+        }
+        Direction toGo;
+        toGo = fuzzynav(target);
+        if (toGo == null) {
+            return false;
+        }
+        return Util.tryMove(toGo);
+    }
+
     public Direction fuzzynav (MapLocation target) throws GameActionException {
         Direction toTarget = robot.myLoc.directionTo(target);
         Direction[] moveOptions = {toTarget, toTarget.rotateLeft(), toTarget.rotateRight(), toTarget.rotateLeft().rotateLeft(), toTarget.rotateRight().rotateRight()};
@@ -217,13 +238,18 @@ public class Navigation {
     public void circle(MapLocation center, int minDist, int maxDist, boolean ccw) throws GameActionException {
         MapLocation myLoc = robot.myLoc;
         if(myLoc.distanceSquaredTo(center) > maxDist){
-            robot.nav.goTo(center);
+            goTo(center);
         }
         else if(myLoc.distanceSquaredTo(center) < minDist){
             Direction centerDir = myLoc.directionTo(center);
             MapLocation target = myLoc.subtract(centerDir).subtract(centerDir).subtract(centerDir).subtract(centerDir).subtract(centerDir);
-            robot.nav.goTo(target);
+            boolean moved = goTo(target);
+            if(!moved){
+                goToFuzzy(target);
+            }
+            return;
         }
+        
         int dx = myLoc.x - center.x;
         int dy = myLoc.y - center.y;
         double cs = Math.cos(ccw ? 0.5 : -0.5);

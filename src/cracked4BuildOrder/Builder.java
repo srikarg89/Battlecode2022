@@ -82,12 +82,15 @@ public class Builder extends Robot {
             if(potentialRepairSpot != null){
                 if(myLoc.distanceSquaredTo(potentialRepairSpot) < myType.actionRadiusSquared){
                     nav.goTo(potentialRepairSpot);
+                    indicatorString += "GT: " + potentialRepairSpot + "; ";
                 }
                 else{
+                    indicatorString += " CIRCHEAL: " + potentialRepairSpot + "; ";
                     nav.circle(potentialRepairSpot, 2, myType.actionRadiusSquared, false);
                 }
             }
             else{
+                indicatorString += " CIRC: " + archonLoc + "; ";
                 nav.circle(archonLoc, 10, myType.visionRadiusSquared, false);
             }
         }
@@ -103,16 +106,22 @@ public class Builder extends Robot {
             if(repairPriority == -1){
                 continue;
             }
+            if(info.getTeam() != myTeam){
+                continue;
+            }
             int health = info.getHealth();
             int maxHealth = info.type.getMaxHealth(info.getLevel());
             if(health == maxHealth) {
+//                indicatorString += "FULL" + info.getLocation();
                 continue;
             }
             int dist = myLoc.distanceSquaredTo(info.getLocation());
-            if(dist > closestDist) {
+            if(dist >= closestDist) {
                 continue;
             }
+//            indicatorString += "CLOSE:" + info.getLocation();
             closest = info.getLocation();
+            closestDist = dist;
         }
         return closest;
     }
