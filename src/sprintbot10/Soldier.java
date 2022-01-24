@@ -485,32 +485,80 @@ public class Soldier extends Robot {
         indicatorString += "NAV: " + currentTarget.toString() + " becuz " + targetLevel;
     }
 
+//    public void resetTarget() throws GameActionException {
+//        // Check if the squad is currently attacking anyone
+//        MapLocation optionA = comms.getClosestEnemyTroop();
+//        MapLocation optionB = comms.getCurrAttackLoc();
+//        optionA = null;
+//        if(optionA == null && optionB != null){
+//            currentTarget = optionB;
+//            targetLevel = 4;
+//            indicatorString += "FGHT";
+//        }
+//        else if(optionA != null && optionB == null){
+//            currentTarget = optionA;
+//            targetLevel = 4;
+//            indicatorString += "ASS";
+//        }
+//        else if(optionA != null && optionB != null){
+//            if(myLoc.distanceSquaredTo(optionA) < myLoc.distanceSquaredTo(optionB) / 2){
+//                currentTarget = optionA;
+//                targetLevel = 4;
+//                indicatorString += "ASS";
+//            }
+//            else{
+//                currentTarget = optionB;
+//                targetLevel = 4;
+//                indicatorString += "XD";
+//                indicatorString += "FGHT";
+//            }
+//        }
+//        else{
+//            targetLevel = 0; // Squad is no longer there
+//        }
+//        if(targetLevel >= 4){
+//            return;
+//        }
+//        MapLocation tempLoc = comms.getClosestEnemyArchonOnComms();
+////        tempLoc = nearestMinerLoc();
+////        tempLoc = null;
+//        if(tempLoc != null){
+//            currentTarget = tempLoc;
+//            enemyConfirmed = true;
+//            targetLevel = 3;
+//            Logger.Log("New current target: " + currentTarget.toString() + ", found archon via comms");
+//        }
+//        else{
+//            targetLevel = 0; // Archon is no longer there
+//        }
+//        if(targetLevel >= 2){
+//            return;
+//        }
+//        enemyConfirmed = false;
+//        // Scout for enemy based on symmetry
+//        tempLoc = scoutForEnemyArchons();
+////        tempLoc = nearestMinerLoc();
+//        if(tempLoc != null){
+//            currentTarget = tempLoc;
+//            targetLevel = 2;
+//            Logger.Log("New current target: " + currentTarget.toString() + ", scouting for enemy archon");
+//        }
+//        if(targetLevel >= 1){
+//            return;
+//        }
+//        // Run around randomly?
+//        targetLevel = 1;
+//        currentTarget = nav.getRandomMapLocation();
+//        Logger.Log("New current target: " + currentTarget.toString() + ", randomly chosen location");
+//    }
+
     public void resetTarget() throws GameActionException {
         // Check if the squad is currently attacking anyone
-        MapLocation optionA = comms.getClosestEnemyTroop();
-        MapLocation optionB = comms.getCurrAttackLoc();
-        if(optionA == null && optionB != null){
-            currentTarget = optionB;
+        MapLocation tempLoc = comms.getCurrAttackLoc();
+        if(tempLoc != null){
+            currentTarget = tempLoc;
             targetLevel = 4;
-            indicatorString += "FGHT";
-        }
-        else if(optionA != null && optionB == null){
-            currentTarget = optionA;
-            targetLevel = 4;
-            indicatorString += "ASS";
-        }
-        else if(optionA != null && optionB != null){
-            if(myLoc.distanceSquaredTo(optionA) < myLoc.distanceSquaredTo(optionB) / 2){
-                currentTarget = optionA;
-                targetLevel = 4;
-                indicatorString += "ASS";
-            }
-            else{
-                currentTarget = optionB;
-                targetLevel = 4;
-                indicatorString += "XD";
-                indicatorString += "FGHT";
-            }
+            sprintbot7.Logger.Log("New current target: " + currentTarget.toString() + ", using comms attack loc");
         }
         else{
             targetLevel = 0; // Squad is no longer there
@@ -518,14 +566,14 @@ public class Soldier extends Robot {
         if(targetLevel >= 4){
             return;
         }
-        MapLocation tempLoc = comms.getClosestEnemyArchonOnComms();
-//        tempLoc = nearestMinerLoc();
+//        tempLoc = comms.getClosestEnemyArchonOnComms();
+        tempLoc = nearestMinerLoc();
 //        tempLoc = null;
         if(tempLoc != null){
             currentTarget = tempLoc;
             enemyConfirmed = true;
             targetLevel = 3;
-            Logger.Log("New current target: " + currentTarget.toString() + ", found archon via comms");
+            sprintbot7.Logger.Log("New current target: " + currentTarget.toString() + ", found archon via comms");
         }
         else{
             targetLevel = 0; // Archon is no longer there
@@ -540,7 +588,7 @@ public class Soldier extends Robot {
         if(tempLoc != null){
             currentTarget = tempLoc;
             targetLevel = 2;
-            Logger.Log("New current target: " + currentTarget.toString() + ", scouting for enemy archon");
+            sprintbot7.Logger.Log("New current target: " + currentTarget.toString() + ", scouting for enemy archon");
         }
         if(targetLevel >= 1){
             return;
@@ -548,8 +596,9 @@ public class Soldier extends Robot {
         // Run around randomly?
         targetLevel = 1;
         currentTarget = nav.getRandomMapLocation();
-        Logger.Log("New current target: " + currentTarget.toString() + ", randomly chosen location");
+        sprintbot7.Logger.Log("New current target: " + currentTarget.toString() + ", randomly chosen location");
     }
+
 
     public MapLocation scoutForEnemyArchons() throws GameActionException {
         Logger.Log("--------------------------------------");

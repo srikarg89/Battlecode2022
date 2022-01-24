@@ -36,7 +36,7 @@ public class Miner extends Robot {
                 indicatorString += "AT; ";
             }
         }
-        
+
         int numDangerousEnemies = 0;
         RobotInfo[] nearbyDangerousEnemies = new RobotInfo[nearbyEnemies.length];
         for(int i = 0; i < nearbyEnemies.length; i++){
@@ -162,7 +162,8 @@ public class Miner extends Robot {
         // Go to nearest lead mine
         MapLocation[] leadLocs = rc.senseNearbyLocationsWithLead(myType.visionRadiusSquared, 1);
         for(int i = leadLocs.length; i -- > 0; ){
-            if(closestEnemyArchon == null || leadLocs[i].distanceSquaredTo(closestEnemyArchon) >= leadLocs[i].distanceSquaredTo(closestFriendlyArchon)){
+//            if(closestEnemyArchon == null || leadLocs[i].distanceSquaredTo(closestEnemyArchon) >= leadLocs[i].distanceSquaredTo(closestFriendlyArchon)){
+            if(true){
                 if(rc.senseLead(leadLocs[i]) < 2){
                     continue;
                 }
@@ -204,7 +205,7 @@ public class Miner extends Robot {
 //                System.out.println("CLOSEST FRIENDLY DIST: " + loc.distanceSquaredTo(closestFriendlyArchon));
 //                System.out.println("CLOSEST ENEMY: " + closestEnemyArchon);
 //                System.out.println("CLOSEST ENEMY DIST: " + loc.distanceSquaredTo(closestEnemyArchon));
-                mineUntil = 0;
+//                mineUntil = 0;
             }
             while (rc.canMineLead(loc) && rc.senseLead(loc) > mineUntil) {
                 if(closestEnemyArchon != null && loc.distanceSquaredTo(closestEnemyArchon) < loc.distanceSquaredTo(closestFriendlyArchon)) {

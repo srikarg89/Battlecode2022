@@ -12,3 +12,10 @@ sprintbot7 was our sprint submission. Tests run on maps progress, valley, tower,
 Created restart (built off of sprintbot7). Fixing archon scouting location sorting bug: restart wins 8/8 as red and 5/8 as blue
 Created restart2 (built off of restart). Made miners completely eat lead if in enemy territory and used rubble sensing for symmetry: restart2 wins 6/8 as red and 5/8 as blue
 Updated restart2. Changed soldier code so that it goes towards center instead of trying to follow miners. Now it's cracked af.
+
+
+
+sprintbot10 vs sprintbot7
+test 1: added in smth (goes towards enemy archons instead of going towards miners)
+test 2: copied archon code (repair priority and sorting bug)
+test 3: miners eat enemy lead and rubble based symmetry. Also added in soldier assassins

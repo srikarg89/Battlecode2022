@@ -68,30 +68,30 @@ public class Robot {
         }
         // TODO: Only do this for scouts, cuz most likely by the time anyone else gets there the archon will have moved
         if(rc.getRoundNum() >= 2){
-//            comms.determineSymmetry();
+            comms.determineSymmetry();
         }
-        comms.runRubbleBasedSymmetry();
+//        comms.runRubbleBasedSymmetry();
         comms.scanEnemyArchons();
 
-        int closestFriendlyArchonIdx = comms.getClosestFriendlyArchonIndex();
-        closestFriendlyArchon = Util.intToMapLocation(rc.readSharedArray(closestFriendlyArchonIdx));
-        closestEnemyArchon = comms.getClosestEnemyArchonOnComms();
-        if(closestEnemyArchon == null){
-            int symmetry = rc.readSharedArray(comms.SYMMETRY_IDX);
-            if(symmetry == 1 || symmetry == 2 || symmetry == 4){
-                MapLocation[] potentialEnemyLocs = comms.getPotentialEnemyArchonLocations();
-                int bestDist = Integer.MAX_VALUE;
-                for(int i = 0; i < potentialEnemyLocs.length; i++){
-                    int dist = myLoc.distanceSquaredTo(potentialEnemyLocs[i]);
-                    if(closestEnemyArchon == null || dist < bestDist){
-                        closestEnemyArchon = potentialEnemyLocs[i];
-                        bestDist = dist;
-                    }
-                }
-            }
-        }
-
-        comms.updateClosestEnemyTroop(closestFriendlyArchon, closestEnemyArchon, nearbyEnemies);
+//        int closestFriendlyArchonIdx = comms.getClosestFriendlyArchonIndex();
+//        closestFriendlyArchon = Util.intToMapLocation(rc.readSharedArray(closestFriendlyArchonIdx));
+//        closestEnemyArchon = comms.getClosestEnemyArchonOnComms();
+//        if(closestEnemyArchon == null){
+//            int symmetry = rc.readSharedArray(comms.SYMMETRY_IDX);
+//            if(symmetry == 1 || symmetry == 2 || symmetry == 4){
+//                MapLocation[] potentialEnemyLocs = comms.getPotentialEnemyArchonLocations();
+//                int bestDist = Integer.MAX_VALUE;
+//                for(int i = 0; i < potentialEnemyLocs.length; i++){
+//                    int dist = myLoc.distanceSquaredTo(potentialEnemyLocs[i]);
+//                    if(closestEnemyArchon == null || dist < bestDist){
+//                        closestEnemyArchon = potentialEnemyLocs[i];
+//                        bestDist = dist;
+//                    }
+//                }
+//            }
+//        }
+//
+//        comms.updateClosestEnemyTroop(closestFriendlyArchon, closestEnemyArchon, nearbyEnemies);
         age++;
     }
 

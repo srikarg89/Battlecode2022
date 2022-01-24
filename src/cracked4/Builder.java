@@ -249,8 +249,8 @@ public class Builder extends Robot {
         if(comms.getRobotCount(RobotType.LABORATORY) == 0){
             return RobotType.LABORATORY;
         }
-        else if(comms.getRobotCount(RobotType.SOLDIER)%15 == 0 && comms.getRobotCount(RobotType.SOLDIER) >= 15){
-            return RobotType.LABORATORY;
+        if(buildType == RobotType.LABORATORY){
+            comms.removeLeadSaveUp();
         }
 
         return null;

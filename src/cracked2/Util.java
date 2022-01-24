@@ -293,7 +293,10 @@ public class Util {
             if(nearby[i] == null){
                 continue;
             }
-            if(nearby[i].getType() != RobotType.SOLDIER || nearby[i].getTeam() != robot.myTeam.opponent()){
+            if(nearby[i].getTeam() == robot.myTeam){
+                continue;
+            }
+            if(nearby[i].getType() != RobotType.SOLDIER && nearby[i].getType() != RobotType.SAGE && nearby[i].getType() != RobotType.WATCHTOWER){
                 continue;
             }
             avgX += nearby[i].getLocation().x;

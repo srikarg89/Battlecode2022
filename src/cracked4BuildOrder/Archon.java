@@ -111,7 +111,6 @@ public class Archon extends Robot {
         else if((double)soldierCount / scalingFactor > 0.3  && builderCount < 1) {
             spawnUniformly(RobotType.BUILDER, builderCount);
         }
-
         else if(minerCount < initialMinerCount){
             spawnUniformly(RobotType.MINER, minerCount);
         }
