@@ -24,7 +24,7 @@ public strictfp class RobotPlayer {
         }
 
         while (true) {
-//            if(rc.getRoundNum() > 100){
+//            if(rc.getRoundNum() > 400){
 //                System.out.println("Resigning XD");
 //                rc.resign();
 //            }

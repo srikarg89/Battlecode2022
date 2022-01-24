@@ -49,6 +49,7 @@ public class Archon extends Robot {
 
     public void run() throws GameActionException {
         super.run();
+        System.out.println("COMMS SAVEUP: " + comms.getLeadSaveUp());
         minerCount = comms.getRobotCount(RobotType.MINER);
         soldierCount = comms.getRobotCount(RobotType.SOLDIER);
         builderCount = comms.getRobotCount(RobotType.BUILDER);
@@ -100,12 +101,12 @@ public class Archon extends Robot {
         else{
             smratio = ((double)soldierCount) * .5 / 35.0 + 1.0;
         }
+        System.out.println("RATIO: " + smratio);
 
         int leadDiff = lead - prevLead;
         if(gold >= RobotType.SAGE.buildCostGold){
             spawnUniformly(RobotType.SAGE, sageCount);
         }
-
         // once builder spawns, we will begin saving up to 180
         else if((double)soldierCount / scalingFactor > 0.3  && builderCount < 1) {
             spawnUniformly(RobotType.BUILDER, builderCount);
@@ -115,7 +116,7 @@ public class Archon extends Robot {
             spawnUniformly(RobotType.MINER, minerCount);
         }
 
-        else if(soldierCost < minerCount * smratio){
+        else if(soldierCount < minerCount * smratio){
             spawnUniformly(RobotType.SOLDIER, soldierCount);
         }
 
@@ -156,6 +157,7 @@ public class Archon extends Robot {
         int leadUsable = rc.getTeamLeadAmount(myTeam) - comms.getLeadSaveUp() + savingUp;
         Direction[] defaultSpawnDirs = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NORTHEAST, Direction.SOUTHWEST, Direction.NORTHWEST, Direction.SOUTHEAST};
         Direction[] spawnDirs = Util.closeDirections(defaultSpawnDirs[offset % 8]);
+        System.out.println("LEAD USABLE: " + leadUsable);
         if(leadUsable < spawnType.buildCostLead){
 //            System.out.println("Someone's saving up so im not gonna spawn this turn");
             return;
