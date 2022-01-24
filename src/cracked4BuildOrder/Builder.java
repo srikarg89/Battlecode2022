@@ -158,6 +158,8 @@ public class Builder extends Robot {
             MapLocation bestLoc = null;
             int bestDist = Integer.MIN_VALUE;
             int bestCooldown = Integer.MAX_VALUE;
+            int bestCenter = Integer.MIN_VALUE;
+            MapLocation center = new MapLocation(rc.getMapWidth()/2, rc.getMapHeight()/2);
             for(int i = 0; i < potentialPlotLocations.length; i++){
                 MapLocation loc = potentialPlotLocations[i];
                 if(!rc.canSenseLocation(loc)){
@@ -169,15 +171,25 @@ public class Builder extends Robot {
                 int cooldown = rc.senseRubble(loc);
 //                int dist = myLoc.distanceSquaredTo(loc);
                 int dist = archonLoc.distanceSquaredTo(loc);
+                int centerDist = loc.distanceSquaredTo(center);
                 if(cooldown < bestCooldown){
                     bestLoc = loc;
                     bestCooldown = cooldown;
+                    bestCenter = centerDist;
                     bestDist = dist;
                 }
-//                else if(cooldown == bestCooldown && dist < bestDist){
-                else if(cooldown == bestCooldown && dist  > bestDist){
+
+                else if(cooldown == bestCooldown && centerDist > bestCenter){
                     bestLoc = loc;
                     bestCooldown = cooldown;
+                    bestCenter = centerDist;
+                    bestDist = dist;
+                }
+
+                else if(cooldown == bestCooldown && centerDist == bestCenter && dist  > bestDist){
+                    bestLoc = loc;
+                    bestCooldown = cooldown;
+                    bestCenter = centerDist;
                     bestDist = dist;
                 }
             }
