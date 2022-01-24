@@ -1,4 +1,4 @@
-package cracked2;
+package cracked5;
 
 import battlecode.common.*;
 
@@ -31,6 +31,9 @@ public class Archon extends Robot {
     MapLocation[] scoutingLocs;
     boolean spawnedMinerLastTurn = false;
     int savingUp = 0;
+    MapLocation moveDestination = null;
+    MapLocation center = new MapLocation(rc.getMapWidth()/2, rc.getMapHeight()/2);
+    Direction[] bestSpawnDirs;
 
     public Archon(RobotController rc) throws GameActionException {
         super(rc);
@@ -53,32 +56,145 @@ public class Archon extends Robot {
         soldierCount = comms.getRobotCount(RobotType.SOLDIER);
         builderCount = comms.getRobotCount(RobotType.BUILDER);
 
-        comms.findFriendlyArchons();
-        RobotInfo[] enemiesInVision = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
-        MapLocation enemyCOM = Util.calculateEnemySoldierCOM(enemiesInVision);
-        comms.updateCurrAttackLoc(enemiesInVision, enemyCOM);
+        indicatorString += rc.getMode().toString() + "; ";
+        this.numFriendlyArchons = rc.getArchonCount();
 
-        if(spawnedMinerLastTurn){
-            // TODO: Change this to spawn miner type based on miner #
-            int minerType = 0; // Explore
-            if(myMiners % 5 == 4){
+        if(rc.getRoundNum() == 1){ // TODO: Might wanna do this based on map size. Might not be worth on smaller maps
+            moveDestination = findLeastRubbleSpot(); // TODO Add heuristic to only move if lead is not a constraint or we have too many friendly soldiers around us (and moving to lower cool-down can benefit)
+        }
+        if(myLoc.distanceSquaredTo(moveDestination) > 0){ // if we are on the move to a lower rubble spot
+            indicatorString += "MOVING; ";
+            while(rc.getMode().equals(RobotMode.TURRET) && rc.canTransform()){
+                rc.transform();
+            }
+            nav.goTo(moveDestination);
+            comms.writeSharedArray(myCommsIdx, Util.mapLocationToInt(myLoc));
+            bestSpawnDirs = null;
+            //getBestSpawnDirs();
+        }
+        else {
+
+            indicatorString += "STAYING; ";
+            while(rc.getMode().equals(RobotMode.PORTABLE) && rc.canTransform()){    // make sure we are in turret mode
+                indicatorString += "Transforming 2; ";
+                rc.transform();
+            }
+            if(bestSpawnDirs == null){
+                getBestSpawnDirs();
+            }
+
+            comms.findFriendlyArchons();
+            RobotInfo[] enemiesInVision = rc.senseNearbyRobots(myType.visionRadiusSquared, myTeam.opponent());
+            MapLocation enemyCOM = Util.calculateEnemySoldierCOM(enemiesInVision);
+            comms.updateCurrAttackLoc(enemiesInVision, enemyCOM);
+
+            if (spawnedMinerLastTurn) {
+                // TODO: Change this to spawn miner type based on miner #
+                int minerType = 0; // Explore
+                if (myMiners % 5 == 4) {
 //                minerType = 1; // Go to biggest fight to cleanup
 //                myCleanupMiners++;
+                }
+                comms.updateMinerInstruction(myCommsIdx, scoutingLocs[(myMiners - myCleanupMiners - 1) % scoutingLocs.length], minerType);
             }
-            comms.updateMinerInstruction(myCommsIdx, scoutingLocs[(myMiners - myCleanupMiners - 1) % scoutingLocs.length], minerType);
-        }
 
-        // Try building
-        if (Util.mapLocationToInt(rc.getLocation()) == rc.readSharedArray(rc.getRoundNum() % this.numFriendlyArchons)) {
-            // Build in a different direction than last time
-            boolean defended = defendYourself();
-            if(!defended){
-                runBuildOrder();
+            // Try building
+            if (Util.mapLocationToInt(rc.getLocation()) == rc.readSharedArray(rc.getRoundNum() % this.numFriendlyArchons)) {
+                // Build in a different direction than last time
+                boolean defended = defendYourself();
+                if (!defended) {
+                    runBuildOrder();
+                }
+            }
+            // Try repairing
+            runRepair();
+            prevLead = rc.getTeamLeadAmount(myTeam);
+        }
+    }
+
+    public MapLocation findLeastRubbleSpot() throws GameActionException{
+        // checks all spots in the archon's vision radius and returns spot with lowest rubble that is closest
+        MapLocation bestSpot = null;
+        int minRubble = Integer.MAX_VALUE;
+        int distanceSquaredToBestSpot = Integer.MAX_VALUE;
+        MapLocation[] visibleSpots = rc.getAllLocationsWithinRadiusSquared(myLoc, myType.visionRadiusSquared);
+
+        for(int i = 0; i < visibleSpots.length; i++) {
+            MapLocation potSpot = visibleSpots[i];
+            if (rc.onTheMap(potSpot)) {     // is the potential spot on the map?
+                int distanceSquaredToPotSpot = myLoc.distanceSquaredTo(potSpot);
+                int rubbleAtPotSpot = rc.senseRubble(potSpot);
+                if (rubbleAtPotSpot < minRubble || (rubbleAtPotSpot == minRubble && distanceSquaredToPotSpot < distanceSquaredToBestSpot)) {
+                    bestSpot = potSpot;
+                    distanceSquaredToBestSpot = distanceSquaredToPotSpot;
+                    minRubble = rubbleAtPotSpot;
+                }
             }
         }
-        // Try repairing
-        runRepair();
-        prevLead = rc.getTeamLeadAmount(myTeam);
+        return bestSpot;
+    }
+
+    Comparator<Direction> compareByRubble  = new Comparator<Direction>() {
+        public int compare(Direction d1, Direction d2) {
+            try {           // hacky way to get past GameActionExceptions, which comparators aren't supposed to throw
+                // check to see if either of the locations are null (might happen, based on how we defined the array
+                MapLocation l1 = myLoc.add(d1);
+                MapLocation l2 = myLoc.add(d2);
+                int l1Rubble;
+                int l2Rubble;
+                if (!rc.onTheMap(l1)) {
+                    l1Rubble = Integer.MAX_VALUE;
+                }
+                else {
+                    l1Rubble = rc.senseRubble(l1);
+                }
+                if (!rc.onTheMap(l2)) {
+                    l2Rubble = Integer.MAX_VALUE;
+                }
+                else {
+                    l2Rubble = rc.senseRubble(l2);
+                }
+                if(l1Rubble < l2Rubble){      // l1 has less rubble
+                    return -1;
+                } else if (l2Rubble < l1Rubble) {    // l2 has less rubble
+                    return 1;
+                }
+
+                else {                          // it's a tie, comparing distances to center
+                    int l1DistanceToCenter;
+                    int l2DistanceToCenter;
+                    if(l1Rubble == Integer.MAX_VALUE){  // mapLocation was not on map, so doesn't make sense to compute distance
+                        l1DistanceToCenter = Integer.MAX_VALUE;
+                    }
+                    else{
+                        l1DistanceToCenter = l1.distanceSquaredTo(center);
+                    }
+                    if(l2Rubble == Integer.MAX_VALUE){  // mapLocation was not on map, so doesn't make sense to compute distance
+                        l2DistanceToCenter = Integer.MAX_VALUE;
+                    }
+                    else{
+                        l2DistanceToCenter = l2.distanceSquaredTo(center);
+                    }
+                    if(l1DistanceToCenter < l2DistanceToCenter){
+                        return -1;
+                    }
+                    else if(l2DistanceToCenter < l1DistanceToCenter){
+                        return 1;
+                    }
+                    else{
+                        return 0;
+                    }
+                }
+            } catch (GameActionException e) {  // hopefully, this should not happen
+                System.out.println(e);
+                return 0;
+            }
+        }
+    };
+
+    public void getBestSpawnDirs() throws GameActionException{
+        bestSpawnDirs = Util.directions;
+        Arrays.sort(bestSpawnDirs, compareByRubble);
     }
 
     // TODO: Figure out an optimal build order instead of overfitting to specific maps

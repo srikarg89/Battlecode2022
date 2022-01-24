@@ -1,43 +1,35 @@
-package cracked4;
+package cracked5;
 
 import battlecode.common.*;
 
-class SoldierHeuristic2 {
+class SoldierHeuristic {
     double friendlyHP;
     double friendlyDamage;
     double enemyHP;
     double enemyDamage;
-    double archonDistanceRatio;
-    public SoldierHeuristic2(double FH, double FD, double EH, double ED, double ADR){
+    double totalEnemyDamage;
+
+    public SoldierHeuristic(double FH, double FD, double EH, double ED, double TED){
         friendlyHP = FH;
         friendlyDamage = FD;
         enemyHP = EH;
         enemyDamage = ED;
-        archonDistanceRatio = ADR;
+        totalEnemyDamage = TED;
     }
 
     public boolean getSafe(Robot robot){
         double myTurnsNeeded = enemyHP / friendlyDamage;
         double enemyTurnsNeeded = friendlyHP / enemyDamage;
-
-        archonDistanceRatio = archonDistanceRatio*archonDistanceRatio*archonDistanceRatio;
-
-        if(archonDistanceRatio > 1){
-            archonDistanceRatio = 1;
-        }
-
-//        System.out.println("My loc: " + robot.myLoc.toString());
 //        System.out.println("Friendly HP: " + friendlyHP + ", DMG: " + friendlyDamage + ", Enemy HP: " + enemyHP + ", DMG: " + enemyDamage);
-        System.out.println("ADR: " + archonDistanceRatio);
-        robot.indicatorString += "ADR:" + (int)(archonDistanceRatio*100) + ",MT:" + (int)myTurnsNeeded + ",ET:" + (int)enemyTurnsNeeded + "; ";
+        robot.indicatorString += "MT: " + (int)myTurnsNeeded + ", ET: " + (int)enemyTurnsNeeded + "; ";
 
         // 1.5 simply because im ballsy and wanna go for it
-        return myTurnsNeeded / archonDistanceRatio <= enemyTurnsNeeded * 1.2; // If you can kill them faster than they can kill you, return true
+        return myTurnsNeeded <= enemyTurnsNeeded * 1.2; // If you can kill them faster than they can kill you, return true
     }
 
 }
 
-public class Soldier2 extends Robot {
+public class Soldier extends Robot {
     MapLocation archonLoc = null;
     int archonIndex = -1;
 
@@ -46,10 +38,6 @@ public class Soldier2 extends Robot {
     MapLocation lastAttackLoc = null;
     int turnsSinceRetreat = 0;
     MapLocation retreatLoc = null;
-    boolean needHealing = false;
-
-    // Proportion of soldiers that are defensive (offensive will go to enemy, defensive will stay close to spawning archon)
-    // might be smart to have a few created for each archon in the beginning of each game
 
     //list defining what we should destroy first
     RobotType[] priorityOrder = {RobotType.SAGE, RobotType.SOLDIER, RobotType.ARCHON, RobotType.WATCHTOWER, RobotType.MINER,
@@ -57,14 +45,15 @@ public class Soldier2 extends Robot {
     boolean[][] visited = new boolean[4][3];
     MapLocation currentTarget;
     boolean enemyConfirmed = false;
-    SoldierHeuristic2 lastHeuristic = null;
-    final int SOLDIER_RETREAT_THRESHOLD = 7;
-    int closestFriendlyArchonIndex = -1;
+    boolean needHealing = false;
+    final int health_to_retreat = 13;
+    int bestArchonForHealingIdx = -1;
+    int healingLeft = -1;
 
     // Defending soldier variables
     int targetLevel = 0;
 
-    public Soldier2(RobotController rc) throws GameActionException {
+    public Soldier(RobotController rc) throws GameActionException {
         super(rc);
     }
 
@@ -100,35 +89,55 @@ public class Soldier2 extends Robot {
         MapLocation closestFriendlyArchon = Util.intToMapLocation(rc.readSharedArray(comms.getClosestFriendlyArchonIndex()));
 
         RobotInfo nearestEnemyInfo = getNearestEnemy(nearbyVisionEnemies);
-        SoldierHeuristic2 heuristic = getHeursitic(nearbyFriendlies, nearbyVisionEnemies, nearestEnemyInfo, closestEnemyArchon, closestFriendlyArchon); // 2300 bytecode for 31 nearby
+        SoldierHeuristic heuristic = getHeursitic(nearbyFriendlies, nearbyVisionEnemies, nearestEnemyInfo, closestEnemyArchon, closestFriendlyArchon); // 2300 bytecode for 31 nearby
         boolean inSafeZone = true;
         if(heuristic != null){
             inSafeZone = heuristic.getSafe(this);
         }
         RobotInfo attackTarget = findAttackTarget(nearbyActionEnemies);
 
-        if(!needHealing && rc.getHealth() <= 7){
-            needHealing = true;
-        }
-        else if(needHealing && rc.getHealth() == myType.getMaxHealth(rc.getLevel())){
+        indicatorString += "AC:" + rc.getActionCooldownTurns() + ";MC:" + rc.getMovementCooldownTurns() + ";";
+
+        if(needHealing && rc.getHealth() == myType.getMaxHealth(rc.getLevel())){
             needHealing = false;
+            int currVal = rc.readSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx);
+            int maxHealth = myType.getMaxHealth(rc.getLevel());
+            int prevHealingLeft = healingLeft;
+            healingLeft = maxHealth - rc.getHealth();
+            comms.writeSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx, currVal - prevHealingLeft + healingLeft);
         }
 
-        needHealing = false;
+        if(!needHealing && heuristic != null && (rc.getHealth() <= heuristic.totalEnemyDamage || rc.getHealth() <= heuristic.enemyDamage * 2.0 / 100.0)){
+            needHealing = true;
+            bestArchonForHealingIdx = comms.findBestArchonForHealing();
+            int currVal = rc.readSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx);
+            int maxHealth = myType.getMaxHealth(rc.getLevel());
+            healingLeft = maxHealth - rc.getHealth();
+            comms.writeSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx, currVal + healingLeft);
+        }
 
-        Logger.Log("Action cooldown: " + rc.getActionCooldownTurns());
-        Logger.Log("Movement cooldown: " + rc.getMovementCooldownTurns());
-        // The strat is to get two shots for the enemy's one shot. ie, you try to stay on the boundary of the enemy's vision. Then, you push, attack, (they get a turn so they attack), then you attack again, then you retreat (back out of their range)
-        if(inSafeZone){
-            if(needHealing){
-                indicatorString += "NH; ";
-                if(myLoc.distanceSquaredTo(closestFriendlyArchon) >= RobotType.ARCHON.actionRadiusSquared){
-                    nav.goTo(closestFriendlyArchon);
+        if(needHealing){
+            attack(attackTarget);
+            if(inSafeZone){
+                MapLocation targetLoc = Util.intToMapLocation(rc.readSharedArray(bestArchonForHealingIdx));
+                if(myLoc.distanceSquaredTo(targetLoc) > RobotType.ARCHON.actionRadiusSquared - 10){
+                    nav.goTo(targetLoc);
                 }
                 else{
-                    nav.circle(closestFriendlyArchon, 10, true);
+                    nav.circle(targetLoc, 8, true);
                 }
+                int currVal = rc.readSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx);
+                int maxHealth = myType.getMaxHealth(rc.getLevel());
+                int prevHealingLeft = healingLeft;
+                healingLeft = maxHealth - rc.getHealth();
+                comms.writeSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx, currVal - prevHealingLeft + healingLeft);
             }
+            else{
+                retreat(enemyCOM, heuristic);
+            }
+        }
+        // The strat is to get two shots for the enemy's one shot. ie, you try to stay on the boundary of the enemy's vision. Then, you push, attack, (they get a turn so they attack), then you attack again, then you retreat (back out of their range)
+        else if(inSafeZone){
             indicatorString += "S; ";
             Logger.Log("In safe zone!");
             if(attackTarget != null){
@@ -144,7 +153,7 @@ public class Soldier2 extends Robot {
                     }
                     else { // Attack and back up (you know the drill)
                         attack(attackTarget);
-                        if(attackTarget.type == RobotType.SOLDIER || attackTarget.type == RobotType.WATCHTOWER){
+                        if(attackTarget.type == RobotType.SOLDIER || attackTarget.type == RobotType.WATCHTOWER || attackTarget.type == RobotType.SAGE){
                             Direction dirToEnemyCOM = myLoc.directionTo(enemyCOM);
                             MapLocation awayFromEnemyCOM = myLoc.subtract(dirToEnemyCOM).subtract(dirToEnemyCOM).subtract(dirToEnemyCOM);
                             boolean retreated = moveForwardSafely(awayFromEnemyCOM, rc.senseRubble(myLoc));
@@ -207,6 +216,14 @@ public class Soldier2 extends Robot {
             attack(attackTarget);
             // Get the hell outta there
             retreat(enemyCOM, heuristic);
+            if(rc.getHealth() < health_to_retreat){
+                needHealing = true;
+                bestArchonForHealingIdx = comms.findBestArchonForHealing();
+                int currVal = rc.readSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx);
+                int maxHealth = myType.getMaxHealth(rc.getLevel());
+                healingLeft = maxHealth - rc.getHealth();
+                comms.writeSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx, currVal + healingLeft);
+            }
             turnsSinceRetreat = 0;
             retreatLoc = enemyCOM;
             // TODO Consider retreating towards friendlies as well as away from enemies
@@ -214,9 +231,6 @@ public class Soldier2 extends Robot {
         checkPossibleDeath();
         turnsSinceAttack++;
         turnsSinceRetreat++;
-        if(heuristic != null){
-            lastHeuristic = heuristic;
-        }
     }
 
     // Follow the miner thats farthest away from archon
@@ -284,7 +298,7 @@ public class Soldier2 extends Robot {
         MapLocation nearestFriendly = null;
         int closestDist = 0;
         for(int i = nearbyFriendlies.length; i-- > 0; ){
-            if(nearbyFriendlies[i].type != RobotType.SOLDIER || nearbyFriendlies[i].type != RobotType.WATCHTOWER){
+            if(nearbyFriendlies[i].type != RobotType.SOLDIER || nearbyFriendlies[i].type != RobotType.WATCHTOWER || nearbyFriendlies[i].type != RobotType.SAGE){
                 continue;
             }
             int dist = myLoc.distanceSquaredTo(nearbyFriendlies[i].location);
@@ -308,24 +322,29 @@ public class Soldier2 extends Robot {
         nav.goTo(nearestFriendlyDamageUnit());
     }
 
-    public void retreat(MapLocation enemyCOM, SoldierHeuristic2 heuristic) throws GameActionException { // Movement method
+    public void retreat(MapLocation enemyCOM, SoldierHeuristic heuristic) throws GameActionException { // Movement method
         Logger.Log("Retreating from: " + enemyCOM.toString());
         indicatorString += "RTR!; ";
         if(enemyCOM.equals(myLoc)){ // No enemies nearby, just retreat back to base
             System.out.println("Enemy COM is my loc but im still retreating? That's weird");
             nav.goTo(archonLoc);
         }
-        else if(rc.getHealth() < SOLDIER_RETREAT_THRESHOLD){
-            needHealing = true;
-            closestFriendlyArchonIndex = comms.getClosestFriendlyArchonIndex();
-            nav.goTo(Util.intToMapLocation(rc.readSharedArray(closestFriendlyArchonIndex)));
-        }
         else{
             // Determine if moving backwards is worth it
-            double myTurns = heuristic.enemyHP / heuristic.friendlyDamage;
-            double enemyTurns = heuristic.friendlyHP / heuristic.enemyDamage;
-            double ratio = myTurns / enemyTurns;
-            int maxRubbleAllowed = (int)(rc.senseRubble(myLoc) * ratio);
+            int maxRubbleAllowed = rc.senseRubble(myLoc);
+            if(heuristic != null){
+                double myTurns = heuristic.enemyHP / heuristic.friendlyDamage;
+                double enemyTurns = heuristic.friendlyHP / heuristic.enemyDamage;
+                double ratio = myTurns / enemyTurns;
+                maxRubbleAllowed = (int)((rc.senseRubble(myLoc) + 10) * ratio) - 10;
+            }
+            else{
+                assert(false);
+            }
+//            double myTurns = heuristic.enemyHP / heuristic.friendlyDamage;
+//            double enemyTurns = heuristic.friendlyHP / heuristic.enemyDamage;
+//            double ratio = myTurns / enemyTurns;
+//            int maxRubbleAllowed = (int)(rc.senseRubble(myLoc) * ratio);
             Direction away = myLoc.directionTo(enemyCOM).opposite();
             MapLocation retreatTarget = myLoc.add(away).add(away).add(away).add(away);
             boolean retreated = moveForwardSafely(retreatTarget, maxRubbleAllowed);
@@ -335,23 +354,23 @@ public class Soldier2 extends Robot {
         }
     }
 
-    public void push(MapLocation enemyCOM, MapLocation bestAttackTarget, SoldierHeuristic2 heuristic) throws GameActionException { // Movement method
+    public void push(MapLocation enemyCOM, MapLocation bestAttackTarget, SoldierHeuristic heuristic) throws GameActionException { // Movement method
         Logger.Log("Pushing towards: " + enemyCOM.toString());
         if(enemyCOM.equals(myLoc)){ // No enemy soldiers nearby, go after whatever else there is
             nav.goTo(bestAttackTarget);
         }
         else{
-            SoldierHeuristic2 heuristicToUse = heuristic;
-            if(heuristic == null){
-                heuristicToUse = lastHeuristic;
-            }
             int maxRubbleAllowed = rc.senseRubble(myLoc);
-            if(heuristicToUse != null){
-                double myTurns = heuristicToUse.enemyHP / heuristicToUse.friendlyDamage;
-                double enemyTurns = heuristicToUse.friendlyHP / heuristicToUse.enemyDamage;
+            if(heuristic != null){
+                double myTurns = heuristic.enemyHP / heuristic.friendlyDamage;
+                double enemyTurns = heuristic.friendlyHP / heuristic.enemyDamage;
                 double ratio = enemyTurns / myTurns;
-                maxRubbleAllowed = (int)(rc.senseRubble(myLoc) * ratio);
+                maxRubbleAllowed = (int)((rc.senseRubble(myLoc) + 10) * ratio) - 10;
             }
+//            double myTurns = heuristic.enemyHP / heuristic.friendlyDamage;
+//            double enemyTurns = heuristic.friendlyHP / heuristic.enemyDamage;
+//            double ratio = enemyTurns / myTurns;
+//            int maxRubbleAllowed = (int)(rc.senseRubble(myLoc) * ratio);
             moveForwardSafely(enemyCOM, maxRubbleAllowed);
         }
     }
@@ -423,7 +442,9 @@ public class Soldier2 extends Robot {
 
     // TODO Count the # of soldiers on their front lines? I'm alr kinda doing that, but maybe comm that info so that everyone's aware of how fucked you are?
 
-    public SoldierHeuristic2 getHeursitic(RobotInfo[] nearbyFriendlies, RobotInfo[] dangeorusEnemies, RobotInfo nearestEnemyInfo, MapLocation closestEnemyArchon, MapLocation closestFriendlyArchon) throws GameActionException { // TODO: Maybe only check # of attackers on the robot closest to you?
+    public SoldierHeuristic getHeursitic(RobotInfo[] nearbyFriendlies, RobotInfo[] dangeorusEnemies, RobotInfo nearestEnemyInfo, MapLocation closestEnemyArchon, MapLocation closestFriendlyLocation) throws GameActionException { // TODO: Maybe only check # of attackers on the robot closest to you?
+        // your attack isn't ready, then don't engage
+
         if(nearestEnemyInfo == null){ // No enemies nearby, we safe
             indicatorString += "NE1; ";
             return null;
@@ -435,13 +456,16 @@ public class Soldier2 extends Robot {
         double enemyDamage = 0.0;
         double friendlyHP = 0.0;
         double enemyHP = 0.0;
+        double totalEnemyDamage = 0.0;
 
         // Calculate enemies attacking you
         for(int i = 0; i < dangeorusEnemies.length; i++){
             RobotInfo info = dangeorusEnemies[i];
-            if(info.type == RobotType.SOLDIER || info.type == RobotType.WATCHTOWER){
+            if(info.type == RobotType.SOLDIER || info.type == RobotType.WATCHTOWER || info.type == RobotType.SAGE){
                 double attackCooldown = rc.senseRubble(info.location) + 10;
+                attackCooldown *= info.type.actionCooldown;
                 enemyDamage += info.type.damage / attackCooldown;
+                totalEnemyDamage += info.type.damage;
                 enemyHP += info.getHealth();
             }
 //            else if(info.type == RobotType.ARCHON){
@@ -463,15 +487,20 @@ public class Soldier2 extends Robot {
             if(info.getLocation().distanceSquaredTo(nearestEnemyInfo.getLocation()) > info.type.actionRadiusSquared){
                 continue; // Only count friendlies that can attack said enemy
             }
-            if(info.type == RobotType.SOLDIER || info.type == RobotType.WATCHTOWER){
-                if(info.getHealth() < SOLDIER_RETREAT_THRESHOLD){
-                    continue;
-                }
+            if(info.getHealth() < health_to_retreat){
+                continue;
+            }
+            if(info.type == RobotType.SAGE){
+                continue;
+            }
+            if(info.type == RobotType.SOLDIER || info.type == RobotType.WATCHTOWER || info.type == RobotType.SAGE){
                 double attackCooldown = rc.senseRubble(info.location) + 10;
+                attackCooldown *= info.type.actionCooldown;
                 friendlyDamage += info.type.damage / attackCooldown;
                 friendlyHP += info.getHealth();
             }
             if(info.type == RobotType.ARCHON){ // NOTE: Archons can't attack, but this just makes you more likely to wanna protect your own archon
+//                friendlyHP += info.getHealth();
                 double damageDiff = 2.0 / (rc.senseRubble(info.location) + 10.0);
                 if(enemyDamage <= damageDiff){
                     enemyDamage = 0;
@@ -491,13 +520,7 @@ public class Soldier2 extends Robot {
         friendlyDamage += myType.damage / myAttackCooldown;
         friendlyHP += rc.getHealth();
 
-        double archonDistanceRatio = 1;
-        if(closestEnemyArchon != null){
-            MapLocation enemyCOM = Util.calculateEnemySoldierCOM(nearbyEnemies);
-            archonDistanceRatio = (double)enemyCOM.distanceSquaredTo(closestEnemyArchon)/(double)enemyCOM.distanceSquaredTo(closestFriendlyArchon) ;
-        }
-
-        return new SoldierHeuristic2(friendlyHP, friendlyDamage, enemyHP, enemyDamage, archonDistanceRatio);
+        return new SoldierHeuristic(friendlyHP, friendlyDamage, enemyHP, enemyDamage, totalEnemyDamage);
     }
 
     public boolean moveForwardSafely(MapLocation target, int maxRubbleAllowed) throws GameActionException { // Maybe instead do smth else
@@ -577,8 +600,6 @@ public class Soldier2 extends Robot {
     public void resetTarget() throws GameActionException {
         // Check if the squad is currently attacking anyone
         MapLocation tempLoc = comms.getCurrAttackLoc();
-//        if(tempLoc != null && currentTarget != null && myLoc.distanceSquaredTo(tempLoc) <= myLoc.distanceSquaredTo(currentTarget)){
-//        if(tempLoc != null && currentTarget != null){
         if(tempLoc != null){
             currentTarget = tempLoc;
             targetLevel = 4;
@@ -592,6 +613,7 @@ public class Soldier2 extends Robot {
         }
         tempLoc = comms.getClosestEnemyArchonOnComms();
 //        tempLoc = nearestMinerLoc();
+//        tempLoc = null;
         if(tempLoc != null){
             currentTarget = tempLoc;
             enemyConfirmed = true;

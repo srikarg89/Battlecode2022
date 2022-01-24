@@ -1,10 +1,10 @@
-package cracked4;
+package cracked5;
 
 import battlecode.common.*;
 
 // And then just go to the spot with the best heuristic
 
-public class Miner extends Robot {
+public class Miner2 extends Robot {
 
     MapLocation archonLoc = null;
     int archonIndex = -1;
@@ -14,7 +14,7 @@ public class Miner extends Robot {
     int leadVal00 = 0; int leadVal01 = 0; int leadVal02 = 0; int leadVal03 = 0; int leadVal04 = 0; int leadVal10 = 0; int leadVal11 = 0; int leadVal12 = 0; int leadVal13 = 0; int leadVal14 = 0; int leadVal20 = 0; int leadVal21 = 0; int leadVal22 = 0; int leadVal23 = 0; int leadVal24 = 0; int leadVal30 = 0; int leadVal31 = 0; int leadVal32 = 0; int leadVal33 = 0; int leadVal34 = 0; int leadVal40 = 0; int leadVal41 = 0; int leadVal42 = 0; int leadVal43 = 0; int leadVal44 = 0;
     int teammate_2_1 = 0; int teammate_20 = 0; int teammate_21 = 0; int teammate_1_2 = 0; int teammate_1_1 = 0; int teammate_10 = 0; int teammate_11 = 0; int teammate_12 = 0; int teammate0_2 = 0; int teammate0_1 = 0; int teammate01 = 0; int teammate02 = 0; int teammate1_2 = 0; int teammate1_1 = 0; int teammate10 = 0; int teammate11 = 0; int teammate12 = 0; int teammate2_1 = 0; int teammate20 = 0; int teammate21 = 0;
 
-    public Miner(RobotController rc) throws GameActionException {
+    public Miner2(RobotController rc) throws GameActionException {
         super(rc);
     }
 
@@ -81,7 +81,7 @@ public class Miner extends Robot {
             if(false){
                 MapLocation enemyCOM = Util.calculateEnemySoldierCOM(nearbyDangerousEnemies);
                 Direction enemyDir = myLoc.directionTo(enemyCOM);
-                MapLocation retreatLoc = myLoc.add(enemyDir).add(enemyDir).add(enemyDir).add(enemyDir);
+                MapLocation retreatLoc = myLoc.add(enemyDir).add(enemyDir).add(enemyDir).add(enemyDir).add(enemyDir).add(enemyDir).add(enemyDir);
                 nav.goTo(retreatLoc);
             }
             else{
@@ -98,12 +98,18 @@ public class Miner extends Robot {
                         }
                         MapLocation newLoc = myLoc.add(dir);
                         double newHeuristic = getHeursitic(newLoc, nearbyEnemies);
+                        System.out.println("Heuristic at loc: " + newLoc + " is " + newHeuristic);
                         if (newHeuristic > bestHeuristic) {
                             bestHeuristic = newHeuristic;
                             bestDir = dir;
                         }
                     }
-                    if (bestDir != null) { // If you can move in a better direction, do so
+                    if(bestHeuristic < 0){
+                        MapLocation enemyCOM = Util.calculateEnemySoldierCOM(nearbyEnemies);
+                        Direction oppDir = myLoc.directionTo(enemyCOM).opposite();
+                        nav.goTo(myLoc.add(oppDir).add(oppDir).add(oppDir).add(oppDir).add(oppDir).add(oppDir));
+                    }
+                    else if (bestDir != null) { // If you can move in a better direction, do so
                         rc.move(bestDir);
                         indicatorString += "CH: " + (int) (currHeuristic * 100) + ",BH: " + (int) (bestHeuristic * 100) + ", Dir: " + bestDir + "; ";
                     }
@@ -162,11 +168,14 @@ public class Miner extends Robot {
         for(int i = nearbyEnemies.length; i-- > 0; ){
             if(nearbyEnemies[i].type == RobotType.SOLDIER || nearbyEnemies[i].type == RobotType.WATCHTOWER){
 //                numEnemies++;
-                double movesToReach = Util.minMovesToReach(center, nearbyEnemies[i].location);
-                numEnemies += 1.0 / movesToReach;
+//                double movesToReach = Util.minMovesToReach(center, nearbyEnemies[i].location);
+//                numEnemies += 1.0 / movesToReach;
 //                numEnemies += 1.0 / Math.sqrt(center.distanceSquaredTo(nearbyEnemies[i].location));
+                numEnemies += 1.0 / center.distanceSquaredTo(nearbyEnemies[i].location);
             }
         }
+
+        numEnemies *= numEnemies;
 
         double leadMineable = numLeadMineableUnrolled(center.x - myLoc.x, center.y - myLoc.y); // 50 bytecode baby.
         double numTeammates = 0;
@@ -183,10 +192,14 @@ public class Miner extends Robot {
 
         double cooldown = 10.0 + rc.senseRubble(center);
 //        double val = leadMineable - numTeammates - numEnemies * 6;
-        if(leadMineable == 0){
-            return -numEnemies * 3 * cooldown;
+//        if(leadMineable == 0){
+//            return -numEnemies * 3 * cooldown;
+//        }
+        double heuristic = (leadMineable - numTeammates - numEnemies * 1000);
+        if(heuristic <= 0){
+            return heuristic * cooldown;
         }
-        return (leadMineable - numTeammates - numEnemies * 6) / cooldown; // Larger heuristic is better
+        return heuristic / cooldown; // Larger heuristic is better
     }
 
     // Find the closest location with the most reserves (gold and lead) to mine from. If there is no location to mine from, return null
