@@ -74,7 +74,7 @@ public class Sage extends Robot {
                     nav.goTo(targetLoc);
                 }
                 else{
-                    nav.circle(targetLoc, 8, true);
+                    nav.circle(targetLoc, 8, RobotType.ARCHON.actionRadiusSquared, true);
                 }
                 int currVal = rc.readSharedArray(comms.ARCHON_HEALING_START_IDX + bestArchonForHealingIdx);
                 int maxHealth = myType.getMaxHealth(rc.getLevel());

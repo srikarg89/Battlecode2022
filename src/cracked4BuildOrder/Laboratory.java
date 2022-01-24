@@ -2,11 +2,12 @@ package cracked4BuildOrder;
 
 import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
+import battlecode.common.RobotType;
 
 public class Laboratory extends Robot {
 
     int prevLead = 0;
-
+    int minerCount = 0;
     public Laboratory(RobotController rc) throws GameActionException {
         super(rc);
     }
@@ -19,7 +20,12 @@ public class Laboratory extends Robot {
         indicatorString += "CT?: " + rc.canTransmute() + ";";
         indicatorString += "AC: " + rc.getActionCooldownTurns() + ";";
         indicatorString += "CT?: " + rc.canTransmute() + ";";
-        if(rc.canTransmute()){
+
+        minerCount = comms.getRobotCount(RobotType.MINER);
+        int initialMinerCount = 3; // scale this according to map size
+        double scalingFactor = Math.sqrt(rc.getMapHeight() * rc.getMapWidth());
+        initialMinerCount *= scalingFactor/25;
+        if(rc.canTransmute() && minerCount>=initialMinerCount){
             rc.transmute();
             rc.setIndicatorString("Transmuting");
         }

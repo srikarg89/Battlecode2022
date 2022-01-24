@@ -55,7 +55,6 @@ public class Soldier extends Robot {
         Logger.Log("Movement cooldown: " + rc.getMovementCooldownTurns());
         // The strat is to get two shots for the enemy's one shot. ie, you try to stay on the boundary of the enemy's vision. Then, you push, attack, (they get a turn so they attack), then you attack again, then you retreat (back out of their range)
         if(inSafeZone){
-//        if(inSafeZone && rc.getHealth() >= 10){
             indicatorString += "S; ";
             Logger.Log("In safe zone!");
 //            int closestArchonIndex = comms.getClosestFriendlyArchonIndex();
