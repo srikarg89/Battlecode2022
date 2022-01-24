@@ -1,4 +1,4 @@
-package cracked4assassin;
+package cracked4BuildOrderAssassin;
 
 import battlecode.common.*;
 
@@ -296,7 +296,7 @@ public class Util {
             if(nearby[i].getTeam() == robot.myTeam){
                 continue;
             }
-            if(nearby[i].getType() != RobotType.SOLDIER && nearby[i].getType() != RobotType.SAGE && nearby[i].getType() != RobotType.WATCHTOWER){
+            if(nearby[i].getType() != RobotType.SOLDIER && nearby[i].getType() != RobotType.SAGE && nearby[i].getType() != RobotType.WATCHTOWER) {
                 continue;
             }
             avgX += nearby[i].getLocation().x;
