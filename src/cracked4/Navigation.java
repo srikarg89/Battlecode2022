@@ -24,8 +24,13 @@ public class Navigation {
         Util.robot = robot;
         currentTarget = null;
         visited = new HashSet<Integer>();
+
+        //TODO: we should prolly change miner to BFS20 as well
         if(rc.getType() == RobotType.MINER){
             bfs = new BFS13(rc, robot);
+        }
+        else if(rc.getType()==RobotType.SAGE){
+            bfs = new BFS34(rc, robot);
         }
         else{
             bfs = new BFS20(rc, robot);
