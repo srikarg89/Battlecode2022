@@ -31,6 +31,8 @@ public class Archon extends Robot {
     MapLocation[] scoutingLocs;
     boolean spawnedMinerLastTurn = false;
     int savingUp = 0;
+    MapLocation moveDestination = null;
+
 
     public Archon(RobotController rc) throws GameActionException {
         super(rc);
@@ -59,14 +61,33 @@ public class Archon extends Robot {
         MapLocation enemyCOM = Util.calculateEnemySoldierCOM(enemiesInVision);
         comms.updateCurrAttackLoc(enemiesInVision, enemyCOM);
 
-        if(spawnedMinerLastTurn){
-            // TODO: Change this to spawn miner type based on miner #
-            int minerType = 0; // Explore
-            if(myMiners % 5 == 4){
+
+        if(rc.getRoundNum() == 1){ // TODO: Might wanna do this based on map size. Might not be worth on smaller maps
+            moveDestination = findLeastRubbleSpot(); // TODO Add heuristic to only move if lead is not a constraint or we have too many friendly soldiers around us (and moving to lower cool-down can benefit)
+        }
+        if(myLoc.distanceSquaredTo(moveDestination) > 0){ // if we are on the move to a lower rubble spot
+            indicatorString += "MOVING; ";
+            while(rc.getMode().equals(RobotMode.TURRET) && rc.canTransform()){
+                rc.transform();
+            }
+            nav.goTo(moveDestination);
+            comms.writeSharedArray(myCommsIdx, Util.mapLocationToInt(myLoc));
+        }
+        else {
+            if (rc.getMode().equals(RobotMode.PORTABLE) && rc.canTransform()) {    // make sure we are in turret mode
+                rc.transform();
+                indicatorString += "TRANSFORM";
+            }
+
+            if (spawnedMinerLastTurn) {
+                // TODO: Change this to spawn miner type based on miner #
+                int minerType = 0; // Explore
+                if (myMiners % 5 == 4) {
 //                minerType = 1; // Go to biggest fight to cleanup
 //                myCleanupMiners++;
+                }
+                comms.updateMinerInstruction(myCommsIdx, scoutingLocs[(myMiners - myCleanupMiners - 1) % scoutingLocs.length], minerType);
             }
-            comms.updateMinerInstruction(myCommsIdx, scoutingLocs[(myMiners - myCleanupMiners - 1) % scoutingLocs.length], minerType);
         }
 
         // Try building
@@ -147,6 +168,28 @@ public class Archon extends Robot {
             return true;
         }
         return false;
+    }
+
+    public MapLocation findLeastRubbleSpot() throws GameActionException{
+        // checks all spots in the archon's vision radius and returns spot with lowest rubble that is closest
+        MapLocation bestSpot = null;
+        int minRubble = Integer.MAX_VALUE;
+        int distanceSquaredToBestSpot = Integer.MAX_VALUE;
+        MapLocation[] visibleSpots = rc.getAllLocationsWithinRadiusSquared(myLoc, myType.visionRadiusSquared);
+
+        for(int i = 0; i < visibleSpots.length; i++) {
+            MapLocation potSpot = visibleSpots[i];
+            if (rc.onTheMap(potSpot)) {     // is the potential spot on the map?
+                int distanceSquaredToPotSpot = myLoc.distanceSquaredTo(potSpot);
+                int rubbleAtPotSpot = rc.senseRubble(potSpot);
+                if (rubbleAtPotSpot < minRubble || (rubbleAtPotSpot == minRubble && distanceSquaredToPotSpot < distanceSquaredToBestSpot)) {
+                    bestSpot = potSpot;
+                    distanceSquaredToBestSpot = distanceSquaredToPotSpot;
+                    minRubble = rubbleAtPotSpot;
+                }
+            }
+        }
+        return bestSpot;
     }
 
     public void spawnUniformly(RobotType spawnType, int offset) throws GameActionException {
