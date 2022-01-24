@@ -126,7 +126,7 @@ public class Soldier2 extends Robot {
                     nav.goTo(closestFriendlyArchon);
                 }
                 else{
-                    nav.circle(closestFriendlyArchon, 10, true);
+                    nav.circle(closestFriendlyArchon, 10, RobotType.ARCHON.actionRadiusSquared, true);
                 }
             }
             indicatorString += "S; ";

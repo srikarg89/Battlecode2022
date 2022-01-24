@@ -84,11 +84,11 @@ public class Builder extends Robot {
                     nav.goTo(potentialRepairSpot);
                 }
                 else{
-                    nav.circle(potentialRepairSpot, 3, false);
+                    nav.circle(potentialRepairSpot, 2, myType.actionRadiusSquared, false);
                 }
             }
             else{
-                nav.circle(archonLoc, myType.visionRadiusSquared - 5, false);
+                nav.circle(archonLoc, 10, myType.visionRadiusSquared, false);
             }
         }
     }
