@@ -64,6 +64,7 @@ public class Sage extends Robot {
         if(needHealing){
             attack(attackTarget);
             if(enemySoldierCOM.equals(myLoc)){
+                bestArchonForHealingIdx = comms.findBestArchonForHealing();
                 MapLocation targetLoc = Util.intToMapLocation(rc.readSharedArray(bestArchonForHealingIdx));
                 if(myLoc.distanceSquaredTo(targetLoc) > RobotType.ARCHON.actionRadiusSquared - 10){
                     nav.goTo(targetLoc);
