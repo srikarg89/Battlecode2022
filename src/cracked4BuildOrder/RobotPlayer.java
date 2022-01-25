@@ -42,11 +42,11 @@ public strictfp class RobotPlayer {
             } catch (GameActionException e) {
                 Logger.Log("CAUGHT GAMEACTIONEXCEPTION");
                 e.printStackTrace();
-                rc.resign();
+//                rc.resign();
             } catch (Exception e) {
                 Logger.Log("CAUGHT EXCEPTION");
                 e.printStackTrace();
-                rc.resign();
+//                rc.resign();
             } finally {
                 Clock.yield();
             }
